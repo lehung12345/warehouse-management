@@ -11,23 +11,19 @@ import (
 	"warehouse-backend/utils"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func main() {
-	// 1️⃣ Load cấu hình từ .env
+	// 1️⃣ Load config từ .env
 	config.LoadConfig()
 	log.Println("👉 DB STRING:", config.ENV.DBConn)
 
-	// 2️⃣ Kết nối Database
-	db, err := gorm.Open(postgres.Open(config.ENV.DBConn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("❌ KẾT NỐI DATABASE THẤT BẠI:", err)
-	}
-	log.Println("✅ KẾT NỐI DATABASE THÀNH CÔNG")
+	// 2️⃣ Kết nối database (chuẩn)
+	config.ConnectDB()
+	db := config.DB
 
-	// 3️⃣ Ping test
+	// 3️⃣ Ping database
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatal("❌ Không lấy được SQL DB:", err)
@@ -35,8 +31,9 @@ func main() {
 	if err = sqlDB.Ping(); err != nil {
 		log.Fatal("❌ DATABASE KHÔNG PING ĐƯỢC:", err)
 	}
+	log.Println("✅ KẾT NỐI DATABASE THÀNH CÔNG")
 
-	// 4️⃣ Auto Migrate
+	// 4️⃣ Auto migrate
 	err = db.AutoMigrate(
 		&entity.User{},
 		&entity.Product{},
@@ -53,26 +50,29 @@ func main() {
 	}
 	log.Println("✅ MIGRATE THÀNH CÔNG")
 
-	// 5️⃣ Seed Admin mặc định (chỉ khi chưa có admin nào)
+	// 5️⃣ Seed admin mặc định
 	seedDefaultAdmin(db)
 
-	// 6️⃣ Khởi tạo Gin router với CORS
+	// 6️⃣ Khởi tạo server
 	r := gin.Default()
 	r.Use(corsMiddleware())
 
-	// 7️⃣ Health check
+	// 7️⃣ API test
 	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "pong", "status": "ok"})
+		c.JSON(200, gin.H{"message": "pong"})
 	})
 
-	// 8️⃣ Đăng ký toàn bộ route
+	// 8️⃣ Routes
 	routes.SetupRoutes(r, db)
 
-	// 9️⃣ Chạy server
+	// 9️⃣ Run server
 	log.Println("🚀 Server chạy tại port:", config.ENV.Port)
 	r.Run(":" + config.ENV.Port)
 }
 
+// =======================
+// Seed Admin
+// =======================
 func seedDefaultAdmin(db *gorm.DB) {
 	adminUsername := os.Getenv("ADMIN_DEFAULT_USERNAME")
 	adminEmail := os.Getenv("ADMIN_DEFAULT_EMAIL")
@@ -90,23 +90,25 @@ func seedDefaultAdmin(db *gorm.DB) {
 
 	hashedPw, err := utils.HashPassword(adminPassword)
 	if err != nil {
-		log.Println("⚠️ Không thể hash password admin mặc định:", err)
+		log.Println("⚠️ Không thể hash password:", err)
 		return
 	}
 
-	if err := services.SeedAdminIfNotExists(db, adminUsername, adminEmail, hashedPw); err != nil {
+	err = services.SeedAdminIfNotExists(db, adminUsername, adminEmail, hashedPw)
+	if err != nil {
 		log.Println("⚠️ Seed admin lỗi:", err)
-		return
 	}
 }
 
-// corsMiddleware cho phép frontend React và Flutter gọi API
+// =======================
+// CORS Middleware
+// =======================
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
@@ -116,4 +118,3 @@ func corsMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
-

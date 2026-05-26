@@ -28,6 +28,8 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		{
 			// Quản lý user / nhân viên
 			controllers.RegisterUserManagementRoutes(adminGroup, db)
+			
+			controllers.RegisterProductRoutes(adminGroup, db)
 		}
 
 		// ─── STAFF ONLY ───────────────────────────────

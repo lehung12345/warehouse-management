@@ -133,10 +133,17 @@ export default function AdminDashboard() {
               <span className="action-icon">👨‍💼</span>
               <span>Quản lý nhân viên</span>
             </button>
-            <button className="action-card" id="goto-products-btn">
+            {/* <button className="action-card" id="goto-products-btn">
               <span className="action-icon">📦</span>
               <span>Quản lý sản phẩm</span>
-              <span className="coming-soon">Sắp ra mắt</span>
+            </button> */}
+            <button
+              className="action-card"
+              id="goto-products-btn"
+              onClick={() => navigate("/admin/products")}
+            >
+              <span className="action-icon">📦</span>
+              <span>Quản lý sản phẩm</span>
             </button>
             <button className="action-card" id="goto-inventory-btn">
               <span className="action-icon">🏬</span>

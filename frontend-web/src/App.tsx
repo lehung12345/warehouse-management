@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import UserManagement from './pages/admin/UserManagement'
 import StaffDashboard from './pages/staff/StaffDashboard'
+import ProductPage from "./pages/admin/ProductPage";
 
 function RootRedirect() {
   const { user, isLoading } = useAuth()
@@ -25,16 +26,32 @@ export default function App() {
           <Route path="/" element={<RootRedirect />} />
 
           {/* Admin routes */}
-          <Route path="/admin" element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminDashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/admin/users" element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <UserManagement />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/products"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <ProductPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Staff routes */}
           <Route path="/staff" element={
