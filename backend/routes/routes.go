@@ -56,5 +56,10 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 				"role":     c.GetString("role"),
 			})
 		})
+		InventoryRoutes(protected, db)
+		LocationRoutes(protected, db)
+		OrderRoutes(protected, db)
+		ScanRoutes(protected, db)
+		ReportRoutes(protected, db)
 	}
 }

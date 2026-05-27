@@ -3,12 +3,12 @@ package entity
 import "time"
 
 type Import struct {
-	ID        uint      `gorm:"primaryKey"`
-	Code      string    `gorm:"unique;not null"`
-	UserID    uint
-	Status    string    `gorm:"type:varchar(20);default:'PENDING'"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint         `gorm:"primaryKey" json:"id"`
+	Code      string       `gorm:"unique;not null" json:"code"`
+	UserID    uint         `json:"user_id"`
+	Status    string       `gorm:"type:varchar(20);default:'PENDING'" json:"status"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
 
-	Items []ImportItem `gorm:"foreignKey:ImportID"`
+	Items []ImportItem `gorm:"foreignKey:ImportID" json:"items"`
 }
