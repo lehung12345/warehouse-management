@@ -11,14 +11,14 @@ func InventoryRoutes(r *gin.RouterGroup, db *gorm.DB) {
 	service := services.NewInventoryService(db)
 	controller := controllers.NewInventoryController(service)
 
-	api := r.Group("/api/inventories")
+	api := r.Group("/api")
 	{
-		api.GET("", controller.GetInventories)
+		api.GET("/inventories", controller.GetInventories)
 	}
 
-	scan := r.Group("/scan")
-	{
-		scan.POST("/import", controller.ImportProduct)
-		scan.POST("/export", controller.ExportProduct)
-	}
+	// scan := r.Group("/api/scan")
+	// {
+	// 	scan.POST("/import", controller.ImportProduct)
+	// 	scan.POST("/export", controller.ExportProduct)
+	// }
 }

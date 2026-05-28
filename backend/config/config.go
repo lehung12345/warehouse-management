@@ -37,7 +37,10 @@ func LoadConfig() {
 	ENV.Port = port
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
+		log.Println("[WARN] JWT_SECRET missing, using default 'secret' (this may break existing tokens)")
 		jwtSecret = "secret"
 	}
 	ENV.JWTSecret = jwtSecret
 }
+
+

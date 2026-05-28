@@ -1,7 +1,247 @@
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import '../providers/auth_provider.dart';
+// import 'scan_screen.dart';
+// import 'orders_screen.dart';
+// import 'inventory_screen.dart';
+//
+// class StaffHomeScreen extends StatelessWidget {
+//   const StaffHomeScreen({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final authProvider = Provider.of<AuthProvider>(context);
+//     final user = authProvider.user;
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(
+//           'WareFlow Staff',
+//           style: GoogleFonts.inter(
+//             fontWeight: FontWeight.w800,
+//             color: const Color(0xFF0F172A),
+//           ),
+//         ),
+//         actions: [
+//           IconButton(
+//             icon: const Icon(Icons.logout_rounded, color: Color(0xFF64748B)),
+//             onPressed: () => authProvider.logout(),
+//           ),
+//           const SizedBox(width: 8),
+//         ],
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: const EdgeInsets.all(20),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               // Header Card
+//               Container(
+//                 width: double.infinity,
+//                 padding: const EdgeInsets.all(20),
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xFF2563EB),
+//                   borderRadius: BorderRadius.circular(24),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: const Color(0xFF2563EB).withOpacity(0.3),
+//                       blurRadius: 20,
+//                       offset: const Offset(0, 10),
+//                     ),
+//                   ],
+//                 ),
+//                 child: Row(
+//                   children: [
+//                     CircleAvatar(
+//                       radius: 28,
+//                       backgroundColor: Colors.white.withOpacity(0.2),
+//                       child: Text(
+//                         user?.username.substring(0, 1).toUpperCase() ?? 'U',
+//                         style: GoogleFonts.inter(
+//                           fontSize: 22,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                     ),
+//                     const SizedBox(width: 16),
+//                     Expanded(
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             'Xin chào,',
+//                             style: GoogleFonts.inter(
+//                               color: Colors.white.withOpacity(0.8),
+//                               fontSize: 14,
+//                             ),
+//                           ),
+//                           Text(
+//                             user?.username ?? 'Nhân viên',
+//                             style: GoogleFonts.inter(
+//                               color: Colors.white,
+//                               fontSize: 20,
+//                               fontWeight: FontWeight.bold,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                     Container(
+//                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//                       decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(20),
+//                       ),
+//                       child: Text(
+//                         'STAFF',
+//                         style: GoogleFonts.inter(
+//                           color: const Color(0xFF2563EB),
+//                           fontSize: 12,
+//                           fontWeight: FontWeight.w700,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               const SizedBox(height: 32),
+//
+//               Text(
+//                 'Tác vụ kho',
+//                 style: GoogleFonts.inter(
+//                   fontSize: 18,
+//                   fontWeight: FontWeight.w700,
+//                   color: const Color(0xFF1E293B),
+//                 ),
+//               ),
+//               const SizedBox(height: 16),
+//
+//               // Grid view cho các thao tác
+//               GridView.count(
+//                 crossAxisCount: 2,
+//                 shrinkWrap: true,
+//                 physics: const NeverScrollableScrollPhysics(),
+//                 mainAxisSpacing: 16,
+//                 crossAxisSpacing: 16,
+//                 childAspectRatio: 1.1,
+//                 children: [
+//                   _buildActionCard(
+//                     title: 'Quét QR',
+//                     subtitle: 'Kiểm tra nhanh',
+//                     icon: Icons.qr_code_scanner_rounded,
+//                     color: const Color(0xFF3B82F6),
+//                     bgColor: const Color(0xFFEFF6FF),
+//                   ),
+//                   _buildActionCard(
+//                     title: 'Nhập Kho',
+//                     subtitle: 'Đưa vào vị trí',
+//                     icon: Icons.inventory_2_rounded,
+//                     color: const Color(0xFF10B981),
+//                     bgColor: const Color(0xFFECFDF5),
+//                   ),
+//                   _buildActionCard(
+//                     title: 'Xuất Kho',
+//                     subtitle: 'Lấy hàng ra',
+//                     icon: Icons.outbox_rounded,
+//                     color: const Color(0xFFF59E0B),
+//                     bgColor: const Color(0xFFFFFBEB),
+//                   ),
+//                   _buildActionCard(
+//                     title: 'Đơn Hàng',
+//                     subtitle: 'Chờ xử lý',
+//                     icon: Icons.assignment_rounded,
+//                     color: const Color(0xFF8B5CF6),
+//                     bgColor: const Color(0xFFF5F3FF),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//
+//   Widget _buildActionCard({
+//     required String title,
+//     required String subtitle,
+//     required IconData icon,
+//     required Color color,
+//     required Color bgColor,
+//   }) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(20),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.03),
+//             blurRadius: 10,
+//             offset: const Offset(0, 4),
+//           ),
+//         ],
+//       ),
+//       child: Material(
+//         color: Colors.transparent,
+//         child: InkWell(
+//           borderRadius: BorderRadius.circular(20),
+//           onTap: () {
+//             // TODO: Xử lý click
+//           },
+//           child: Padding(
+//             padding: const EdgeInsets.all(16.0),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Container(
+//                   padding: const EdgeInsets.all(12),
+//                   decoration: BoxDecoration(
+//                     color: bgColor,
+//                     borderRadius: BorderRadius.circular(14),
+//                   ),
+//                   child: Icon(icon, color: color, size: 28),
+//                 ),
+//                 const Spacer(),
+//                 Text(
+//                   title,
+//                   style: GoogleFonts.inter(
+//                     fontSize: 16,
+//                     fontWeight: FontWeight.w700,
+//                     color: const Color(0xFF1E293B),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 Text(
+//                   subtitle,
+//                   style: GoogleFonts.inter(
+//                     fontSize: 12,
+//                     fontWeight: FontWeight.w500,
+//                     color: const Color(0xFF64748B),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../providers/auth_provider.dart';
+import 'scan_screen.dart';
+import 'orders_screen.dart';
+import 'inventory_screen.dart';
 
 class StaffHomeScreen extends StatelessWidget {
   const StaffHomeScreen({super.key});
@@ -25,16 +265,16 @@ class StaffHomeScreen extends StatelessWidget {
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF64748B)),
             onPressed: () => authProvider.logout(),
           ),
-          const SizedBox(width: 8),
         ],
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header Card
+              // ================= HEADER =================
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -71,7 +311,7 @@ class StaffHomeScreen extends StatelessWidget {
                           Text(
                             'Xin chào,',
                             style: GoogleFonts.inter(
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.white70,
                               fontSize: 14,
                             ),
                           ),
@@ -87,7 +327,10 @@ class StaffHomeScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -104,6 +347,7 @@ class StaffHomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
+
               const SizedBox(height: 32),
 
               Text(
@@ -114,9 +358,10 @@ class StaffHomeScreen extends StatelessWidget {
                   color: const Color(0xFF1E293B),
                 ),
               ),
+
               const SizedBox(height: 16),
 
-              // Grid view cho các thao tác
+              // ================= GRID =================
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
@@ -126,32 +371,71 @@ class StaffHomeScreen extends StatelessWidget {
                 childAspectRatio: 1.1,
                 children: [
                   _buildActionCard(
+                    context: context,
                     title: 'Quét QR',
-                    subtitle: 'Kiểm tra nhanh',
+                    subtitle: 'Scan sản phẩm',
                     icon: Icons.qr_code_scanner_rounded,
                     color: const Color(0xFF3B82F6),
                     bgColor: const Color(0xFFEFF6FF),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ScanScreen(isImport: true),
+                        ),
+                      );
+                    },
                   ),
+
                   _buildActionCard(
+                    context: context,
                     title: 'Nhập Kho',
-                    subtitle: 'Đưa vào vị trí',
+                    subtitle: 'Import hàng',
                     icon: Icons.inventory_2_rounded,
                     color: const Color(0xFF10B981),
                     bgColor: const Color(0xFFECFDF5),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ScanScreen(isImport: true), // ← sửa
+                        ),
+                      );
+                    },
                   ),
+
                   _buildActionCard(
+                    context: context,
                     title: 'Xuất Kho',
-                    subtitle: 'Lấy hàng ra',
+                    subtitle: 'Export hàng',
                     icon: Icons.outbox_rounded,
                     color: const Color(0xFFF59E0B),
                     bgColor: const Color(0xFFFFFBEB),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ScanScreen(isImport: false), // ← sửa
+                        ),
+                      );
+                    },
                   ),
+
                   _buildActionCard(
+                    context: context,
                     title: 'Đơn Hàng',
-                    subtitle: 'Chờ xử lý',
+                    subtitle: 'Import / Export',
                     icon: Icons.assignment_rounded,
                     color: const Color(0xFF8B5CF6),
                     bgColor: const Color(0xFFF5F3FF),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const OrdersScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -162,12 +446,15 @@ class StaffHomeScreen extends StatelessWidget {
     );
   }
 
+  // ================= ACTION CARD =================
   Widget _buildActionCard({
+    required BuildContext context,
     required String title,
     required String subtitle,
     required IconData icon,
     required Color color,
     required Color bgColor,
+    required VoidCallback onTap,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -185,11 +472,9 @@ class StaffHomeScreen extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            // TODO: Xử lý click
-          },
+          onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -202,7 +487,9 @@ class StaffHomeScreen extends StatelessWidget {
                   ),
                   child: Icon(icon, color: color, size: 28),
                 ),
+
                 const Spacer(),
+
                 Text(
                   title,
                   style: GoogleFonts.inter(
@@ -211,7 +498,9 @@ class StaffHomeScreen extends StatelessWidget {
                     color: const Color(0xFF1E293B),
                   ),
                 ),
+
                 const SizedBox(height: 4),
+
                 Text(
                   subtitle,
                   style: GoogleFonts.inter(

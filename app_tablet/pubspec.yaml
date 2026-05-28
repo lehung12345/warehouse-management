@@ -16,6 +16,7 @@ dependencies:
   provider: ^6.1.2
   google_fonts: ^6.2.1
   flutter_dotenv: ^6.0.1
+  mobile_scanner: ^3.5.0
 
 dev_dependencies:
   flutter_test:
