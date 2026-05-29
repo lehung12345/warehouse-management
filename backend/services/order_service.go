@@ -3,6 +3,7 @@ package services
 import (
 	"warehouse-backend/entity"
 	"gorm.io/gorm"
+	"errors"
 )
 
 type OrderService struct {
@@ -45,53 +46,81 @@ func (s *OrderService) UpdateExportStatus(id uint, status string) error {
 		Update("status", status).Error
 }
 
-func (s *OrderService) CompleteImport(id uint) error {
+// func (s *OrderService) CompleteImport(id uint) error {
 
+// 	var order entity.Import
+// 	s.DB.Preload("Items").First(&order, id)
+
+// 	tx := s.DB.Begin()
+
+// 	for _, i := range order.Items {
+
+// 		var inv entity.Inventory
+// 		tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
+// 			First(&inv)
+
+// 		inv.Quantity += i.Quantity
+// 		tx.Save(&inv)
+// 	}
+
+// 	tx.Model(&entity.Import{}).
+// 		Where("id = ?", id).
+// 		Update("status", "DONE")
+
+// 	tx.Commit()
+// 	return nil
+// }
+
+// func (s *OrderService) CompleteExport(id uint) error {
+
+// 	var order entity.Export
+// 	s.DB.Preload("Items").First(&order, id)
+
+// 	tx := s.DB.Begin()
+
+// 	for _, i := range order.Items {
+
+// 		var inv entity.Inventory
+// 		tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
+// 			First(&inv)
+
+// 		inv.Quantity -= i.Quantity
+// 		tx.Save(&inv)
+// 	}
+
+// 	tx.Model(&entity.Export{}).
+// 		Where("id = ?", id).
+// 		Update("status", "DONE")
+
+// 	tx.Commit()
+// 	return nil
+// }
+
+func (s *OrderService) CancelImport(id uint) error {
 	var order entity.Import
-	s.DB.Preload("Items").First(&order, id)
-
-	tx := s.DB.Begin()
-
-	for _, i := range order.Items {
-
-		var inv entity.Inventory
-		tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
-			First(&inv)
-
-		inv.Quantity += i.Quantity
-		tx.Save(&inv)
+	if err := s.DB.First(&order, id).Error; err != nil {
+		return err
 	}
-
-	tx.Model(&entity.Import{}).
-		Where("id = ?", id).
-		Update("status", "DONE")
-
-	tx.Commit()
-	return nil
+	if order.Status == "DONE" {
+		return errors.New("đơn đã hoàn thành, không thể hủy")
+	}
+	if order.Status == "CANCELLED" {
+		return errors.New("đơn đã bị hủy trước đó")
+	}
+	return s.DB.Model(&order).Update("status", "CANCELLED").Error
 }
 
-func (s *OrderService) CompleteExport(id uint) error {
 
+func (s *OrderService) CancelExport(id uint) error {
 	var order entity.Export
-	s.DB.Preload("Items").First(&order, id)
-
-	tx := s.DB.Begin()
-
-	for _, i := range order.Items {
-
-		var inv entity.Inventory
-		tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
-			First(&inv)
-
-		inv.Quantity -= i.Quantity
-		tx.Save(&inv)
+	if err := s.DB.First(&order, id).Error; err != nil {
+		return err
 	}
-
-	tx.Model(&entity.Export{}).
-		Where("id = ?", id).
-		Update("status", "DONE")
-
-	tx.Commit()
-	return nil
+	if order.Status == "DONE" {
+		return errors.New("đơn đã hoàn thành, không thể hủy")
+	}
+	if order.Status == "CANCELLED" {
+		return errors.New("đơn đã bị hủy trước đó")
+	}
+	return s.DB.Model(&order).Update("status", "CANCELLED").Error
 }
-

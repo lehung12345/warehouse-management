@@ -58,41 +58,70 @@ func (c *OrderController) GetExports(ctx *gin.Context) {
 	ctx.JSON(200, data)
 }
 
-func (c *OrderController) CompleteImport(ctx *gin.Context) {
-	id := ctx.Param("id")
+// func (c *OrderController) CompleteImport(ctx *gin.Context) {
+// 	id := ctx.Param("id")
 
-	parsedID, err := strconv.ParseUint(id, 10, 64)
+// 	parsedID, err := strconv.ParseUint(id, 10, 64)
+// 	if err != nil {
+// 		ctx.JSON(400, gin.H{"error": "invalid id"})
+// 		return
+// 	}
+
+// 	err = c.Service.CompleteImport(uint(parsedID))
+// 	if err != nil {
+// 		ctx.JSON(500, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	ctx.JSON(200, gin.H{"message": "import done"})
+// }
+
+// func (c *OrderController) CompleteExport(ctx *gin.Context) {
+// 	id := ctx.Param("id")
+
+// 	parsedID, err := strconv.ParseUint(id, 10, 64)
+// 	if err != nil {
+// 		ctx.JSON(400, gin.H{"error": "invalid id"})
+// 		return
+// 	}
+
+// 	err = c.Service.CompleteExport(uint(parsedID))
+// 	if err != nil {
+// 		ctx.JSON(500, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	ctx.JSON(200, gin.H{"message": "export done"})
+// }
+
+
+func (c *OrderController) CancelImport(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ctx.JSON(400, gin.H{"error": "invalid id"})
 		return
 	}
-
-	err = c.Service.CompleteImport(uint(parsedID))
-	if err != nil {
+	if err := c.Service.CancelImport(uint(id)); err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-
-	ctx.JSON(200, gin.H{"message": "import done"})
+	ctx.JSON(200, gin.H{"message": "import cancelled"})
 }
 
-func (c *OrderController) CompleteExport(ctx *gin.Context) {
-	id := ctx.Param("id")
-
-	parsedID, err := strconv.ParseUint(id, 10, 64)
+func (c *OrderController) CancelExport(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ctx.JSON(400, gin.H{"error": "invalid id"})
 		return
 	}
-
-	err = c.Service.CompleteExport(uint(parsedID))
-	if err != nil {
+	if err := c.Service.CancelExport(uint(id)); err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-
-	ctx.JSON(200, gin.H{"message": "export done"})
+	ctx.JSON(200, gin.H{"message": "export cancelled"})
 }
+
+
 
 func (c *OrderController) GetImportByID(ctx *gin.Context) {
 	id := ctx.Param("id")

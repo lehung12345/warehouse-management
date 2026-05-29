@@ -7,14 +7,22 @@ import (
 	"warehouse-backend/services"
 )
 
+// func ScanRoutes(r *gin.RouterGroup, db *gorm.DB) {
+
+// 	service := services.NewScanService(db)
+// 	controller := controllers.NewScanController(service)
+
+// 	api := r.Group("/api/scan")
+// 	{
+// 		api.POST("/import", controller.ScanImport)
+// 		api.POST("/export", controller.ScanExport)
+// 	}
+// }
+
+
 func ScanRoutes(r *gin.RouterGroup, db *gorm.DB) {
-
-	service := services.NewScanService(db)
-	controller := controllers.NewScanController(service)
-
-	api := r.Group("/api/scan")
-	{
-		api.POST("/import", controller.ScanImport)
-		api.POST("/export", controller.ScanExport)
-	}
+    service := services.NewScanService(db)
+    controller := controllers.NewScanController(service)
+    r.POST("/scan/import", controller.ScanImport)
+    r.POST("/scan/export", controller.ScanExport)
 }
