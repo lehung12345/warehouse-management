@@ -11,7 +11,7 @@ func OrderRoutes(r *gin.RouterGroup, db *gorm.DB) {
 	service := services.NewOrderService(db)
 	controller := controllers.NewOrderController(service)
 
-	api := r.Group("/api/orders")
+	api := r.Group("/orders")
 	{
 		// Import
 		api.POST("/import", controller.CreateImport)

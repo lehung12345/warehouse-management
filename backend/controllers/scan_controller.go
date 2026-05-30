@@ -21,6 +21,7 @@ func (c *ScanController) ScanImport(ctx *gin.Context) {
 	var req struct {
 		ImportID  uint `json:"import_id"`
 		ProductID uint `json:"product_id"`
+		LocationID uint `json:"location_id"`
 		Quantity  int  `json:"quantity"`
 	}
 
@@ -29,7 +30,7 @@ func (c *ScanController) ScanImport(ctx *gin.Context) {
 		return
 	}
 
-	err := c.Service.ScanImport(req.ImportID, req.ProductID, req.Quantity)
+	err := c.Service.ScanImport(req.ImportID, req.ProductID, req.LocationID, req.Quantity)
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return
@@ -43,6 +44,7 @@ func (c *ScanController) ScanExport(ctx *gin.Context) {
 	var req struct {
 		ExportID  uint `json:"export_id"`
 		ProductID uint `json:"product_id"`
+		LocationID uint `json:"location_id"`
 		Quantity  int  `json:"quantity"`
 	}
 
@@ -51,7 +53,7 @@ func (c *ScanController) ScanExport(ctx *gin.Context) {
 		return
 	}
 
-	err := c.Service.ScanExport(req.ExportID, req.ProductID, req.Quantity)
+	err := c.Service.ScanExport(req.ExportID, req.ProductID, req.LocationID, req.Quantity)
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 		return

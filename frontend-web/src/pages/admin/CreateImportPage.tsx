@@ -89,7 +89,7 @@
 
 
 //bản giao diện
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
@@ -98,9 +98,47 @@ export default function CreateImportPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [code, setCode] = useState("");
   const [items, setItems] = useState<any[]>([]);
   const [errors, setErrors] = useState<any>({});
+  const [products, setProducts] = useState<any[]>([]);
+  const [locations, setLocations] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchLocations();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await api.get("/api/products");
+      setProducts(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchLocations = async () => {
+    try {
+      const res = await api.get("/api/locations/tree");
+      setLocations(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Flatten tree to array with indentation for display
+  const flattenLocations = (nodes: any[], level = 0): any[] => {
+    let result: any[] = [];
+    nodes.forEach((node) => {
+      result.push({ ...node, level });
+      if (node.children && node.children.length > 0) {
+        result = result.concat(flattenLocations(node.children, level + 1));
+      }
+    });
+    return result;
+  };
+
+  const flatLocations = flattenLocations(locations);
 
   /* ================= ADD / UPDATE ================= */
   const addItem = () => {
@@ -121,10 +159,6 @@ export default function CreateImportPage() {
   const validate = () => {
     let newErrors: any = {};
 
-    if (!code.trim()) {
-      newErrors.code = "Không được để trống mã đơn";
-    }
-
     if (items.length === 0) {
       newErrors.items = "Phải có ít nhất 1 sản phẩm";
     }
@@ -135,11 +169,22 @@ export default function CreateImportPage() {
       let err: any = {};
 
       if (!item.product_id || item.product_id <= 0) {
-        err.product_id = "Product ID > 0";
+        err.product_id = "Chọn sản phẩm";
       }
 
       if (!item.location_id || item.location_id <= 0) {
-        err.location_id = "Location ID > 0";
+        err.location_id = "Chọn vị trí";
+      } else {
+        // Validate location must be BIN
+        const selectedLocation = flatLocations.find((loc) => loc.id === item.location_id);
+        if (selectedLocation && selectedLocation.type !== "BIN") {
+          err.location_id = "Chỉ chọn vị trí BIN";
+        }
+
+        // Validate quantity <= BIN capacity
+        if (selectedLocation && item.quantity > selectedLocation.capacity) {
+          err.quantity = `Số lượng không vượt quá ${selectedLocation.capacity}`;
+        }
       }
 
       if (!item.quantity || item.quantity <= 0) {
@@ -157,7 +202,7 @@ export default function CreateImportPage() {
       (e) => Object.keys(e).length > 0
     );
 
-    return !newErrors.code && !newErrors.items && !hasItemError;
+    return !newErrors.items && !hasItemError;
   };
 
   /* ================= SUBMIT ================= */
@@ -166,7 +211,6 @@ export default function CreateImportPage() {
 
     try {
       await api.post("/api/orders/import", {
-        code,
         user_id: user?.id,
         status: "PENDING",
         items,
@@ -197,18 +241,6 @@ export default function CreateImportPage() {
         {/* CARD */}
         <div style={card}>
 
-          {/* CODE */}
-          <div style={{ marginBottom: "20px" }}>
-            <label style={label}>Mã đơn</label>
-            <input
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="VD: IMP-001"
-              style={input}
-            />
-            {errors.code && <p style={errorText}>{errors.code}</p>}
-          </div>
-
           {/* ITEMS */}
           <div style={{ marginBottom: "20px" }}>
             <div style={rowBetween}>
@@ -227,23 +259,37 @@ export default function CreateImportPage() {
             <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
               {items.map((item, index) => (
                 <div key={index} style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  
+
                   <div style={itemRow}>
-                    <input
-                      placeholder="Product ID"
-                      style={inputSmall}
+                    <select
+                      value={item.product_id || ""}
                       onChange={(e) =>
                         updateItem(index, "product_id", Number(e.target.value))
                       }
-                    />
-
-                    <input
-                      placeholder="Location ID"
                       style={inputSmall}
+                    >
+                      <option value="">Chọn sản phẩm</option>
+                      {products.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={item.location_id || ""}
                       onChange={(e) =>
                         updateItem(index, "location_id", Number(e.target.value))
                       }
-                    />
+                      style={inputSmall}
+                    >
+                      <option value="">Chọn vị trí</option>
+                      {flatLocations.map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {"  ".repeat(loc.level)}{loc.name} ({loc.type})
+                        </option>
+                      ))}
+                    </select>
 
                     <input
                       type="number"

@@ -393,6 +393,7 @@ type Location = {
   name: string;
   type: "WAREHOUSE" | "SHELF" | "BIN";
   parent_id?: number | null;
+  capacity?: number;
   children?: Location[];
 };
 
@@ -512,6 +513,16 @@ export default function LocationPage() {
               color: node.type === "SHELF" ? "#34d399" : "#fbbf24" 
             }}>
               {node.name}
+            </span>
+            <span style={{ 
+              marginLeft: "8px", 
+              fontSize: "11px", 
+              color: "#9ca3af",
+              background: "rgba(255, 255, 255, 0.05)",
+              padding: "2px 6px",
+              borderRadius: "4px"
+            }}>
+              {node.capacity || 0}
             </span>
           </div>
 
@@ -755,6 +766,16 @@ export default function LocationPage() {
                       </span>
                       <span style={{ fontSize: "15px", fontWeight: 600, color: "#60a5fa" }}>
                         {warehouse.name}
+                      </span>
+                      <span style={{ 
+                        fontSize: "12px", 
+                        color: "#9ca3af",
+                        background: "rgba(96, 165, 250, 0.1)",
+                        padding: "3px 8px",
+                        borderRadius: "6px",
+                        fontWeight: 500
+                      }}>
+                        {warehouse.capacity || 0}
                       </span>
                     </div>
                     {/* Mũi tên góc phải chỉ định trạng thái đóng/mở */}

@@ -125,7 +125,9 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
         // Đăng ký các route xử lý nghiệp vụ Quét và Đơn hàng riêng với tiền tố /api cho Flutter
         InventoryRoutes(apiProtected, db) // Tạo thêm: /api/inventories
         LocationRoutes(apiProtected, db)  // Tạo thêm: /api/locations
+        ProductRoutes(apiProtected, db)   // Tạo thêm: /api/products
         OrderRoutes(apiProtected, db)     // Tạo thêm: /api/orders/... hoặc /api/orders/import
         ScanRoutes(apiProtected, db)      // Tạo thêm: /api/scan/import và /api/scan/export
+        ReportRoutes(apiProtected, db)    // Tạo thêm: /api/reports/...
     }
 }

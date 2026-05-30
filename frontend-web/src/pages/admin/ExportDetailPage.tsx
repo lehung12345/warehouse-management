@@ -322,7 +322,7 @@
 
 
 
-//bản sửa nút 
+//bản sửa nút
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/auth";
@@ -344,6 +344,21 @@ export default function ExportDetailPage() {
   useEffect(() => {
     fetchDetail();
   }, []);
+
+  // Helper function to build location path
+  const buildLocationPath = (location: any): string => {
+    if (!location) return "";
+    const parts: string[] = [];
+    let current = location;
+
+    // Traverse up the parent chain
+    while (current) {
+      parts.unshift(current.name);
+      current = current.parent;
+    }
+
+    return parts.join(" → ");
+  };
 
   const handleCancel = async () => {
     if (!confirm("Bạn có chắc chắn muốn hủy đơn xuất này?")) return;
@@ -433,6 +448,7 @@ export default function ExportDetailPage() {
               <thead>
                 <tr style={thead}>
                   <th>Product</th>
+                  <th>Vị trí</th>
                   <th>Số lượng</th>
                   <th>Đã scan</th>
                   <th>Tiến độ</th>
@@ -443,7 +459,20 @@ export default function ExportDetailPage() {
                   const percent = Math.round((i.scanned_quantity / i.quantity) * 100);
                   return (
                     <tr key={i.id} style={row}>
-                      <td>{i.product_id}</td>
+                      <td>
+                        <div>
+                          <div style={{ fontWeight: 500, color: "#E5E7EB" }}>
+                            {i.product?.name || i.product_id}
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div>
+                          <div style={{ fontWeight: 500, color: "#E5E7EB" }}>
+                            {buildLocationPath(i.location) || i.location_id}
+                          </div>
+                        </div>
+                      </td>
                       <td>{i.quantity}</td>
                       <td>{i.scanned_quantity}</td>
                       <td>

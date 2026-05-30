@@ -282,6 +282,257 @@
 
 
 //bản có thể nập tay
+// import 'package:flutter/material.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:provider/provider.dart';
+// import '../providers/auth_provider.dart';
+// import '../services/scan_service.dart';
+// import 'location_picker_screen.dart';
+//
+// class ScanScreen extends StatefulWidget {
+//   final bool isImport;
+//   final int? presetOrderId;
+//   const ScanScreen({super.key, required this.isImport, this.presetOrderId});
+//
+//   @override
+//   State<ScanScreen> createState() => _ScanScreenState();
+// }
+//
+// class _ScanScreenState extends State<ScanScreen> {
+//   final MobileScannerController scannerController = MobileScannerController();
+//   bool isScanning = true;
+//   String? scannedProductId;
+//   final TextEditingController productIdController = TextEditingController();
+//   int? orderId;
+//   int quantity = 1;
+//   int? selectedLocationId;
+//   String selectedLocationPath = '';
+//   String? error;
+//   bool submitting = false;
+//   bool useManualInput = false; // chuyển sang chế độ nhập tay
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     if (widget.presetOrderId != null) {
+//       orderId = widget.presetOrderId;
+//     }
+//   }
+//
+//   @override
+//   void dispose() {
+//     scannerController.dispose();
+//     productIdController.dispose();
+//     super.dispose();
+//   }
+//
+//   void _onScan(BarcodeCapture capture) {
+//     if (!isScanning) return;
+//     final String? raw = capture.barcodes.first.rawValue;
+//     if (raw != null) {
+//       setState(() {
+//         isScanning = false;
+//         scannedProductId = raw;
+//         productIdController.text = raw;
+//         useManualInput = false;
+//       });
+//       scannerController.stop();
+//     }
+//   }
+//
+//   void _toggleInputMode() {
+//     setState(() {
+//       useManualInput = !useManualInput;
+//       if (useManualInput) {
+//         isScanning = false;
+//         scannerController.stop();
+//       } else {
+//         isScanning = true;
+//         scannedProductId = null;
+//         productIdController.clear();
+//         scannerController.start();
+//       }
+//     });
+//   }
+//
+//   Future<void> _submit() async {
+//     final token = Provider.of<AuthProvider>(context, listen: false).token;
+//     if (token == null) {
+//       setState(() => error = "Chưa đăng nhập");
+//       return;
+//     }
+//
+//     String productId = useManualInput
+//         ? productIdController.text.trim()
+//         : (scannedProductId ?? '');
+//     if (productId.isEmpty || orderId == null) {
+//       setState(() => error = "Vui lòng nhập/scan Product ID và Mã đơn");
+//       return;
+//     }
+//     if (widget.isImport && selectedLocationId == null) {
+//       setState(() => error = "Vui lòng chọn vị trí nhập kho");
+//       return;
+//     }
+//
+//     setState(() { submitting = true; error = null; });
+//     try {
+//       String message;
+//       if (widget.isImport) {
+//         message = await ScanService.scanImport(
+//           importId: orderId!,
+//           productId: int.parse(productId),
+//           quantity: quantity,
+//           token: token,
+//         );
+//       } else {
+//         message = await ScanService.scanExport(
+//           exportId: orderId!,
+//           productId: int.parse(productId),
+//           quantity: quantity,
+//           token: token,
+//         );
+//       }
+//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+//       Navigator.pop(context, true);
+//     } catch (e) {
+//       setState(() { error = e.toString(); submitting = false; });
+//     }
+//   }
+//
+//   void _pickLocation() async {
+//     final token = Provider.of<AuthProvider>(context, listen: false).token;
+//     if (token == null) return;
+//     await Navigator.push(
+//       context,
+//       MaterialPageRoute(
+//         builder: (_) => LocationPickerScreen(
+//           token: token,
+//           onSelected: (id, path) {
+//             setState(() {
+//               selectedLocationId = id;
+//               selectedLocationPath = path;
+//             });
+//           },
+//         ),
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.isImport ? "Nhập kho" : "Xuất kho"),
+//         actions: [
+//           IconButton(
+//             icon: Icon(useManualInput ? Icons.qr_code_scanner : Icons.edit),
+//             onPressed: _toggleInputMode,
+//             tooltip: useManualInput ? "Chuyển sang quét QR" : "Chuyển sang nhập tay",
+//           ),
+//         ],
+//       ),
+//       body: Column(
+//         children: [
+//           if (!useManualInput && isScanning)
+//             SizedBox(
+//               height: 300,
+//               child: MobileScanner(
+//                 controller: scannerController,
+//                 onDetect: _onScan,
+//               ),
+//             )
+//           else if (!useManualInput && !isScanning)
+//             Card(
+//               margin: const EdgeInsets.all(16),
+//               child: ListTile(
+//                 title: const Text("Sản phẩm đã scan"),
+//                 subtitle: Text("Product ID: $scannedProductId"),
+//                 trailing: IconButton(
+//                   icon: const Icon(Icons.refresh),
+//                   onPressed: () {
+//                     setState(() {
+//                       isScanning = true;
+//                       scannedProductId = null;
+//                       productIdController.clear();
+//                       scannerController.start();
+//                     });
+//                   },
+//                 ),
+//               ),
+//             ),
+//           Padding(
+//             padding: const EdgeInsets.all(16),
+//             child: Column(
+//               children: [
+//                 if (useManualInput)
+//                   TextField(
+//                     controller: productIdController,
+//                     keyboardType: TextInputType.number,
+//                     decoration: const InputDecoration(labelText: "Product ID (nhập tay)"),
+//                   ),
+//                 const SizedBox(height: 12),
+//                 TextField(
+//                   keyboardType: TextInputType.number,
+//                   decoration: const InputDecoration(labelText: "Mã đơn hàng (Order ID)"),
+//                   onChanged: (v) => orderId = int.tryParse(v),
+//                   controller: widget.presetOrderId != null
+//                       ? TextEditingController(text: widget.presetOrderId.toString())
+//                       : null,
+//                   readOnly: widget.presetOrderId != null,
+//                 ),
+//                 const SizedBox(height: 12),
+//                 Row(
+//                   children: [
+//                     Expanded(
+//                       child: TextField(
+//                         keyboardType: TextInputType.number,
+//                         decoration: const InputDecoration(labelText: "Số lượng"),
+//                         onChanged: (v) => quantity = int.tryParse(v) ?? 1,
+//                         controller: TextEditingController(text: quantity.toString()),
+//                       ),
+//                     ),
+//                     Column(
+//                       children: [
+//                         IconButton(
+//                           icon: const Icon(Icons.add_circle),
+//                           onPressed: () => setState(() => quantity++),
+//                         ),
+//                         IconButton(
+//                           icon: const Icon(Icons.remove_circle),
+//                           onPressed: () {
+//                             if (quantity > 1) setState(() => quantity--);
+//                           },
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//                 if (widget.isImport) ...[
+//                   const SizedBox(height: 12),
+//                   ElevatedButton.icon(
+//                     onPressed: _pickLocation,
+//                     icon: const Icon(Icons.place),
+//                     label: Text(selectedLocationPath.isEmpty ? "Chọn vị trí" : selectedLocationPath),
+//                   ),
+//                 ],
+//                 const SizedBox(height: 24),
+//                 if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),
+//                 const SizedBox(height: 12),
+//                 ElevatedButton(
+//                   onPressed: submitting ? null : _submit,
+//                   style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+//                   child: submitting ? const CircularProgressIndicator() : const Text("Xác nhận"),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+//bản mới
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
@@ -292,7 +543,8 @@ import 'location_picker_screen.dart';
 class ScanScreen extends StatefulWidget {
   final bool isImport;
   final int? presetOrderId;
-  const ScanScreen({super.key, required this.isImport, this.presetOrderId});
+  final String? presetOrderCode;
+  const ScanScreen({super.key, required this.isImport, this.presetOrderId, this.presetOrderCode});
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -309,7 +561,7 @@ class _ScanScreenState extends State<ScanScreen> {
   String selectedLocationPath = '';
   String? error;
   bool submitting = false;
-  bool useManualInput = false; // chuyển sang chế độ nhập tay
+  bool useManualInput = false;
 
   @override
   void initState() {
@@ -369,8 +621,8 @@ class _ScanScreenState extends State<ScanScreen> {
       setState(() => error = "Vui lòng nhập/scan Product ID và Mã đơn");
       return;
     }
-    if (widget.isImport && selectedLocationId == null) {
-      setState(() => error = "Vui lòng chọn vị trí nhập kho");
+    if (selectedLocationId == null) {
+      setState(() => error = "Vui lòng chọn vị trí kho");
       return;
     }
 
@@ -381,6 +633,7 @@ class _ScanScreenState extends State<ScanScreen> {
         message = await ScanService.scanImport(
           importId: orderId!,
           productId: int.parse(productId),
+          locationId: selectedLocationId!,
           quantity: quantity,
           token: token,
         );
@@ -388,6 +641,7 @@ class _ScanScreenState extends State<ScanScreen> {
         message = await ScanService.scanExport(
           exportId: orderId!,
           productId: int.parse(productId),
+          locationId: selectedLocationId!,
           quantity: quantity,
           token: token,
         );
@@ -471,14 +725,21 @@ class _ScanScreenState extends State<ScanScreen> {
                     decoration: const InputDecoration(labelText: "Product ID (nhập tay)"),
                   ),
                 const SizedBox(height: 12),
-                TextField(
+                // Hiển thị mã code nếu có, nếu không thì hiển thị ô nhập ID
+                widget.presetOrderId != null && widget.presetOrderCode != null
+                    ? TextFormField(
+                  initialValue: widget.presetOrderCode,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: "Mã đơn hàng",
+                    border: OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                )
+                    : TextField(
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(labelText: "Mã đơn hàng (Order ID)"),
                   onChanged: (v) => orderId = int.tryParse(v),
-                  controller: widget.presetOrderId != null
-                      ? TextEditingController(text: widget.presetOrderId.toString())
-                      : null,
-                  readOnly: widget.presetOrderId != null,
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -507,14 +768,12 @@ class _ScanScreenState extends State<ScanScreen> {
                     ),
                   ],
                 ),
-                if (widget.isImport) ...[
-                  const SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    onPressed: _pickLocation,
-                    icon: const Icon(Icons.place),
-                    label: Text(selectedLocationPath.isEmpty ? "Chọn vị trí" : selectedLocationPath),
-                  ),
-                ],
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: _pickLocation,
+                  icon: const Icon(Icons.place),
+                  label: Text(selectedLocationPath.isEmpty ? "Chọn vị trí" : selectedLocationPath),
+                ),
                 const SizedBox(height: 24),
                 if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),
                 const SizedBox(height: 12),

@@ -14,7 +14,23 @@ func generateSKU() string {
 }
 
 func generateBarcode() string {
-	return fmt.Sprintf("%013d", time.Now().UnixNano()%1000000000000)
+	// Generate a random 12-digit number for EAN13 (last digit is checksum)
+	randomNum := time.Now().UnixNano() % 1000000000000
+	barcode := fmt.Sprintf("%012d", randomNum)
+
+	// Calculate EAN13 checksum
+	sum := 0
+	for i := 0; i < 12; i++ {
+		digit := int(barcode[i] - '0')
+		if i%2 == 0 {
+			sum += digit
+		} else {
+			sum += digit * 3
+		}
+	}
+	checksum := (10 - (sum % 10)) % 10
+
+	return barcode + fmt.Sprintf("%d", checksum)
 }
 
 func CreateProduct(product *entity.Product) error {

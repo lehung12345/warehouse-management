@@ -43,6 +43,26 @@ func (s *LocationService) Create(loc entity.Location) error {
 		if strings.TrimSpace(strings.ToUpper(parent.Type)) != "WAREHOUSE" {
 			return errors.New("parent phải là warehouse")
 		}
+
+		// Validate: shelf capacity <= warehouse capacity
+		if loc.Capacity > parent.Capacity {
+			return errors.New("sức chứa của shelf không được vượt quá sức chứa của warehouse")
+		}
+
+		// Validate: tổng capacity của các shelf hiện tại + shelf mới <= warehouse capacity
+		var existingShelves []entity.Location
+		if err := s.DB.Where("parent_id = ? AND type = ?", *loc.ParentID, "SHELF").Find(&existingShelves).Error; err != nil {
+			return err
+		}
+
+		totalShelfCapacity := loc.Capacity
+		for _, shelf := range existingShelves {
+			totalShelfCapacity += shelf.Capacity
+		}
+
+		if totalShelfCapacity > parent.Capacity {
+			return errors.New("tổng sức chứa của các shelf không được vượt quá sức chứa của warehouse")
+		}
 	}
 
 	if loc.Type == "BIN" {
@@ -57,6 +77,26 @@ func (s *LocationService) Create(loc entity.Location) error {
 
 		if strings.TrimSpace(strings.ToUpper(parent.Type)) != "SHELF" {
 			return errors.New("parent phải là shelf")
+		}
+
+		// Validate: bin capacity <= shelf capacity
+		if loc.Capacity > parent.Capacity {
+			return errors.New("sức chứa của bin không được vượt quá sức chứa của shelf")
+		}
+
+		// Validate: tổng capacity của các bin hiện tại + bin mới <= shelf capacity
+		var existingBins []entity.Location
+		if err := s.DB.Where("parent_id = ? AND type = ?", *loc.ParentID, "BIN").Find(&existingBins).Error; err != nil {
+			return err
+		}
+
+		totalBinCapacity := loc.Capacity
+		for _, bin := range existingBins {
+			totalBinCapacity += bin.Capacity
+		}
+
+		if totalBinCapacity > parent.Capacity {
+			return errors.New("tổng sức chứa của các bin không được vượt quá sức chứa của shelf")
 		}
 	}
 
@@ -94,9 +134,10 @@ func (s *LocationService) GetTree() ([]map[string]interface{}, error) {
 
 		for _, loc := range childrenMap[parentID] {
 			node := map[string]interface{}{
-				"id":   loc.ID,
-				"name": loc.Name,
-				"type": loc.Type,
+				"id":       loc.ID,
+				"name":     loc.Name,
+				"type":     loc.Type,
+				"capacity": loc.Capacity,
 				"children": buildTree(loc.ID),
 			}
 			result = append(result, node)

@@ -184,9 +184,120 @@
 
 
 
+//bản cũ
+
+//
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import '../providers/auth_provider.dart';
+// import '../services/order_service.dart';
+// import '../models/order_model.dart';
+// import 'order_detail_screen.dart';
+//
+// class OrdersScreen extends StatefulWidget {
+//   const OrdersScreen({super.key});
+//
+//   @override
+//   State<OrdersScreen> createState() => _OrdersScreenState();
+// }
+//
+// class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderStateMixin {
+//   late TabController _tabController;
+//   List<OrderModel> imports = [];
+//   List<OrderModel> exports = [];
+//   bool loading = true;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _tabController = TabController(length: 2, vsync: this);
+//     _fetchData();
+//   }
+//
+//   Future<void> _fetchData() async {
+//     final auth = Provider.of<AuthProvider>(context, listen: false);
+//     final token = auth.token;
+//     if (token == null) return;
+//     setState(() => loading = true);
+//     try {
+//       final imp = await OrderService.getImports(token);
+//       final exp = await OrderService.getExports(token);
+//       setState(() {
+//         imports = imp;
+//         exports = exp;
+//         loading = false;
+//       });
+//     } catch (e) {
+//       setState(() => loading = false);
+//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Đơn hàng'),
+//         bottom: TabBar(
+//           controller: _tabController,
+//           tabs: const [
+//             Tab(text: 'NHẬP KHO', icon: Icon(Icons.download)),
+//             Tab(text: 'XUẤT KHO', icon: Icon(Icons.upload)),
+//           ],
+//         ),
+//       ),
+//       body: loading
+//           ? const Center(child: CircularProgressIndicator())
+//           : TabBarView(
+//         controller: _tabController,
+//         children: [
+//           _buildOrderList(imports, true),
+//           _buildOrderList(exports, false),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildOrderList(List<OrderModel> orders, bool isImport) {
+//     if (orders.isEmpty) {
+//       return const Center(child: Text('Không có đơn hàng nào'));
+//     }
+//     return RefreshIndicator(
+//       onRefresh: _fetchData,
+//       child: ListView.builder(
+//         itemCount: orders.length,
+//         itemBuilder: (context, index) {
+//           final order = orders[index];
+//           return Card(
+//             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//             child: ListTile(
+//               title: Text('Mã đơn: ${order.code}'),
+//               subtitle: Text('Trạng thái: ${order.status}'),
+//               trailing: order.status == 'DONE'
+//                   ? const Icon(Icons.check_circle, color: Colors.green)
+//                   : const Icon(Icons.pending, color: Colors.orange),
+//               onTap: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (_) => OrderDetailScreen(
+//                       orderId: order.id,
+//                       isImport: isImport,
+//                     ),
+//                   ),
+//                 ).then((_) => _fetchData());
+//               },
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
 
 
 
+//bản mới
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -276,16 +387,18 @@ class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderSt
               trailing: order.status == 'DONE'
                   ? const Icon(Icons.check_circle, color: Colors.green)
                   : const Icon(Icons.pending, color: Colors.orange),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => OrderDetailScreen(
                       orderId: order.id,
                       isImport: isImport,
+                      orderCode: order.code, // ✅ truyền mã code
                     ),
                   ),
-                ).then((_) => _fetchData());
+                );
+                _fetchData(); // refresh sau khi quay về
               },
             ),
           );

@@ -11,7 +11,7 @@ func LocationRoutes(r *gin.RouterGroup, db *gorm.DB) {
 	service := services.NewLocationService(db)
 	controller := controllers.NewLocationController(service)
 
-	api := r.Group("/api/locations")
+	api := r.Group("/locations")
 	{
 		api.POST("", controller.Create)
 		api.GET("", controller.GetAll)

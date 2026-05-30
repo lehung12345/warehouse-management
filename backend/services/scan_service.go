@@ -166,6 +166,7 @@ import (
 	"warehouse-backend/entity"
 	"gorm.io/gorm"
 	"errors"
+	"strconv"
 )
 
 type ScanService struct {
@@ -176,7 +177,7 @@ func NewScanService(db *gorm.DB) *ScanService {
 	return &ScanService{DB: db}
 }
 
-func (s *ScanService) ScanImport(importID uint, productID uint, qty int) error {
+func (s *ScanService) ScanImport(importID uint, productID uint, locationID uint, qty int) error {
 
 	tx := s.DB.Begin()
 
@@ -194,7 +195,7 @@ func (s *ScanService) ScanImport(importID uint, productID uint, qty int) error {
 	var item entity.ImportItem
 
 	err := tx.
-		Where("import_id = ? AND product_id = ?", importID, productID).
+		Where("import_id = ? AND product_id = ? AND location_id = ?", importID, productID, locationID).
 		First(&item).Error
 
 	if err != nil {
@@ -242,11 +243,26 @@ func (s *ScanService) ScanImport(importID uint, productID uint, qty int) error {
 			var inv entity.Inventory
 			if err := tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
 				First(&inv).Error; err != nil {
-				tx.Rollback()
-				return errors.New("inventory không tồn tại")
+				// If inventory doesn't exist, create it
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					inv = entity.Inventory{
+						ProductID:  i.ProductID,
+						LocationID: i.LocationID,
+						Quantity:   i.Quantity,
+					}
+					if err := tx.Create(&inv).Error; err != nil {
+						tx.Rollback()
+						return errors.New("không thể tạo inventory mới")
+					}
+				} else {
+					tx.Rollback()
+					return errors.New("lỗi khi tìm inventory")
+				}
+			} else {
+				// Inventory exists, update quantity
+				inv.Quantity += i.Quantity
+				tx.Save(&inv)
 			}
-			inv.Quantity += i.Quantity
-			tx.Save(&inv)
 		}
 	}
 
@@ -254,7 +270,7 @@ func (s *ScanService) ScanImport(importID uint, productID uint, qty int) error {
 	return nil
 }
 
-func (s *ScanService) ScanExport(exportID uint, productID uint, qty int) error {
+func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint, qty int) error {
 
 	tx := s.DB.Begin()
 
@@ -272,12 +288,26 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, qty int) error {
 	var item entity.ExportItem
 
 	err := tx.
-		Where("export_id = ? AND product_id = ?", exportID, productID).
+		Where("export_id = ? AND product_id = ? AND location_id = ?", exportID, productID, locationID).
 		First(&item).Error
 
 	if err != nil {
 		tx.Rollback()
 		return errors.New("export item không tồn tại")
+	}
+
+	// 🔥 Kiểm tra tồn kho thực tế trước khi cho scan
+	var inv entity.Inventory
+	if err := tx.Where("product_id = ? AND location_id = ?", productID, locationID).
+		First(&inv).Error; err != nil {
+		tx.Rollback()
+		return errors.New("sản phẩm không tồn tại trong kho tại vị trí này")
+	}
+
+	// Kiểm tra xem còn đủ hàng trong kho không
+	if inv.Quantity < qty {
+		tx.Rollback()
+		return errors.New("không đủ hàng trong kho để xuất (còn " + strconv.Itoa(inv.Quantity) + " sản phẩm)")
 	}
 
 	if item.ScannedQuantity+qty > item.Quantity {
@@ -319,8 +349,26 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, qty int) error {
 			var inv entity.Inventory
 			if err := tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
 				First(&inv).Error; err != nil {
+				// If inventory doesn't exist, create it with 0 quantity
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					inv = entity.Inventory{
+						ProductID:  i.ProductID,
+						LocationID: i.LocationID,
+						Quantity:   0,
+					}
+					if err := tx.Create(&inv).Error; err != nil {
+						tx.Rollback()
+						return errors.New("không thể tạo inventory mới")
+					}
+				} else {
+					tx.Rollback()
+					return errors.New("lỗi khi tìm inventory")
+				}
+			}
+			// Check if there's enough quantity to export
+			if inv.Quantity < i.Quantity {
 				tx.Rollback()
-				return errors.New("inventory không tồn tại")
+				return errors.New("không đủ hàng trong kho để xuất")
 			}
 			inv.Quantity -= i.Quantity
 			tx.Save(&inv)

@@ -128,6 +128,8 @@ func (c *OrderController) GetImportByID(ctx *gin.Context) {
 
 	var data entity.Import
 	if err := c.Service.DB.Preload("Items.Product").
+		Preload("Items.Location.Parent").
+		Preload("Items.Location.Parent.Parent").
 		First(&data, id).Error; err != nil {
 
 		ctx.JSON(404, gin.H{"error": "Import not found"})
@@ -142,6 +144,8 @@ func (c *OrderController) GetExportByID(ctx *gin.Context) {
 
 	var data entity.Export
 	if err := c.Service.DB.Preload("Items.Product").
+		Preload("Items.Location.Parent").
+		Preload("Items.Location.Parent.Parent").
 		First(&data, id).Error; err != nil {
 
 		ctx.JSON(404, gin.H{"error": "Export not found"})

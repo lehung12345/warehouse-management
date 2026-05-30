@@ -88,7 +88,7 @@
 // }
 
 //bản giao diện
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
@@ -97,9 +97,62 @@ export default function CreateExportPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [code, setCode] = useState("");
   const [items, setItems] = useState<any[]>([]);
   const [errors, setErrors] = useState<any>({});
+  const [warnings, setWarnings] = useState<any>({});
+  const [products, setProducts] = useState<any[]>([]);
+  const [locations, setLocations] = useState<any[]>([]);
+  const [inventories, setInventories] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchLocations();
+    fetchInventories();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await api.get("/api/products");
+      setProducts(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchLocations = async () => {
+    try {
+      const res = await api.get("/api/locations/tree");
+      setLocations(res.data || []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchInventories = async () => {
+    try {
+      const res = await api.get("/api/inventories");
+      // Handle different response structures
+      const data = res.data?.data || res.data || [];
+      setInventories(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+      setInventories([]);
+    }
+  };
+
+  // Flatten tree to array with indentation for display
+  const flattenLocations = (nodes: any[], level = 0): any[] => {
+    let result: any[] = [];
+    nodes.forEach((node) => {
+      result.push({ ...node, level });
+      if (node.children && node.children.length > 0) {
+        result = result.concat(flattenLocations(node.children, level + 1));
+      }
+    });
+    return result;
+  };
+
+  const flatLocations = flattenLocations(locations);
 
   /* ================= CRUD ITEM ================= */
   const addItem = () => {
@@ -119,26 +172,49 @@ export default function CreateExportPage() {
   /* ================= VALIDATE ================= */
   const validate = () => {
     let newErrors: any = {};
-
-    if (!code.trim()) {
-      newErrors.code = "Không được để trống mã đơn";
-    }
+    let newWarnings: any = {};
 
     if (items.length === 0) {
       newErrors.items = "Phải có ít nhất 1 sản phẩm";
     }
 
     const itemErrors: any[] = [];
+    const itemWarnings: any[] = [];
 
     items.forEach((item, index) => {
       let err: any = {};
+      let warn: any = {};
 
       if (!item.product_id || item.product_id <= 0) {
-        err.product_id = "Product ID > 0";
+        err.product_id = "Chọn sản phẩm";
       }
 
       if (!item.location_id || item.location_id <= 0) {
-        err.location_id = "Location ID > 0";
+        err.location_id = "Chọn vị trí";
+      } else {
+        // Validate location must be BIN
+        const selectedLocation = flatLocations.find((loc) => loc.id === item.location_id);
+        if (selectedLocation && selectedLocation.type !== "BIN") {
+          err.location_id = "Chỉ chọn vị trí BIN";
+        }
+
+        // Validate quantity <= BIN capacity
+        if (selectedLocation && item.quantity > selectedLocation.capacity) {
+          err.quantity = `Số lượng không vượt quá ${selectedLocation.capacity}`;
+        }
+
+        // Check stock availability (warning only, not error)
+        if (item.product_id && item.location_id && item.quantity > 0) {
+          const inventoryList = Array.isArray(inventories) ? inventories : [];
+          const inventoryRecord = inventoryList.find(
+            (inv) => inv.product_id === item.product_id && inv.location_id === item.location_id
+          );
+          const availableStock = inventoryRecord ? inventoryRecord.quantity : 0;
+          
+          if (item.quantity > availableStock) {
+            warn.quantity = `Cảnh báo: Kho chỉ còn ${availableStock} sản phẩm này`;
+          }
+        }
       }
 
       if (!item.quantity || item.quantity <= 0) {
@@ -146,26 +222,40 @@ export default function CreateExportPage() {
       }
 
       itemErrors[index] = err;
+      itemWarnings[index] = warn;
     });
 
     newErrors.itemErrors = itemErrors;
+    newWarnings.itemWarnings = itemWarnings;
 
     setErrors(newErrors);
+    setWarnings(newWarnings);
 
     const hasItemError = itemErrors.some(
       (e) => Object.keys(e).length > 0
     );
 
-    return !newErrors.code && !newErrors.items && !hasItemError;
+    return !newErrors.items && !hasItemError;
   };
 
   /* ================= SUBMIT ================= */
   const handleCreate = async () => {
     if (!validate()) return;
 
+    // Check if there are any stock warnings
+    const hasStockWarnings = Object.values(warnings.itemWarnings || {}).some(
+      (warn: any) => warn.quantity
+    );
+
+    if (hasStockWarnings) {
+      const confirmed = confirm(
+        "Cảnh báo: Một số sản phẩm có số lượng xuất vượt quá tồn kho hiện tại. Bạn có chắc muốn tiếp tục tạo đơn?"
+      );
+      if (!confirmed) return;
+    }
+
     try {
       await api.post("/api/orders/export", {
-        code,
         user_id: user?.id,
         status: "PENDING",
         items,
@@ -196,18 +286,6 @@ export default function CreateExportPage() {
         {/* CARD */}
         <div style={card}>
 
-          {/* CODE */}
-          <div style={{ marginBottom: "20px" }}>
-            <label style={label}>Mã đơn</label>
-            <input
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="VD: EXP-001"
-              style={input}
-            />
-            {errors.code && <p style={errorText}>{errors.code}</p>}
-          </div>
-
           {/* ITEMS */}
           <div style={{ marginBottom: "20px" }}>
             <div style={rowBetween}>
@@ -226,23 +304,37 @@ export default function CreateExportPage() {
             <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
               {items.map((item, index) => (
                 <div key={index} style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  
+
                   <div style={itemRow}>
-                    <input
-                      placeholder="Product ID"
-                      style={inputSmall}
+                    <select
+                      value={item.product_id || ""}
                       onChange={(e) =>
                         updateItem(index, "product_id", Number(e.target.value))
                       }
-                    />
-
-                    <input
-                      placeholder="Location ID"
                       style={inputSmall}
+                    >
+                      <option value="">Chọn sản phẩm</option>
+                      {products.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <select
+                      value={item.location_id || ""}
                       onChange={(e) =>
                         updateItem(index, "location_id", Number(e.target.value))
                       }
-                    />
+                      style={inputSmall}
+                    >
+                      <option value="">Chọn vị trí</option>
+                      {flatLocations.map((loc) => (
+                        <option key={loc.id} value={loc.id}>
+                          {"  ".repeat(loc.level)}{loc.name} ({loc.type})
+                        </option>
+                      ))}
+                    </select>
 
                     <input
                       type="number"
@@ -270,6 +362,15 @@ export default function CreateExportPage() {
                       {errors.itemErrors?.[index]?.quantity}
                     </span>
                   </div>
+
+                  {/* WARNINGS */}
+                  {warnings.itemWarnings?.[index]?.quantity && (
+                    <div style={{ marginTop: "4px" }}>
+                      <span style={warningText}>
+                        ⚠️ {warnings.itemWarnings?.[index]?.quantity}
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -375,5 +476,10 @@ const btnDelete = {
 
 const errorText = {
   color: "#EF4444",
+  fontSize: "12px",
+};
+
+const warningText = {
+  color: "#F59E0B",
   fontSize: "12px",
 };
