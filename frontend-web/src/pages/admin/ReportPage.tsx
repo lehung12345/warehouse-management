@@ -386,8 +386,10 @@ ChartJS.register(
 
 type TabType = "importExport" | "stock" | "top";
 
+import AdminLayout from "./AdminLayout";
+
 export default function ReportPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>("importExport");
 
@@ -396,11 +398,6 @@ export default function ReportPage() {
   const [topProducts, setTopProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
-  };
 
   const getAuthHeader = () => {
     const token = localStorage.getItem("token");
@@ -466,103 +463,34 @@ export default function ReportPage() {
     "#EC4899", "#8B5CF6", "#14B8A6", "#F43F5E", "#10B981"
   ];
 
-  if (loading) return <div className="dashboard-main" style={{ color: "#fff", padding: 24 }}>Đang tải dữ liệu...</div>;
+  if (loading) return <AdminLayout><div style={{ color: "#fff", padding: 24 }}>Đang tải dữ liệu...</div></AdminLayout>;
 
   if (error) return (
-    <div className="dashboard-main" style={{ color: "#fff", padding: 24 }}>
-      <div style={{ background: "#1F2937", padding: "20px", borderRadius: "12px", border: "1px solid #EF4444" }}>
-        <h3 style={{ color: "#EF4444", marginBottom: "12px" }}>Lỗi tải dữ liệu</h3>
-        <p style={{ color: "#9CA3AF", marginBottom: "16px" }}>{error}</p>
-        <button
-          onClick={fetchReports}
-          style={{
-            background: "#4F46E5",
-            color: "#fff",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            border: "none",
-            cursor: "pointer"
-          }}
-        >
-          Thử lại
-        </button>
+    <AdminLayout>
+      <div style={{ color: "#fff", padding: 24 }}>
+        <div style={{ background: "#1F2937", padding: "20px", borderRadius: "12px", border: "1px solid #EF4444" }}>
+          <h3 style={{ color: "#EF4444", marginBottom: "12px" }}>Lỗi tải dữ liệu</h3>
+          <p style={{ color: "#9CA3AF", marginBottom: "16px" }}>{error}</p>
+          <button
+            onClick={fetchReports}
+            style={{
+              background: "#4F46E5",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            Thử lại
+          </button>
+        </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 
   return (
-    <div className="dashboard-root">
-      {/* Sidebar đồng bộ hệ thống */}
-      <aside className="sidebar">
-        <div className="sidebar-brand" onClick={() => navigate("/admin")} style={{ cursor: 'pointer' }}>
-          <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
-            <rect width="48" height="48" rx="12" fill="url(#sideGrad)" />
-            <path d="M10 18L24 10L38 18V30L24 38L10 30V18Z" stroke="white" strokeWidth="2.5" fill="none" />
-            <defs>
-              <linearGradient id="sideGrad" x1="0" y1="0" x2="48" y2="48">
-                <stop stopColor="#6366F1" />
-                <stop offset="1" stopColor="#8B5CF6" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <span>WareFlow</span>
-        </div>
-
-        <nav className="sidebar-nav">
-          <div className="nav-section-title">Quản lý</div>
-          <a className="nav-item" href="/admin">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            </svg>
-            Dashboard
-          </a>
-          <a className="nav-item" href="/admin/products">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-            Sản phẩm
-          </a>
-          <a className="nav-item" href="/admin/locations">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Kho
-          </a>
-          <div className="nav-section-title">Đơn hàng</div>
-          <a className="nav-item" href="/admin/orders">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-            </svg>
-            Đơn hàng
-          </a>
-          <a className="nav-item active" href="/admin/reports">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            Báo cáo
-          </a>
-        </nav>
-
-        <div className="sidebar-footer">
-          <div className="user-info">
-            <div className="user-avatar">{user?.username?.[0]?.toUpperCase()}</div>
-            <div>
-              <p className="user-name">{user?.username}</p>
-              <p className="user-role-badge">ADMIN</p>
-            </div>
-          </div>
-          <button className="btn-logout" onClick={handleLogout} id="logout-btn">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Đăng xuất
-          </button>
-        </div>
-      </aside>
-
-      {/* Phần nội dung chính (Main Content) */}
-      <main className="dashboard-main" style={{ padding: 24, minHeight: "100vh", background: "#111827" }}>
+    <AdminLayout>
 
         {/* HEADER */}
         <h1 style={{ color: "#fff", marginBottom: 24 }}>📈 Reports Dashboard</h1>
@@ -849,8 +777,7 @@ export default function ReportPage() {
         )}
 
       </div>
-      </main>
-    </div>
+    </AdminLayout>
   );
 }
 

@@ -327,6 +327,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/auth";
+import AdminLayout from "./AdminLayout";
 
 export default function ImportDetailPage() {
   const { id } = useParams();
@@ -404,12 +405,11 @@ export default function ImportDetailPage() {
   };
 
   if (!order) {
-    return <div style={{ color: "#fff", padding: 20 }}>Loading...</div>;
+    return <AdminLayout><div style={{ color: "#fff", padding: 20 }}>Loading...</div></AdminLayout>;
   }
 
   return (
-    <div className="dashboard-root">
-      <main className="dashboard-main" style={{ padding: "24px" }}>
+    <AdminLayout>
         <div style={{ marginBottom: "24px" }}>
           <h1 style={{ fontSize: "26px", fontWeight: 700, color: "#fff" }}>
             📥 Chi tiết đơn nhập
@@ -497,8 +497,7 @@ export default function ImportDetailPage() {
         <button onClick={() => navigate(-1)} style={btnSecondary}>
           ← Quay lại
         </button>
-      </main>
-    </div>
+    </AdminLayout>
   );
 }
 

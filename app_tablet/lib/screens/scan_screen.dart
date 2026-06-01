@@ -632,7 +632,7 @@ class _ScanScreenState extends State<ScanScreen> {
       if (widget.isImport) {
         message = await ScanService.scanImport(
           importId: orderId!,
-          productId: int.parse(productId),
+          barcode: productId,
           locationId: selectedLocationId!,
           quantity: quantity,
           token: token,
@@ -640,7 +640,7 @@ class _ScanScreenState extends State<ScanScreen> {
       } else {
         message = await ScanService.scanExport(
           exportId: orderId!,
-          productId: int.parse(productId),
+          barcode: productId,
           locationId: selectedLocationId!,
           quantity: quantity,
           token: token,

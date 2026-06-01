@@ -194,9 +194,17 @@ func (s *ScanService) ScanImport(importID uint, productID uint, locationID uint,
 
 	var item entity.ImportItem
 
+	// Try with location_id first (new behavior)
 	err := tx.
 		Where("import_id = ? AND product_id = ? AND location_id = ?", importID, productID, locationID).
 		First(&item).Error
+
+	// If not found, try without location_id (backward compatibility)
+	if err != nil {
+		err = tx.
+			Where("import_id = ? AND product_id = ?", importID, productID).
+			First(&item).Error
+	}
 
 	if err != nil {
 		tx.Rollback()
@@ -287,9 +295,17 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint,
 
 	var item entity.ExportItem
 
+	// Try with location_id first (new behavior)
 	err := tx.
 		Where("export_id = ? AND product_id = ? AND location_id = ?", exportID, productID, locationID).
 		First(&item).Error
+
+	// If not found, try without location_id (backward compatibility)
+	if err != nil {
+		err = tx.
+			Where("export_id = ? AND product_id = ?", exportID, productID).
+			First(&item).Error
+	}
 
 	if err != nil {
 		tx.Rollback()

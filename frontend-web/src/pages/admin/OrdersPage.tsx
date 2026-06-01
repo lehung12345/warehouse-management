@@ -787,9 +787,10 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../api/auth";
+import AdminLayout from "./AdminLayout";
 
 export default function OrdersPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [imports, setImports] = useState<any[]>([]);
@@ -813,11 +814,6 @@ export default function OrdersPage() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
-  };
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return "—";
@@ -874,36 +870,7 @@ export default function OrdersPage() {
   const displayName = user?.username ? `${user.username} (Admin)` : "Administrator";
 
   return (
-    <div className="dashboard-root">
-      {/* SIDEBAR */}
-      <aside className="sidebar">
-        <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-          WareFlow
-        </div>
-        <nav className="sidebar-nav">
-          <Link to="/admin">Dashboard</Link>
-          <Link to="/admin/products">Sản phẩm</Link>
-          <Link to="/admin/inventory">Tồn kho</Link>
-          <Link className="active" to="/admin/orders">
-            Đơn hàng
-          </Link>
-        </nav>
-        <div className="sidebar-footer">
-          <div style={{ fontWeight: 500 }}>{user?.username || "Nguyễn Huy An"}</div>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      </aside>
-
-      {/* MAIN CONTENT */}
-      <main
-        className="dashboard-main"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
+    <AdminLayout>
         {/* Header */}
         <div
           style={{
@@ -1329,7 +1296,6 @@ export default function OrdersPage() {
             </div>
           </div>
         </div>
-      </main>
 
       <style>{`
         .table-row-hover:hover {
@@ -1349,6 +1315,6 @@ export default function OrdersPage() {
           background: rgba(255, 255, 255, 0.2);
         }
       `}</style>
-    </div>
+    </AdminLayout>
   );
 }

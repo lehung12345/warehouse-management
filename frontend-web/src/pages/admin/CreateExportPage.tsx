@@ -92,6 +92,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/auth";
 import { useAuth } from "../../context/AuthContext";
+import AdminLayout from "./AdminLayout";
 
 export default function CreateExportPage() {
   const { user } = useAuth();
@@ -270,8 +271,7 @@ export default function CreateExportPage() {
   };
 
   return (
-    <div className="dashboard-root">
-      <main className="dashboard-main" style={{ padding: "24px" }}>
+    <AdminLayout>
 
         {/* HEADER */}
         <div style={{ marginBottom: "24px" }}>
@@ -387,8 +387,7 @@ export default function CreateExportPage() {
             </button>
           </div>
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   );
 }
 

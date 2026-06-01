@@ -567,9 +567,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../api/auth";
+import AdminLayout from "./AdminLayout";
 
 export default function InventoryPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [inventories, setInventories] = useState<any[]>([]);
@@ -600,11 +601,6 @@ export default function InventoryPage() {
     setCurrentPage(1);
   }, [searchTerm]);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
-  };
-
   const getProductInitial = (name: string) => {
     if (!name) return "P";
     const parts = name.trim().split(" ");
@@ -624,26 +620,7 @@ export default function InventoryPage() {
   const lowStockCount = inventories.filter((item) => item.status === "LOW").length;
 
   return (
-    <div className="dashboard-root">
-
-      {/* ── SIDEBAR GỐC CỦA BẠN ────────────────── */}
-      <aside className="sidebar">
-        <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-          WareFlow
-        </div>
-        <nav className="sidebar-nav">
-          <a href="/admin">Dashboard</a>
-          <a href="/admin/products">Sản phẩm</a>
-          <a className="active" href="/admin/inventory">Tồn kho</a>
-        </nav>
-        <div className="sidebar-footer">
-          <div>{user?.username}</div>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      </aside>
-
-      {/* ── PHẦN MAIN BÊN PHẢI (FIX NỔI BỌT THANH PHÂN TRANG) ────────────────── */}
-      <main className="dashboard-main">
+    <AdminLayout>
 
         {/* Tiêu đề trang */}
         <div style={{ marginBottom: "20px" }}>
@@ -856,7 +833,6 @@ export default function InventoryPage() {
           </div>
 
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   );
 }

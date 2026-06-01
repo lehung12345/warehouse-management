@@ -397,8 +397,10 @@ type Location = {
   children?: Location[];
 };
 
+import AdminLayout from "./AdminLayout";
+
 export default function LocationPage() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [tree, setTree] = useState<Location[]>([]);
@@ -537,36 +539,8 @@ export default function LocationPage() {
     });
   };
 
-  // ================= LOGOUT =================
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
-  };
-
   return (
-    <div className="dashboard-root">
-      {/* SIDEBAR GỐC CHUẨN WAREFLOW */}
-      <aside className="sidebar">
-        <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-          WareFlow
-        </div>
-
-        <nav className="sidebar-nav">
-          <a href="/admin">Dashboard</a>
-          <a href="/admin/products">Sản phẩm</a>
-          <a href="/admin/inventory">Tồn kho</a>
-          <a href="/admin/orders">Đơn hàng</a>
-          <a className="active" href="/admin/locations">Kho</a>
-        </nav>
-
-        <div className="sidebar-footer">
-          <div>{user?.username}</div>
-          <button onClick={handleLogout}>Logout</button>
-        </div>
-      </aside>
-
-      {/* MAIN LAYOUT */}
-      <main className="dashboard-main">
+    <AdminLayout>
         <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "20px" }}>
           📍 Quản lý vị trí kho
         </h1>
@@ -806,7 +780,6 @@ export default function LocationPage() {
             })}
           </div>
         )}
-      </main>
 
       {/* Tối ưu hiệu ứng Hover & Focus */}
       <style>{`
@@ -830,6 +803,6 @@ export default function LocationPage() {
           border-color: rgba(255, 255, 255, 0.1) !important;
         }
       `}</style>
-    </div>
+    </AdminLayout>
   );
 }

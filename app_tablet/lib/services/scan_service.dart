@@ -72,7 +72,7 @@ class ScanService {
 
   static Future<String> scanImport({
     required int importId,
-    required int productId,
+    required String barcode,
     required int locationId,
     required int quantity,
     required String token,
@@ -86,7 +86,7 @@ class ScanService {
         },
         body: jsonEncode({
           "import_id": importId,
-          "product_id": productId,
+          "barcode": barcode,
           "location_id": locationId,
           "quantity": quantity,
         }),
@@ -103,7 +103,7 @@ class ScanService {
 
   static Future<String> scanExport({
     required int exportId,
-    required int productId,
+    required String barcode,
     required int locationId,
     required int quantity,
     required String token,
@@ -117,7 +117,7 @@ class ScanService {
         },
         body: jsonEncode({
           "export_id": exportId,
-          "product_id": productId,
+          "barcode": barcode,
           "location_id": locationId,
           "quantity": quantity,
         }),

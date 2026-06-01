@@ -243,9 +243,10 @@ import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import AdminLayout from './AdminLayout'
 
 export default function AdminDashboard() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
   const [stats, setStats] = useState({
@@ -255,11 +256,6 @@ export default function AdminDashboard() {
     totalExports: 0
   })
   const [loading, setLoading] = useState(true)
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login', { replace: true })
-  }
 
   const getAuthHeader = () => {
     const token = localStorage.getItem("token")
@@ -305,61 +301,8 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="dashboard-root">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="sidebar-brand">
-          <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
-            <rect width="48" height="48" rx="12" fill="url(#sideGrad)" />
-            <path d="M10 18L24 10L38 18V30L24 38L10 30V18Z" stroke="white" strokeWidth="2.5" fill="none" />
-            <defs>
-              <linearGradient id="sideGrad" x1="0" y1="0" x2="48" y2="48">
-                <stop stopColor="#6366F1" />
-                <stop offset="1" stopColor="#8B5CF6" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <span>WareFlow</span>
-        </div>
-
-        <nav className="sidebar-nav">
-          <div className="nav-section-title">Quản lý</div>
-          <a className="nav-item active" href="/admin">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            </svg>
-            Dashboard
-          </a>
-          <a className="nav-item" href="/admin/users">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            Nhân viên
-          </a>
-        </nav>
-
-        <div className="sidebar-footer">
-          <div className="user-info">
-            <div className="user-avatar">{user?.username?.[0]?.toUpperCase()}</div>
-            <div>
-              <p className="user-name">{user?.username}</p>
-              <p className="user-role-badge">ADMIN</p>
-            </div>
-          </div>
-          <button className="btn-logout" onClick={handleLogout} id="logout-btn">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Đăng xuất
-          </button>
-        </div>
-      </aside>
-
+    <AdminLayout>
       {/* Main content */}
-      <main className="dashboard-main">
         <header className="dashboard-header">
           <div>
             <h1>Dashboard</h1>
@@ -471,7 +414,6 @@ export default function AdminDashboard() {
             </button>
           </div>
         </div>
-      </main>
-    </div>
+    </AdminLayout>
   )
 }
