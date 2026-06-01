@@ -47,7 +47,7 @@ export interface StaffUser {
 }
 
 // ─── Auth ───────────────────────────────────────
-export const loginAPI = (data: { username: string; email: string; password: string }) =>
+export const loginAPI = (data: { username: string; email: string; password: string; platform: 'web' | 'mobile' }) =>
   api.post<LoginResponse>('/auth/login', data)
 
 // ─── Admin – User Management ────────────────────

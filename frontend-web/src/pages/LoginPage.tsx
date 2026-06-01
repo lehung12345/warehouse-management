@@ -16,7 +16,7 @@ export default function LoginPage() {
   // Nếu đã đăng nhập thì redirect ngay
   useEffect(() => {
     if (!isLoading && user) {
-      navigate(user.role === 'ADMIN' ? '/admin' : '/staff', { replace: true })
+      navigate('/admin', { replace: true })
     }
   }, [user, isLoading, navigate])
 
@@ -34,6 +34,7 @@ export default function LoginPage() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        (err as Error).message ||
         'Đăng nhập thất bại. Vui lòng thử lại.'
       setError(msg)
     } finally {
@@ -223,10 +224,6 @@ export default function LoginPage() {
                 <span className="role-badge admin-badge">
                   <span className="badge-dot" />
                   Admin → Web
-                </span>
-                <span className="role-badge staff-badge">
-                  <span className="badge-dot" />
-                  Nhân viên → App
                 </span>
               </div>
               <p className="login-hint">

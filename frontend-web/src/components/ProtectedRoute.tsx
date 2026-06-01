@@ -19,18 +19,13 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     )
   }
 
-  // Chưa đăng nhập
+  // Chưa đăng nhập hoặc không có quyền
   if (!token || !user) {
     return <Navigate to="/login" replace />
   }
 
-  // Sai role
   if (requiredRole && user.role !== requiredRole) {
-    // ADMIN có thể xem cả staff page, nhưng STAFF không thể vào admin
-    if (requiredRole === 'ADMIN') {
-      return <Navigate to="/staff" replace />
-    }
-    return <Navigate to="/admin" replace />
+    return <Navigate to="/login" replace />
   }
 
   return <>{children}</>

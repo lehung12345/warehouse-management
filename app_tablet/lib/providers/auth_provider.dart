@@ -38,9 +38,14 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> login(String username, String email, String password) async {
     final result = await AuthService.login(username, email, password);
-    
+    final user = result['user'] as UserModel;
+
+    if (!user.isStaff) {
+      throw const AuthException('Thông tin bị sai yêu cầu nhập lại');
+    }
+
     _token = result['token'] as String;
-    _user = result['user'] as UserModel;
+    _user = user;
 
     // Lưu vào storage
     final prefs = await SharedPreferences.getInstance();

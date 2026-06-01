@@ -227,6 +227,14 @@ export default function CreateImportPage() {
 
   return (
     <AdminLayout>
+      <style>{`
+        select:focus { border-color: #4F46E5 !important; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important; }
+        select:hover { border-color: rgba(255,255,255,0.2) !important; }
+        select::-webkit-scrollbar { width: 8px; }
+        select::-webkit-scrollbar-track { background: #1f2937; border-radius: 4px; }
+        select::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        select::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+      `}</style>
 
         {/* HEADER */}
         <div style={{ marginBottom: "24px" }}>
@@ -364,11 +372,18 @@ const input = {
 
 const inputSmall = {
   flex: 1,
-  padding: "10px",
+  padding: "10px 36px 10px 12px",
   borderRadius: "8px",
   border: "1px solid rgba(255,255,255,0.1)",
   background: "#111827",
   color: "#fff",
+  appearance: "none" as "none",
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "right 10px center",
+  backgroundSize: "16px",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
 };
 
 const itemRow = {

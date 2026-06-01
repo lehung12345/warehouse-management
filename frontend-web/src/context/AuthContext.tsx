@@ -17,7 +17,6 @@ interface AuthContextType {
   login: (username: string, email: string, password: string) => Promise<void>
   logout: () => void
   isAdmin: () => boolean
-  isStaff: () => boolean
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -33,8 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const savedUser = localStorage.getItem('user')
     if (savedToken && savedUser) {
       try {
-        setToken(savedToken)
-        setUser(JSON.parse(savedUser))
+        const parsedUser = JSON.parse(savedUser) as User
+        if (parsedUser.role === 'ADMIN') {
+          setToken(savedToken)
+          setUser(parsedUser)
+        } else {
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+        }
       } catch {
         localStorage.removeItem('token')
         localStorage.removeItem('user')
@@ -44,8 +49,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (username: string, email: string, password: string) => {
-    const res = await loginAPI({ username, email, password })
+    const res = await loginAPI({ username, email, password, platform: 'web' })
     const { token: newToken, user: newUser } = res.data
+
+    if (newUser.role !== 'ADMIN') {
+      throw new Error('Thông tin bị sai yêu cầu nhập lại')
+    }
 
     localStorage.setItem('token', newToken)
     localStorage.setItem('user', JSON.stringify(newUser))
@@ -62,10 +71,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const isAdmin = () => user?.role === 'ADMIN'
-  const isStaff = () => user?.role === 'STAFF'
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, logout, isAdmin, isStaff }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   )

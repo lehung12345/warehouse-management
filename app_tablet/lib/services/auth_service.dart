@@ -31,6 +31,7 @@ class AuthService {
               'username': username,
               'email': email,
               'password': password,
+              'platform': 'mobile',
             }),
           )
           .timeout(_timeout);

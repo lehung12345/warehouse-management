@@ -79,19 +79,16 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
     webProtected := r.Group("/")
     webProtected.Use(middleware.AuthMiddleware())
     {
-        // Giữ nguyên các route admin không có tiền tố /api để web admin hoạt động bình thường
         adminGroup := webProtected.Group("/admin")
         adminGroup.Use(middleware.RequireRole("ADMIN"))
         {
             controllers.RegisterUserManagementRoutes(adminGroup, db)
             controllers.RegisterProductRoutes(adminGroup, db)
+            InventoryRoutes(adminGroup, db) // /admin/inventories
+            LocationRoutes(adminGroup, db)  // /admin/locations
+            OrderRoutes(adminGroup, db)     // /admin/orders/...
+            ReportRoutes(adminGroup, db)    // /admin/reports/...
         }
-
-        // Giữ nguyên các hàm route cũ cho Web Admin gọi trực tiếp
-        InventoryRoutes(webProtected, db) // /inventories
-        LocationRoutes(webProtected, db)  // /locations
-        OrderRoutes(webProtected, db)     // /orders/...
-        ReportRoutes(webProtected, db)    // /reports/...
     }
 
     // =============================================
@@ -111,7 +108,7 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
         })
 
         staffGroup := apiProtected.Group("/staff")
-        staffGroup.Use(middleware.RequireRole("STAFF", "ADMIN"))
+        staffGroup.Use(middleware.RequireRole("STAFF"))
         {
             staffGroup.GET("/me", func(c *gin.Context) {
                 c.JSON(200, gin.H{

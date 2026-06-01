@@ -16,6 +16,7 @@ type LoginRequest struct {
 	Username string `json:"username" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
+	Platform string `json:"platform" binding:"required,oneof=web mobile"`
 }
 
 type CreateUserRequest struct {
@@ -73,6 +74,16 @@ func loginHandler(db *gorm.DB) gin.HandlerFunc {
 		// Kiểm tra mật khẩu
 		if !utils.CheckPasswordHash(user.Password, req.Password) {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Tài khoản không tồn tại hoặc sai thông tin"})
+			return
+		}
+
+		// Kiểm tra nền tảng đăng nhập
+		if req.Platform == "web" && user.Role != "ADMIN" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Thông tin bị sai yêu cầu nhập lại"})
+			return
+		}
+		if req.Platform == "mobile" && user.Role != "STAFF" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Thông tin bị sai yêu cầu nhập lại"})
 			return
 		}
 

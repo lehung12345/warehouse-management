@@ -4,23 +4,22 @@ import ProtectedRoute from './components/ProtectedRoute'
 import LoginPage from './pages/LoginPage'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import UserManagement from './pages/admin/UserManagement'
-import StaffDashboard from './pages/staff/StaffDashboard'
-import ProductPage from "./pages/admin/ProductPage";
-import InventoryPage from "./pages/admin/InventoryPage";
-import LocationPage from "./pages/admin/LocationPage";
-import ReportPage from "./pages/admin/ReportPage";
-import OrdersPage from "./pages/admin/OrdersPage";
-import CreateImportPage from "./pages/admin/CreateImportPage";
-import CreateExportPage from "./pages/admin/CreateExportPage";
-import ExportDetailPage from './pages/admin/ExportDetailPage';
-import ImportDetailPage from './pages/admin/ImportDetailPage';
+import ProductPage from './pages/admin/ProductPage'
+import InventoryPage from './pages/admin/InventoryPage'
+import LocationPage from './pages/admin/LocationPage'
+import ReportPage from './pages/admin/ReportPage'
+import OrdersPage from './pages/admin/OrdersPage'
+import CreateImportPage from './pages/admin/CreateImportPage'
+import CreateExportPage from './pages/admin/CreateExportPage'
+import ExportDetailPage from './pages/admin/ExportDetailPage'
+import ImportDetailPage from './pages/admin/ImportDetailPage'
 
 
 function RootRedirect() {
   const { user, isLoading } = useAuth()
   if (isLoading) return <div className="loading-screen"><div className="loading-spinner" /></div>
-  if (!user) return <Navigate to="/login" replace />
-  return <Navigate to={user.role === 'ADMIN' ? '/admin' : '/staff'} replace />
+  if (!user || user.role !== 'ADMIN') return <Navigate to="/login" replace />
+  return <Navigate to="/admin" replace />
 }
 
 export default function App() {
@@ -134,13 +133,6 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Staff routes */}
-          <Route path="/staff" element={
-            <ProtectedRoute requiredRole="STAFF">
-              <StaffDashboard />
-            </ProtectedRoute>
-          } />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
