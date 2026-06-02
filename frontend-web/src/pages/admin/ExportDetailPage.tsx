@@ -372,6 +372,18 @@ export default function ExportDetailPage() {
     }
   };
 
+  const handleApprove = async () => {
+    if (!confirm("Bạn có chắc chắn muốn duyệt đơn xuất này? Hàng sẽ được trừ khỏi tồn kho.")) return;
+    try {
+      await api.post(`/api/orders/export/${id}/approve`);
+      fetchDetail();
+      alert("Đã duyệt đơn xuất thành công!");
+    } catch (err) {
+      console.error(err);
+      alert("Duyệt đơn thất bại");
+    }
+  };
+
   const renderStatus = (status: string) => {
     let bg = "rgba(107,114,128,0.1)";
     let color = "#9CA3AF";
@@ -385,6 +397,9 @@ export default function ExportDetailPage() {
     } else if (status === "CANCELLED") {
       bg = "rgba(239,68,68,0.1)";
       color = "#EF4444";
+    } else if (status === "APPROVED") {
+      bg = "rgba(59,130,246,0.1)";
+      color = "#3B82F6";
     }
 
     return (
@@ -398,7 +413,7 @@ export default function ExportDetailPage() {
           fontWeight: 600,
         }}
       >
-        {status}
+        {status === "APPROVED" ? "ĐÃ DUYỆT" : status}
       </span>
     );
   };
@@ -432,9 +447,21 @@ export default function ExportDetailPage() {
             </div>
           </div>
 
-          {order.status !== "DONE" && order.status !== "CANCELLED" && (
+          {order.status !== "DONE" && order.status !== "CANCELLED" && order.status !== "APPROVED" && (
             <button onClick={handleCancel} style={{ ...btnPrimary, background: "#EF4444" }}>
               🗑️ Hủy đơn
+            </button>
+          )}
+
+          {order.status === "DONE" && (
+            <button onClick={handleApprove} style={btnPrimary}>
+              ✅ Duyệt đơn
+            </button>
+          )}
+
+          {order.status === "APPROVED" && (
+            <button disabled style={{ ...btnPrimary, background: "#3B82F6", opacity: 0.7 }}>
+              ✅ Đã duyệt
             </button>
           )}
         </div>

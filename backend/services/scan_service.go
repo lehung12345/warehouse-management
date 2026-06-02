@@ -241,42 +241,12 @@ func (s *ScanService) ScanImport(importID uint, productID uint, locationID uint,
 		Where("scanned_quantity < quantity").
 		Count(&total)
 
-	// Nếu tất cả đã scan đủ → DONE
+	// Nếu tất cả đã scan đủ → DONE (không cập nhật inventory, chờ admin duyệt)
 	if total == 0 {
 		// Lấy lại order (có thể đã được cập nhật status)
 		tx.First(&order, importID)
 		order.Status = "DONE"
 		tx.Save(&order)
-
-		// Cập nhật inventory cho tất cả các item trong đơn
-		var items []entity.ImportItem
-		tx.Where("import_id = ?", importID).Find(&items)
-
-		for _, i := range items {
-			var inv entity.Inventory
-			if err := tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
-				First(&inv).Error; err != nil {
-				// If inventory doesn't exist, create it
-				if errors.Is(err, gorm.ErrRecordNotFound) {
-					inv = entity.Inventory{
-						ProductID:  i.ProductID,
-						LocationID: i.LocationID,
-						Quantity:   i.Quantity,
-					}
-					if err := tx.Create(&inv).Error; err != nil {
-						tx.Rollback()
-						return errors.New("không thể tạo inventory mới")
-					}
-				} else {
-					tx.Rollback()
-					return errors.New("lỗi khi tìm inventory")
-				}
-			} else {
-				// Inventory exists, update quantity
-				inv.Quantity += i.Quantity
-				tx.Save(&inv)
-			}
-		}
 	}
 
 	tx.Commit()
@@ -360,45 +330,12 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint,
 		Where("scanned_quantity < quantity").
 		Count(&total)
 
-	// Nếu tất cả đã scan đủ → DONE
+	// Nếu tất cả đã scan đủ → DONE (không cập nhật inventory, chờ admin duyệt)
 	if total == 0 {
 		// Lấy lại order (có thể đã được cập nhật status)
 		tx.First(&order, exportID)
 		order.Status = "DONE"
 		tx.Save(&order)
-
-		// Cập nhật inventory cho tất cả các item trong đơn
-		var items []entity.ExportItem
-		tx.Where("export_id = ?", exportID).Find(&items)
-
-		for _, i := range items {
-			var inv entity.Inventory
-			if err := tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
-				First(&inv).Error; err != nil {
-				// If inventory doesn't exist, create it with 0 quantity
-				if errors.Is(err, gorm.ErrRecordNotFound) {
-					inv = entity.Inventory{
-						ProductID:  i.ProductID,
-						LocationID: i.LocationID,
-						Quantity:   0,
-					}
-					if err := tx.Create(&inv).Error; err != nil {
-						tx.Rollback()
-						return errors.New("không thể tạo inventory mới")
-					}
-				} else {
-					tx.Rollback()
-					return errors.New("lỗi khi tìm inventory")
-				}
-			}
-			// Check if there's enough quantity to export
-			if inv.Quantity < i.Quantity {
-				tx.Rollback()
-				return errors.New("không đủ hàng trong kho để xuất")
-			}
-			inv.Quantity -= i.Quantity
-			tx.Save(&inv)
-		}
 	}
 
 	tx.Commit()

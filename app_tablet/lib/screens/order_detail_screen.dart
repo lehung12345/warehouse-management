@@ -174,14 +174,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 final item = order!['items'][index];
                 final scanned = item['scanned_quantity'] ?? 0;
                 final total = item['quantity'];
+                final location = item['location'];
                 return Card(
                   margin: const EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text(item['product']['name']),
-                    subtitle: Text('Cần: $total | Đã scan: $scanned'),
-                    trailing: scanned >= total
-                        ? const Icon(Icons.check_circle, color: Colors.green)
-                        : const Icon(Icons.pending, color: Colors.orange),
+                  child: InkWell(
+                    onTap: order?['status'] == 'CANCELLED' ? null : () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ScanScreen(
+                            isImport: widget.isImport,
+                            presetOrderId: widget.orderId,
+                            presetOrderCode: widget.orderCode,
+                            presetLocationId: location?['id'],
+                            presetLocationPath: location != null
+                                ? '${location['parent']?['parent']?['name'] ?? ''} > ${location['parent']?['name'] ?? ''} > ${location['name'] ?? ''}'
+                                : null,
+                          ),
+                        ),
+                      ).then((_) => _fetchDetail());
+                    },
+                    child: ListTile(
+                      title: Text(item['product']['name']),
+                      subtitle: Text('Cần: $total | Đã scan: $scanned'),
+                      trailing: scanned >= total
+                          ? const Icon(Icons.check_circle, color: Colors.green)
+                          : const Icon(Icons.pending, color: Colors.orange),
+                    ),
                   ),
                 );
               },
@@ -190,23 +209,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
-              onPressed: order?['status'] == 'CANCELLED' ? null : () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ScanScreen(
-                      isImport: widget.isImport,
-                      presetOrderId: widget.orderId,
-                      presetOrderCode: widget.orderCode,
-                    ),
-                  ),
-                ).then((_) => _fetchDetail());
-              },
+              onPressed: null, // Non-clickable, display only
               icon: const Icon(Icons.qr_code_scanner),
               label: Text(order?['status'] == 'CANCELLED' ? 'ĐƠN ĐÃ BỊ HỦY' : 'QUÉT SẢN PHẨM'),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                backgroundColor: order?['status'] == 'CANCELLED' ? Colors.grey : null,
+                backgroundColor: order?['status'] == 'CANCELLED' ? Colors.grey : Colors.blue,
               ),
             ),
           ),

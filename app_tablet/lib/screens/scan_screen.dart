@@ -544,7 +544,16 @@ class ScanScreen extends StatefulWidget {
   final bool isImport;
   final int? presetOrderId;
   final String? presetOrderCode;
-  const ScanScreen({super.key, required this.isImport, this.presetOrderId, this.presetOrderCode});
+  final int? presetLocationId;
+  final String? presetLocationPath;
+  const ScanScreen({
+    super.key,
+    required this.isImport,
+    this.presetOrderId,
+    this.presetOrderCode,
+    this.presetLocationId,
+    this.presetLocationPath,
+  });
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -568,6 +577,10 @@ class _ScanScreenState extends State<ScanScreen> {
     super.initState();
     if (widget.presetOrderId != null) {
       orderId = widget.presetOrderId;
+    }
+    if (widget.presetLocationId != null) {
+      selectedLocationId = widget.presetLocationId;
+      selectedLocationPath = widget.presetLocationPath ?? '';
     }
   }
 
@@ -770,9 +783,12 @@ class _ScanScreenState extends State<ScanScreen> {
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton.icon(
-                  onPressed: _pickLocation,
+                  onPressed: widget.presetLocationId != null ? null : _pickLocation,
                   icon: const Icon(Icons.place),
                   label: Text(selectedLocationPath.isEmpty ? "Chọn vị trí" : selectedLocationPath),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: widget.presetLocationId != null ? Colors.grey : null,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),

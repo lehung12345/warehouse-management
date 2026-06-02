@@ -242,3 +242,122 @@ func (s *OrderService) CancelExport(id uint) error {
 	}
 	return s.DB.Model(&order).Update("status", "CANCELLED").Error
 }
+
+func (s *OrderService) ApproveImport(id uint) error {
+	tx := s.DB.Begin()
+
+	var order entity.Import
+	if err := tx.First(&order, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if order.Status != "DONE" {
+		tx.Rollback()
+		return errors.New("chỉ có thể duyệt đơn hàng đã hoàn thành")
+	}
+
+	// Cập nhật status thành APPROVED
+	order.Status = "APPROVED"
+	if err := tx.Save(&order).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Cập nhật inventory cho tất cả các item trong đơn
+	var items []entity.ImportItem
+	if err := tx.Where("import_id = ?", id).Find(&items).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	for _, i := range items {
+		var inv entity.Inventory
+		if err := tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
+			First(&inv).Error; err != nil {
+			// If inventory doesn't exist, create it
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				inv = entity.Inventory{
+					ProductID:  i.ProductID,
+					LocationID: i.LocationID,
+					Quantity:   i.Quantity,
+				}
+				if err := tx.Create(&inv).Error; err != nil {
+					tx.Rollback()
+					return errors.New("không thể tạo inventory mới")
+				}
+			} else {
+				tx.Rollback()
+				return errors.New("lỗi khi tìm inventory")
+			}
+		} else {
+			// Inventory exists, update quantity
+			inv.Quantity += i.Quantity
+			tx.Save(&inv)
+		}
+	}
+
+	tx.Commit()
+	return nil
+}
+
+func (s *OrderService) ApproveExport(id uint) error {
+	tx := s.DB.Begin()
+
+	var order entity.Export
+	if err := tx.First(&order, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if order.Status != "DONE" {
+		tx.Rollback()
+		return errors.New("chỉ có thể duyệt đơn hàng đã hoàn thành")
+	}
+
+	// Cập nhật status thành APPROVED
+	order.Status = "APPROVED"
+	if err := tx.Save(&order).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// Cập nhật inventory cho tất cả các item trong đơn
+	var items []entity.ExportItem
+	if err := tx.Where("export_id = ?", id).Find(&items).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	for _, i := range items {
+		var inv entity.Inventory
+		if err := tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
+			First(&inv).Error; err != nil {
+			// If inventory doesn't exist, create it with 0 quantity
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				inv = entity.Inventory{
+					ProductID:  i.ProductID,
+					LocationID: i.LocationID,
+					Quantity:   0,
+				}
+				if err := tx.Create(&inv).Error; err != nil {
+					tx.Rollback()
+					return errors.New("không thể tạo inventory mới")
+				}
+			} else {
+				tx.Rollback()
+				return errors.New("lỗi khi tìm inventory")
+			}
+		}
+		// Check if there's enough quantity to export
+		if inv.Quantity < i.Quantity {
+			tx.Rollback()
+			return errors.New("không đủ hàng trong kho để xuất")
+		}
+		inv.Quantity -= i.Quantity
+		tx.Save(&inv)
+	}
+
+	tx.Commit()
+	return nil
+}

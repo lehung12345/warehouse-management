@@ -1326,7 +1326,7 @@ import { useAuth } from "../../context/AuthContext";
 import api from "../../api/auth";
 import AdminLayout from "./AdminLayout";
 
-type StatusFilter = "ALL" | "DONE" | "PROCESSING" | "PENDING" | "CANCELLED";
+type StatusFilter = "ALL" | "DONE" | "PROCESSING" | "PENDING" | "CANCELLED" | "APPROVED";
 
 export default function OrdersPage() {
   const { user } = useAuth();
@@ -1357,11 +1357,11 @@ export default function OrdersPage() {
     const tabParam = searchParams.get("tab");
     const statusParam = searchParams.get("status") as StatusFilter;
     const searchParam = searchParams.get("search");
-    
+
     if (tabParam === "import" || tabParam === "export") {
       setActiveTab(tabParam);
     }
-    if (statusParam && ["ALL", "DONE", "PROCESSING", "PENDING", "CANCELLED"].includes(statusParam)) {
+    if (statusParam && ["ALL", "DONE", "PROCESSING", "PENDING", "CANCELLED", "APPROVED"].includes(statusParam)) {
       setStatusFilter(statusParam);
     }
     if (searchParam) {
@@ -1395,6 +1395,7 @@ export default function OrdersPage() {
     PROCESSING: { bg: "rgba(245,158,11,0.1)",  color: "#F59E0B" },
     PENDING:    { bg: "rgba(99,102,241,0.1)",  color: "#818CF8" },
     CANCELLED:  { bg: "rgba(239,68,68,0.1)",   color: "#EF4444" },
+    APPROVED:   { bg: "rgba(59,130,246,0.1)",  color: "#3B82F6" },
   };
 
   const renderStatusBadge = (status: string) => {
@@ -1448,6 +1449,7 @@ export default function OrdersPage() {
     { key: "PROCESSING", label: "Đang xử lý",  color: "#F59E0B" },
     { key: "PENDING",    label: "Chờ duyệt",   color: "#818CF8" },
     { key: "CANCELLED",  label: "Đã hủy",      color: "#EF4444" },
+    { key: "APPROVED",   label: "Đã duyệt",    color: "#3B82F6" },
   ];
 
   const statusCount: Record<StatusFilter, number> = {
@@ -1456,6 +1458,7 @@ export default function OrdersPage() {
     PROCESSING: countByStatus("PROCESSING"),
     PENDING:    countByStatus("PENDING"),
     CANCELLED:  countByStatus("CANCELLED"),
+    APPROVED:   countByStatus("APPROVED"),
   };
 
   return (

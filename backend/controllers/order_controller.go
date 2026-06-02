@@ -154,3 +154,33 @@ func (c *OrderController) GetExportByID(ctx *gin.Context) {
 
 	ctx.JSON(200, data)
 }
+
+func (c *OrderController) ApproveImport(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "invalid id"})
+		return
+	}
+
+	if err := c.Service.ApproveImport(uint(id)); err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"message": "Import approved successfully"})
+}
+
+func (c *OrderController) ApproveExport(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "invalid id"})
+		return
+	}
+
+	if err := c.Service.ApproveExport(uint(id)); err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"message": "Export approved successfully"})
+}
