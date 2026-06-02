@@ -722,7 +722,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   TextField(
                     controller: productIdController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: "Product ID (nhập tay)"),
+                    decoration: const InputDecoration(labelText: "Barcode (nhập tay)"),
                   ),
                 const SizedBox(height: 12),
                 // Hiển thị mã code nếu có, nếu không thì hiển thị ô nhập ID
