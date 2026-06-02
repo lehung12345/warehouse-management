@@ -192,6 +192,11 @@ func (s *ScanService) ScanImport(importID uint, productID uint, locationID uint,
 		return errors.New("import order đã hoàn thành")
 	}
 
+	if order.Status == "CANCELLED" {
+		tx.Rollback()
+		return errors.New("import order đã bị hủy, không thể quét")
+	}
+
 	var item entity.ImportItem
 
 	// Try with location_id first (new behavior)
@@ -291,6 +296,11 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint,
 	if order.Status == "DONE" {
 		tx.Rollback()
 		return errors.New("export order đã hoàn thành")
+	}
+
+	if order.Status == "CANCELLED" {
+		tx.Rollback()
+		return errors.New("export order đã bị hủy, không thể quét")
 	}
 
 	var item entity.ExportItem

@@ -190,21 +190,24 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
-              onPressed: () {
+              onPressed: order?['status'] == 'CANCELLED' ? null : () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ScanScreen(
                       isImport: widget.isImport,
                       presetOrderId: widget.orderId,
-                      presetOrderCode: widget.orderCode, // ✅ truyền mã code
+                      presetOrderCode: widget.orderCode,
                     ),
                   ),
                 ).then((_) => _fetchDetail());
               },
               icon: const Icon(Icons.qr_code_scanner),
-              label: const Text('QUÉT SẢN PHẨM'),
-              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+              label: Text(order?['status'] == 'CANCELLED' ? 'ĐƠN ĐÃ BỊ HỦY' : 'QUÉT SẢN PHẨM'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: order?['status'] == 'CANCELLED' ? Colors.grey : null,
+              ),
             ),
           ),
         ],

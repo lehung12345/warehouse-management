@@ -1321,7 +1321,7 @@
 
 //bản sửa giao diện
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../api/auth";
 import AdminLayout from "./AdminLayout";
@@ -1331,11 +1331,13 @@ type StatusFilter = "ALL" | "DONE" | "PROCESSING" | "PENDING" | "CANCELLED";
 export default function OrdersPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [imports, setImports] = useState<any[]>([]);
   const [exports, setExports] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<"import" | "export">("import");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchData = async () => {
     try {
@@ -1350,11 +1352,35 @@ export default function OrdersPage() {
     }
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    // Read tab, status filter, and search term from URL query parameter on mount
+    const tabParam = searchParams.get("tab");
+    const statusParam = searchParams.get("status") as StatusFilter;
+    const searchParam = searchParams.get("search");
+    
+    if (tabParam === "import" || tabParam === "export") {
+      setActiveTab(tabParam);
+    }
+    if (statusParam && ["ALL", "DONE", "PROCESSING", "PENDING", "CANCELLED"].includes(statusParam)) {
+      setStatusFilter(statusParam);
+    }
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+    fetchData();
+  }, [searchParams]);
 
   const handleTabChange = (tab: "import" | "export") => {
     setActiveTab(tab);
     setStatusFilter("ALL");
+    // Update URL query parameter to persist tab state
+    setSearchParams({ tab, status: "ALL", search: searchTerm });
+  };
+
+  const handleStatusFilterChange = (status: StatusFilter) => {
+    setStatusFilter(status);
+    // Update URL query parameter to persist status filter state
+    setSearchParams({ tab: activeTab, status, search: searchTerm });
   };
 
   const formatDate = (dateStr: string) => {
@@ -1395,9 +1421,24 @@ export default function OrdersPage() {
   );
 
   // Filter theo status
-  const filteredData = statusFilter === "ALL"
+  let filteredData = statusFilter === "ALL"
     ? sortedData
     : sortedData.filter(item => item.status === statusFilter);
+
+  // Filter theo tên sản phẩm
+  if (searchTerm.trim()) {
+    const term = searchTerm.toLowerCase();
+    filteredData = filteredData.filter(item => {
+      // Check if order has items and filter by product name
+      if (item.items && Array.isArray(item.items)) {
+        return item.items.some((item: any) =>
+          item.product && item.product.name && item.product.name.toLowerCase().includes(term)
+        );
+      }
+      // Also check order code
+      return item.code && item.code.toLowerCase().includes(term);
+    });
+  }
 
   const countByStatus = (status: string) => rawData.filter(i => i.status === status).length;
 
@@ -1463,6 +1504,55 @@ export default function OrdersPage() {
         </div>
       </div>
 
+      {/* ── Search bar ── */}
+      <div style={{ marginBottom: "20px" }}>
+        <div style={{ position: "relative" }}>
+          <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }}>🔍</span>
+          <input
+            type="text"
+            placeholder="Tìm kiếm theo tên sản phẩm hoặc mã đơn..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setSearchParams({ tab: activeTab, status: statusFilter, search: e.target.value });
+            }}
+            style={{
+              width: "100%",
+              padding: "12px 16px 12px 40px",
+              background: "#111827",
+              border: "1px solid rgba(255,255,255,0.08)",
+              borderRadius: "10px",
+              color: "#fff",
+              fontSize: "14px",
+              outline: "none",
+            }}
+          />
+          {searchTerm && (
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setSearchParams({ tab: activeTab, status: statusFilter, search: "" });
+              }}
+              style={{
+                position: "absolute",
+                right: "14px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "6px",
+                color: "#9CA3AF",
+                cursor: "pointer",
+                fontSize: "12px",
+                padding: "4px 8px",
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* ── Tab nhập / xuất + Sub status bar (liền nhau) ── */}
       <div style={{ background: "#1F2937", borderRadius: "12px", marginBottom: "20px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
 
@@ -1509,7 +1599,7 @@ export default function OrdersPage() {
             return (
               <button
                 key={s.key}
-                onClick={() => setStatusFilter(s.key)}
+                onClick={() => handleStatusFilterChange(s.key)}
                 style={{
                   padding: "12px 20px",
                   border: "none",

@@ -125,6 +125,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"warehouse-backend/entity"
 	"warehouse-backend/services"
 )
 
@@ -162,12 +163,14 @@ func (c *InventoryController) GetInventories(ctx *gin.Context) {
 		locationPath := services.BuildLocationPath(c.Service.DB, inv.LocationID)
 
 		result = append(result, gin.H{
-			"id":       inv.ID,
-			"product":  inv.Product.Name,
-			"sku":      inv.Product.SKU,
-			"quantity": inv.Quantity,
-			"location": locationPath,
-			"status":   status,
+			"id":           inv.ID,
+			"product_id":   inv.ProductID,
+			"product":      inv.Product.Name,
+			"sku":          inv.Product.SKU,
+			"quantity":     inv.Quantity,
+			"min_quantity": inv.MinQuantity,
+			"location":     locationPath,
+			"status":       status,
 		})
 	}
 
@@ -238,4 +241,25 @@ func (c *InventoryController) ExportProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, gin.H{"message": "export success"})
+}
+
+func (c *InventoryController) UpdateMinQuantity(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	var req struct {
+		MinQuantity int `json:"min_quantity"`
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := c.Service.DB.Model(&entity.Inventory{}).Where("id = ?", id).Update("min_quantity", req.MinQuantity).Error
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"message": "Min quantity updated successfully"})
 }
