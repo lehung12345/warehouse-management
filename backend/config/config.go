@@ -11,6 +11,9 @@ type Config struct {
 	Port   string
 	DBConn string
 	JWTSecret string
+	AdminUsername string
+	AdminEmail string
+	AdminPassword string
 }
 
 var ENV Config
@@ -41,6 +44,25 @@ func LoadConfig() {
 		jwtSecret = "secret"
 	}
 	ENV.JWTSecret = jwtSecret
+
+	// Admin credentials
+	adminUsername := os.Getenv("ADMIN_DEFAULT_USERNAME")
+	if adminUsername == "" {
+		adminUsername = "admin"
+	}
+	ENV.AdminUsername = adminUsername
+
+	adminEmail := os.Getenv("ADMIN_DEFAULT_EMAIL")
+	if adminEmail == "" {
+		adminEmail = "admin@warehouse.com"
+	}
+	ENV.AdminEmail = adminEmail
+
+	adminPassword := os.Getenv("ADMIN_DEFAULT_PASSWORD")
+	if adminPassword == "" {
+		adminPassword = "Admin@123"
+	}
+	ENV.AdminPassword = adminPassword
 }
 
 

@@ -11,7 +11,13 @@ class AuthException implements Exception {
 }
 
 class AuthService {
-  static String get _baseUrl => dotenv.env['API_URL'] ?? 'http://10.0.2.2:8080';
+  static String get _baseUrl {
+    final url = dotenv.env['API_URL'];
+    if (url == null || url.isEmpty) {
+      throw Exception('API_URL not found in .env file');
+    }
+    return url;
+  }
 
   static const Duration _timeout = Duration(seconds: 15);
 

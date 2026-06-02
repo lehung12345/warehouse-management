@@ -68,7 +68,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ScanService {
-  static String get _baseUrl => dotenv.env['API_URL'] ?? 'http://10.0.2.2:8080';
+  static String get _baseUrl {
+    final url = dotenv.env['API_URL'];
+    if (url == null || url.isEmpty) {
+      throw Exception('API_URL not found in .env file');
+    }
+    return url;
+  }
 
   static Future<String> scanImport({
     required int importId,

@@ -35,7 +35,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/order_model.dart';
 
 class OrderService {
-  static String get baseUrl => dotenv.env['API_URL'] ?? 'http://10.0.2.2:8080';
+  static String get baseUrl {
+    final url = dotenv.env['API_URL'];
+    if (url == null || url.isEmpty) {
+      throw Exception('API_URL not found in .env file');
+    }
+    return url;
+  }
 
   static Future<List<OrderModel>> getImports(String token) async {
     try {

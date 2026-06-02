@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"warehouse-backend/config"
 	"warehouse-backend/entity"
@@ -17,7 +16,6 @@ import (
 func main() {
 	// 1️⃣ Load config từ .env
 	config.LoadConfig()
-	log.Println("👉 DB STRING:", config.ENV.DBConn)
 
 	// 2️⃣ Kết nối database (chuẩn)
 	config.ConnectDB()
@@ -68,25 +66,16 @@ func main() {
 	// 9️⃣ Run server
 	log.Println("🚀 Server chạy tại port:", config.ENV.Port)
 	r.Run(":" + config.ENV.Port)
+	// r.Run("0.0.0.0:" + config.ENV.Port) dùng súng rfid thì dùng
 }
 
 // =======================
 // Seed Admin
 // =======================
 func seedDefaultAdmin(db *gorm.DB) {
-	adminUsername := os.Getenv("ADMIN_DEFAULT_USERNAME")
-	adminEmail := os.Getenv("ADMIN_DEFAULT_EMAIL")
-	adminPassword := os.Getenv("ADMIN_DEFAULT_PASSWORD")
-
-	if adminUsername == "" {
-		adminUsername = "admin"
-	}
-	if adminEmail == "" {
-		adminEmail = "admin@warehouse.com"
-	}
-	if adminPassword == "" {
-		adminPassword = "Admin@123"
-	}
+	adminUsername := config.ENV.AdminUsername
+	adminEmail := config.ENV.AdminEmail
+	adminPassword := config.ENV.AdminPassword
 
 	hashedPw, err := utils.HashPassword(adminPassword)
 	if err != nil {
