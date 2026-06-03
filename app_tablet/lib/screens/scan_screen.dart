@@ -538,6 +538,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/scan_service.dart';
+import '../services/order_service.dart';
 import 'location_picker_screen.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -564,7 +565,9 @@ class _ScanScreenState extends State<ScanScreen> {
   bool isScanning = true;
   String? scannedProductId;
   final TextEditingController productIdController = TextEditingController();
+  final TextEditingController orderCodeController = TextEditingController();
   int? orderId;
+  String? orderCode;
   int quantity = 1;
   int? selectedLocationId;
   String selectedLocationPath = '';
@@ -577,6 +580,8 @@ class _ScanScreenState extends State<ScanScreen> {
     super.initState();
     if (widget.presetOrderId != null) {
       orderId = widget.presetOrderId;
+      orderCode = widget.presetOrderCode;
+      orderCodeController.text = widget.presetOrderCode ?? '';
     }
     if (widget.presetLocationId != null) {
       selectedLocationId = widget.presetLocationId;
@@ -588,6 +593,7 @@ class _ScanScreenState extends State<ScanScreen> {
   void dispose() {
     scannerController.dispose();
     productIdController.dispose();
+    orderCodeController.dispose();
     super.dispose();
   }
 
@@ -630,6 +636,35 @@ class _ScanScreenState extends State<ScanScreen> {
     String productId = useManualInput
         ? productIdController.text.trim()
         : (scannedProductId ?? '');
+    
+    // If orderId is not preset, try to get it from orderCode
+    if (orderId == null && orderCode != null && orderCode!.isNotEmpty) {
+      setState(() { submitting = true; error = null; });
+      try {
+        int? foundId;
+        if (widget.isImport) {
+          foundId = await OrderService.getImportIdByCode(orderCode!, token);
+        } else {
+          foundId = await OrderService.getExportIdByCode(orderCode!, token);
+        }
+        if (foundId != null) {
+          orderId = foundId;
+        } else {
+          setState(() { 
+            error = "Không tìm thấy mã đơn: $orderCode"; 
+            submitting = false; 
+          });
+          return;
+        }
+      } catch (e) {
+        setState(() { 
+          error = "Lỗi tìm mã đơn: $e"; 
+          submitting = false; 
+        });
+        return;
+      }
+    }
+
     if (productId.isEmpty || orderId == null) {
       setState(() => error = "Vui lòng nhập/scan Product ID và Mã đơn");
       return;
@@ -738,7 +773,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     decoration: const InputDecoration(labelText: "Barcode (nhập tay)"),
                   ),
                 const SizedBox(height: 12),
-                // Hiển thị mã code nếu có, nếu không thì hiển thị ô nhập ID
+                // Hiển thị mã code nếu có preset, nếu không thì hiển thị ô nhập code
                 widget.presetOrderId != null && widget.presetOrderCode != null
                     ? TextFormField(
                   initialValue: widget.presetOrderCode,
@@ -750,9 +785,17 @@ class _ScanScreenState extends State<ScanScreen> {
                   style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                 )
                     : TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: "Mã đơn hàng (Order ID)"),
-                  onChanged: (v) => orderId = int.tryParse(v),
+                  controller: orderCodeController,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: const InputDecoration(
+                    labelText: "Mã đơn hàng (ví dụ: IMP001, EXP002)",
+                    border: OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
+                  onChanged: (v) {
+                    orderCode = v.trim().toUpperCase();
+                  },
                 ),
                 const SizedBox(height: 12),
                 Row(

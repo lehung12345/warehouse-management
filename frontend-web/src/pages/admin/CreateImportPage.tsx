@@ -238,10 +238,10 @@ export default function CreateImportPage() {
 
         {/* HEADER */}
         <div style={{ marginBottom: "24px" }}>
-          <h1 style={{ fontSize: "26px", fontWeight: 700, color: "#fff" }}>
+          <h1 style={{ fontSize: "26px", fontWeight: 700, color: "var(--text-primary)" }}>
             📥 Tạo đơn nhập kho
           </h1>
-          <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
             Tạo phiếu nhập hàng vào kho
           </p>
         </div>
@@ -252,7 +252,7 @@ export default function CreateImportPage() {
           {/* ITEMS */}
           <div style={{ marginBottom: "20px" }}>
             <div style={rowBetween}>
-              <h3 style={{ color: "#fff" }}>Danh sách sản phẩm</h3>
+              <h3 style={{ color: "var(--text-primary)" }}>Danh sách sản phẩm</h3>
               <button onClick={addItem} style={btnAdd}>
                 + Thêm
               </button>
@@ -261,7 +261,7 @@ export default function CreateImportPage() {
             {errors.items && <p style={errorText}>{errors.items}</p>}
 
             {items.length === 0 && (
-              <p style={{ color: "#6B7280" }}>Chưa có sản phẩm</p>
+              <p style={{ color: "var(--text-secondary)" }}>Chưa có sản phẩm</p>
             )}
 
             <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -348,16 +348,16 @@ export default function CreateImportPage() {
 /* ================= STYLE ================= */
 
 const card = {
-  background: "#1F2937",
+  background: "var(--bg-elevated)",
   borderRadius: "16px",
   padding: "24px",
-  border: "1px solid rgba(255,255,255,0.06)",
+  border: "1px solid var(--border)",
 };
 
 const label = {
   display: "block",
   marginBottom: "6px",
-  color: "#9CA3AF",
+  color: "var(--text-secondary)",
   fontSize: "13px",
 };
 
@@ -365,18 +365,18 @@ const input = {
   width: "100%",
   padding: "10px",
   borderRadius: "8px",
-  border: "1px solid rgba(255,255,255,0.1)",
-  background: "#111827",
-  color: "#fff",
+  border: "1px solid var(--border)",
+  background: "var(--bg-overlay)",
+  color: "var(--text-primary)",
 };
 
 const inputSmall = {
   flex: 1,
   padding: "10px 36px 10px 12px",
   borderRadius: "8px",
-  border: "1px solid rgba(255,255,255,0.1)",
-  background: "#111827",
-  color: "#fff",
+  border: "1px solid var(--border)",
+  background: "var(--bg-overlay)",
+  color: "var(--text-primary)",
   appearance: "none" as "none",
   backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
   backgroundRepeat: "no-repeat",
@@ -399,7 +399,7 @@ const rowBetween = {
 
 const btnPrimary = {
   background: "#4F46E5",
-  color: "#fff",
+  color: "var(--text-primary)",
   padding: "10px 18px",
   borderRadius: "8px",
   border: "none",
@@ -409,7 +409,7 @@ const btnPrimary = {
 
 const btnSecondary = {
   background: "transparent",
-  color: "#fff",
+  color: "var(--text-primary)",
   border: "1px solid rgba(255,255,255,0.2)",
   padding: "10px 18px",
   borderRadius: "8px",

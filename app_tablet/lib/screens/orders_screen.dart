@@ -432,8 +432,8 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
 
   // Status filter
   String _selectedStatus = 'ALL';
-  final List<String> _statusOptions = ['ALL', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED'];
-  final List<String> _statusLabels = ['Tất cả', 'Done', 'Processing', 'Pending', 'Cancelled'];
+  final List<String> _statusOptions = ['ALL', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED', 'APPROVED'];
+  final List<String> _statusLabels = ['Tất cả', 'Done', 'Processing', 'Pending', 'Cancelled', 'Approved'];
 
   @override
   void initState() {
@@ -496,6 +496,8 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
         return const Color(0xFF6B7280); // Gray
       case 'CANCELLED':
         return const Color(0xFFEF4444); // Red
+      case 'APPROVED':
+        return const Color(0xFF4F46E5); // Admin indigo
       default:
         return const Color(0xFF6B7280);
     }
@@ -511,6 +513,8 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
         return const Color(0xFFE5E7EB); // Light gray
       case 'CANCELLED':
         return const Color(0xFFFEE2E2); // Light red
+      case 'APPROVED':
+        return const Color(0xFFE0E7FF); // Light indigo
       default:
         return const Color(0xFFE5E7EB);
     }

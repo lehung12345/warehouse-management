@@ -144,38 +144,38 @@
 
 //         {/* Form thêm sản phẩm được làm đẹp */}
 //         <div className="stat-card" style={{ display: 'block', marginBottom: '24px', padding: '24px' }}>
-//           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: '#fff' }}>Thêm sản phẩm mới</h3>
+//           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>Thêm sản phẩm mới</h3>
 //           <form onSubmit={handleCreate} style={{ display: 'flex', gap: '16px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
 //             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: '200px' }}>
-//               <label style={{ fontSize: '13px', color: '#9CA3AF', fontWeight: 500 }}>Tên sản phẩm *</label>
+//               <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Tên sản phẩm *</label>
 //               <input
 //                 type="text"
 //                 placeholder="Ví dụ: Thùng Carton A1"
 //                 value={name}
 //                 onChange={(e) => setName(e.target.value)}
 //                 style={{
-//                   background: '#1F2937',
+//                   background: 'var(--bg-elevated)',
 //                   border: '1px solid #374151',
 //                   borderRadius: '6px',
 //                   padding: '10px 14px',
-//                   color: '#fff',
+//                   color: 'var(--text-primary)',
 //                   outline: 'none'
 //                 }}
 //               />
 //             </div>
 //             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '180px' }}>
-//               <label style={{ fontSize: '13px', color: '#9CA3AF', fontWeight: 500 }}>Đơn vị tính</label>
+//               <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Đơn vị tính</label>
 //               <input
 //                 type="text"
 //                 placeholder="Ví dụ: Cái, Thùng"
 //                 value={unit}
 //                 onChange={(e) => setUnit(e.target.value)}
 //                 style={{
-//                   background: '#1F2937',
+//                   background: 'var(--bg-elevated)',
 //                   border: '1px solid #374151',
 //                   borderRadius: '6px',
 //                   padding: '10px 14px',
-//                   color: '#fff',
+//                   color: 'var(--text-primary)',
 //                   outline: 'none'
 //                 }}
 //               />
@@ -209,31 +209,31 @@
 //           <div style={{ overflowX: 'auto' }}>
 //             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
 //               <thead>
-//                 <tr style={{ background: '#111827', borderBottom: '1px solid #1F2937' }}>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '80px' }}>ID</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>Tên sản phẩm</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>SKU</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>Barcode</th>
+//                 <tr style={{ background: 'var(--bg-overlay)', borderBottom: '1px solid var(--bg-elevated)' }}>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '80px' }}>ID</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Tên sản phẩm</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>SKU</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Barcode</th>
 //                   <th style={{ padding: '16px' }}>QR</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '120px' }}>Đơn vị</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '100px', textAlign: 'center' }}>Thao tác</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '120px' }}>Đơn vị</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '100px', textAlign: 'center' }}>Thao tác</th>
 //                 </tr>
 //               </thead>
 
 //               <tbody style={{ color: '#E5E7EB' }}>
 //                 {products.length === 0 ? (
 //                   <tr>
-//                     <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: '#6B7280' }}>
+//                     <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
 //                       Chưa có sản phẩm nào trong hệ thống kho.
 //                     </td>
 //                   </tr>
 //                 ) : (
 //                   products.map((p, index) => (
-//                     <tr key={p.id} style={{ borderBottom: '1px solid #1F2937', background: index % 2 === 0 ? 'transparent' : '#1F2937/30' }}>
-//                       <td style={{ padding: '16px', color: '#9CA3AF' }}>#{p.id}</td>
-//                       <td style={{ padding: '16px', fontWeight: 500, color: '#FFF' }}>{p.name}</td>
-//                       <td style={{ padding: '16px' }}><code style={{ background: '#1F2937', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>{p.sku || "—"}</code></td>
-//                       <td style={{ padding: '16px', color: '#9CA3AF' }}>{p.barcode || "—"}</td>
+//                     <tr key={p.id} style={{ borderBottom: '1px solid var(--bg-elevated)', background: index % 2 === 0 ? 'transparent' : 'var(--bg-elevated)/30' }}>
+//                       <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>#{p.id}</td>
+//                       <td style={{ padding: '16px', fontWeight: 500, color: 'var(--text-primary)' }}>{p.name}</td>
+//                       <td style={{ padding: '16px' }}><code style={{ background: 'var(--bg-elevated)', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>{p.sku || "—"}</code></td>
+//                       <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{p.barcode || "—"}</td>
 //                       <td style={{ padding: '16px' }}>
 //                         <QRCode value={p.barcode || p.sku} size={50} />
 //                       </td>
@@ -256,7 +256,7 @@
 //                             fontWeight: 500,
 //                             transition: 'all 0.2s'
 //                           }}
-//                           onMouseOver={(e) => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = '#fff' }}
+//                           onMouseOver={(e) => { e.currentTarget.style.background = '#EF4444'; e.currentTarget.style.color = 'var(--text-primary)' }}
 //                           onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.color = '#EF4444' }}
 //                         >
 //                           Xóa
@@ -274,7 +274,7 @@
 //                             }}
 //                             style={{
 //                             background: '#3B82F6',
-//                             color: '#fff',
+//                             color: 'var(--text-primary)',
 //                             border: 'none',
 //                             padding: '6px 12px',
 //                             borderRadius: '6px',
@@ -407,57 +407,57 @@
 
 //         {/* Form thêm sản phẩm được làm đẹp */}
 //         <div className="stat-card" style={{ display: 'block', marginBottom: '24px', padding: '24px' }}>
-//           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: '#fff' }}>
+//           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>
 //             {editingId ? "Cập nhật sản phẩm" : "Thêm sản phẩm mới"}
 //           </h3>
 //           <form onSubmit={handleCreate} style={{ display: 'flex', gap: '16px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
 //             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: '200px' }}>
-//               <label style={{ fontSize: '13px', color: '#9CA3AF', fontWeight: 500 }}>Tên sản phẩm *</label>
+//               <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Tên sản phẩm *</label>
 //               <input
 //                 type="text"
 //                 placeholder="Ví dụ: Thùng Carton A1"
 //                 value={name}
 //                 onChange={(e) => setName(e.target.value)}
 //                 style={{
-//                   background: '#1F2937',
+//                   background: 'var(--bg-elevated)',
 //                   border: '1px solid #374151',
 //                   borderRadius: '6px',
 //                   padding: '10px 14px',
-//                   color: '#fff',
+//                   color: 'var(--text-primary)',
 //                   outline: 'none'
 //                 }}
 //               />
 //             </div>
 //             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '180px' }}>
-//               <label style={{ fontSize: '13px', color: '#9CA3AF', fontWeight: 500 }}>Đơn vị tính</label>
+//               <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Đơn vị tính</label>
 //               <input
 //                 type="text"
 //                 placeholder="Ví dụ: Cái, Thùng"
 //                 value={unit}
 //                 onChange={(e) => setUnit(e.target.value)}
 //                 style={{
-//                   background: '#1F2937',
+//                   background: 'var(--bg-elevated)',
 //                   border: '1px solid #374151',
 //                   borderRadius: '6px',
 //                   padding: '10px 14px',
-//                   color: '#fff',
+//                   color: 'var(--text-primary)',
 //                   outline: 'none'
 //                 }}
 //               />
 //             </div>
 //             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '200px' }}>
-//             <label style={{ fontSize: '13px', color: '#9CA3AF' }}>RFID</label>
+//             <label style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>RFID</label>
 //             <input
 //                 type="text"
 //                 placeholder="Nhập RFID (nếu có)"
 //                 value={rfid}
 //                 onChange={(e) => setRfid(e.target.value)}
 //                 style={{
-//                 background: '#1F2937',
+//                 background: 'var(--bg-elevated)',
 //                 border: '1px solid #374151',
 //                 borderRadius: '6px',
 //                 padding: '10px 14px',
-//                 color: '#fff'
+//                 color: 'var(--text-primary)'
 //                 }}
 //             />
 //             </div>
@@ -492,7 +492,7 @@
 //                 }}
 //                 style={{
 //                   background: '#374151',
-//                   color: '#fff',
+//                   color: 'var(--text-primary)',
 //                   border: 'none',
 //                   padding: '11px 16px',
 //                   borderRadius: '6px',
@@ -510,7 +510,7 @@
 //         {/* Thanh tìm kiếm */}
 //         <div className="stat-card" style={{ display: 'block', marginBottom: '24px', padding: '20px' }}>
 //           <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-//             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" strokeWidth="2">
+//             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--text-secondary)" strokeWidth="2">
 //               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 //             </svg>
 //             <input
@@ -520,11 +520,11 @@
 //               onChange={(e) => setSearchTerm(e.target.value)}
 //               style={{
 //                 flex: 1,
-//                 background: '#1F2937',
+//                 background: 'var(--bg-elevated)',
 //                 border: '1px solid #374151',
 //                 borderRadius: '6px',
 //                 padding: '10px 14px',
-//                 color: '#fff',
+//                 color: 'var(--text-primary)',
 //                 outline: 'none',
 //                 fontSize: '14px'
 //               }}
@@ -534,7 +534,7 @@
 //                 onClick={() => setSearchTerm("")}
 //                 style={{
 //                   background: '#374151',
-//                   color: '#9CA3AF',
+//                   color: 'var(--text-secondary)',
 //                   border: 'none',
 //                   padding: '8px 12px',
 //                   borderRadius: '6px',
@@ -553,32 +553,32 @@
 //           <div style={{ overflowX: 'auto' }}>
 //             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
 //               <thead>
-//                 <tr style={{ background: '#111827', borderBottom: '1px solid #1F2937' }}>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '80px' }}>ID</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>Tên sản phẩm</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>SKU</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>Barcode</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>QR</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>RFID</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '120px' }}>Đơn vị</th>
-//                   <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '100px', textAlign: 'center' }}>Thao tác</th>
+//                 <tr style={{ background: 'var(--bg-overlay)', borderBottom: '1px solid var(--bg-elevated)' }}>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '80px' }}>ID</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Tên sản phẩm</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>SKU</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Barcode</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>QR</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>RFID</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '120px' }}>Đơn vị</th>
+//                   <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '100px', textAlign: 'center' }}>Thao tác</th>
 //                 </tr>
 //               </thead>
 
 //               <tbody style={{ color: '#E5E7EB' }}>
 //                 {filteredProducts.length === 0 ? (
 //                   <tr>
-//                     <td colSpan={7} style={{ padding: '32px', textAlign: 'center', color: '#6B7280' }}>
+//                     <td colSpan={7} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
 //                       {searchTerm ? "Không tìm thấy sản phẩm nào phù hợp." : "Chưa có sản phẩm nào trong hệ thống kho."}
 //                     </td>
 //                   </tr>
 //                 ) : (
 //                   filteredProducts.map((p, index) => (
-//                     <tr key={p.id} style={{ borderBottom: '1px solid #1F2937', background: index % 2 === 0 ? 'transparent' : '#1F2937/30' }}>
-//                       <td style={{ padding: '16px', color: '#9CA3AF' }}>#{p.id}</td>
-//                       <td style={{ padding: '16px', fontWeight: 500, color: '#FFF' }}>{p.name}</td>
-//                       <td style={{ padding: '16px' }}><code style={{ background: '#1F2937', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>{p.sku || "—"}</code></td>
-//                       <td style={{ padding: '16px', color: '#9CA3AF' }}>{p.barcode || "—"}</td>
+//                     <tr key={p.id} style={{ borderBottom: '1px solid var(--bg-elevated)', background: index % 2 === 0 ? 'transparent' : 'var(--bg-elevated)/30' }}>
+//                       <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>#{p.id}</td>
+//                       <td style={{ padding: '16px', fontWeight: 500, color: 'var(--text-primary)' }}>{p.name}</td>
+//                       <td style={{ padding: '16px' }}><code style={{ background: 'var(--bg-elevated)', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>{p.sku || "—"}</code></td>
+//                       <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{p.barcode || "—"}</td>
 //                       <td style={{ padding: '16px' }}>
 //                         {p.barcode ? (
 //                           <button
@@ -623,7 +623,7 @@
 //                           }}
 //                           style={{
 //                             background: '#3B82F6',
-//                             color: '#fff',
+//                             color: 'var(--text-primary)',
 //                             border: 'none',
 //                             padding: '6px 12px',
 //                             borderRadius: '6px',
@@ -675,7 +675,7 @@
 //           >
 //             <div
 //               style={{
-//                 background: '#1F2937',
+//                 background: 'var(--bg-elevated)',
 //                 padding: '32px',
 //                 borderRadius: '16px',
 //                 maxWidth: '400px',
@@ -684,8 +684,8 @@
 //               }}
 //               onClick={(e) => e.stopPropagation()}
 //             >
-//               <h3 style={{ color: '#fff', marginBottom: '16px' }}>{modalProduct.name}</h3>
-//               <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>Barcode: {modalProduct.barcode}</p>
+//               <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>{modalProduct.name}</h3>
+//               <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Barcode: {modalProduct.barcode}</p>
 
 //               {/* Toggle buttons */}
 //               <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginBottom: '24px' }}>
@@ -693,7 +693,7 @@
 //                   onClick={() => setModalType('qr')}
 //                   style={{
 //                     background: modalType === 'qr' ? '#6366F1' : 'rgba(99, 102, 241, 0.1)',
-//                     color: modalType === 'qr' ? '#fff' : '#A5B4FC',
+//                     color: modalType === 'qr' ? 'var(--text-primary)' : '#A5B4FC',
 //                     border: '1px solid rgba(99, 102, 241, 0.2)',
 //                     padding: '8px 16px',
 //                     borderRadius: '8px',
@@ -707,7 +707,7 @@
 //                   onClick={() => setModalType('barcode')}
 //                   style={{
 //                     background: modalType === 'barcode' ? '#6366F1' : 'rgba(99, 102, 241, 0.1)',
-//                     color: modalType === 'barcode' ? '#fff' : '#A5B4FC',
+//                     color: modalType === 'barcode' ? 'var(--text-primary)' : '#A5B4FC',
 //                     border: '1px solid rgba(99, 102, 241, 0.2)',
 //                     padding: '8px 16px',
 //                     borderRadius: '8px',
@@ -722,14 +722,14 @@
 //               {/* QR Code or Barcode display */}
 //               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
 //                 {modalType === 'qr' ? (
-//                   <div style={{ background: '#fff', padding: '20px', borderRadius: '8px' }}>
+//                   <div style={{ background: 'var(--text-primary)', padding: '20px', borderRadius: '8px' }}>
 //                     <QRCodeSVG value={modalProduct.barcode} size={200} />
 //                     <p style={{ color: '#000', marginTop: '12px', fontSize: '14px', fontWeight: 500 }}>
 //                       {modalProduct.barcode}
 //                     </p>
 //                   </div>
 //                 ) : (
-//                   <div style={{ background: '#fff', padding: '20px', borderRadius: '8px' }}>
+//                   <div style={{ background: 'var(--text-primary)', padding: '20px', borderRadius: '8px' }}>
 //                     <svg ref={(ref) => {
 //                       if (ref) {
 //                         JsBarcode(ref, modalProduct.barcode, {
@@ -753,7 +753,7 @@
 //                 onClick={() => setModalProduct(null)}
 //                 style={{
 //                   background: '#374151',
-//                   color: '#fff',
+//                   color: 'var(--text-primary)',
 //                   border: 'none',
 //                   padding: '10px 20px',
 //                   borderRadius: '8px',
@@ -880,57 +880,57 @@ export default function ProductPage() {
 
       {/* Form thêm / sửa sản phẩm */}
       <div className="stat-card" style={{ display: 'block', marginBottom: '24px', padding: '24px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: '#fff' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: 'var(--text-primary)' }}>
           {editingId ? "Cập nhật sản phẩm" : "Thêm sản phẩm mới"}
         </h3>
         <form onSubmit={handleCreate} style={{ display: 'flex', gap: '16px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: '200px' }}>
-            <label style={{ fontSize: '13px', color: '#9CA3AF', fontWeight: 500 }}>Tên sản phẩm *</label>
+            <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Tên sản phẩm *</label>
             <input
               type="text"
               placeholder="Ví dụ: Thùng Carton A1"
               value={name}
               onChange={(e) => setName(e.target.value)}
               style={{
-                background: '#1F2937',
+                background: 'var(--bg-elevated)',
                 border: '1px solid #374151',
                 borderRadius: '6px',
                 padding: '10px 14px',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 outline: 'none'
               }}
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '180px' }}>
-            <label style={{ fontSize: '13px', color: '#9CA3AF', fontWeight: 500 }}>Đơn vị tính</label>
+            <label style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Đơn vị tính</label>
             <input
               type="text"
               placeholder="Ví dụ: Cái, Thùng"
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
               style={{
-                background: '#1F2937',
+                background: 'var(--bg-elevated)',
                 border: '1px solid #374151',
                 borderRadius: '6px',
                 padding: '10px 14px',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 outline: 'none'
               }}
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '200px' }}>
-            <label style={{ fontSize: '13px', color: '#9CA3AF' }}>RFID</label>
+            <label style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>RFID</label>
             <input
               type="text"
               placeholder="Nhập RFID (nếu có)"
               value={rfid}
               onChange={(e) => setRfid(e.target.value)}
               style={{
-                background: '#1F2937',
+                background: 'var(--bg-elevated)',
                 border: '1px solid #374151',
                 borderRadius: '6px',
                 padding: '10px 14px',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 outline: 'none'
               }}
             />
@@ -960,7 +960,7 @@ export default function ProductPage() {
               onClick={() => { setEditingId(null); setName(""); setUnit(""); setRfid(""); }}
               style={{
                 background: '#374151',
-                color: '#fff',
+                color: 'var(--text-primary)',
                 border: 'none',
                 padding: '11px 16px',
                 borderRadius: '6px',
@@ -978,7 +978,7 @@ export default function ProductPage() {
       {/* Thanh tìm kiếm */}
       <div className="stat-card" style={{ display: 'block', marginBottom: '24px', padding: '20px' }}>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" strokeWidth="2">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--text-secondary)" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -988,11 +988,11 @@ export default function ProductPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
               flex: 1,
-              background: '#1F2937',
+              background: 'var(--bg-elevated)',
               border: '1px solid #374151',
               borderRadius: '6px',
               padding: '10px 14px',
-              color: '#fff',
+              color: 'var(--text-primary)',
               outline: 'none',
               fontSize: '14px'
             }}
@@ -1002,7 +1002,7 @@ export default function ProductPage() {
               onClick={() => setSearchTerm("")}
               style={{
                 background: '#374151',
-                color: '#9CA3AF',
+                color: 'var(--text-secondary)',
                 border: 'none',
                 padding: '8px 12px',
                 borderRadius: '6px',
@@ -1027,21 +1027,21 @@ export default function ProductPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
               {/* Sticky header */}
               <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
-                <tr style={{ background: '#111827', borderBottom: '1px solid #1F2937' }}>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>Tên sản phẩm</th>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>SKU</th>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>Barcode</th>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>QR</th>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600 }}>RFID</th>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '120px' }}>Đơn vị</th>
-                  <th style={{ padding: '16px', color: '#9CA3AF', fontWeight: 600, width: '140px', textAlign: 'center' }}>Thao tác</th>
+                <tr style={{ background: 'var(--bg-overlay)', borderBottom: '1px solid var(--bg-elevated)' }}>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Tên sản phẩm</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>SKU</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>Barcode</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>QR</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600 }}>RFID</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '120px' }}>Đơn vị</th>
+                  <th style={{ padding: '16px', color: 'var(--text-secondary)', fontWeight: 600, width: '140px', textAlign: 'center' }}>Thao tác</th>
                 </tr>
               </thead>
 
               <tbody style={{ color: '#E5E7EB' }}>
                 {filteredProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ padding: '32px', textAlign: 'center', color: '#6B7280' }}>
+                    <td colSpan={7} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-secondary)' }}>
                       {searchTerm ? "Không tìm thấy sản phẩm nào phù hợp." : "Chưa có sản phẩm nào trong hệ thống kho."}
                     </td>
                   </tr>
@@ -1050,17 +1050,21 @@ export default function ProductPage() {
                     <tr
                       key={p.id}
                       style={{
-                        borderBottom: '1px solid #1F2937',
+                        borderBottom: '1px solid var(--bg-elevated)',
                         background: index % 2 === 0 ? 'transparent' : 'rgba(31, 41, 55, 0.3)'
                       }}
                     >
-                      <td style={{ padding: '16px', fontWeight: 500, color: '#FFF' }}>{p.name}</td>
+                      <td style={{ padding: '16px', fontWeight: 500, color: 'var(--text-primary)' }}>
+                        <div className="truncate-cell" title={p.name}>{p.name}</div>
+                      </td>
                       <td style={{ padding: '16px' }}>
-                        <code style={{ background: '#1F2937', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>
+                        <code className="truncate-cell" title={p.sku || ""} style={{ background: 'var(--bg-elevated)', padding: '4px 8px', borderRadius: '4px', fontSize: '12px' }}>
                           {p.sku || "—"}
                         </code>
                       </td>
-                      <td style={{ padding: '16px', color: '#9CA3AF' }}>{p.barcode || "—"}</td>
+                      <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>
+                        <div className="truncate-cell" title={p.barcode || ""}>{p.barcode || "—"}</div>
+                      </td>
                       <td style={{ padding: '16px' }}>
                         {p.barcode ? (
                           <button
@@ -1080,7 +1084,9 @@ export default function ProductPage() {
                           </button>
                         ) : "—"}
                       </td>
-                      <td style={{ padding: '16px', color: '#9CA3AF' }}>{p.rfid_code || "Chưa gán"}</td>
+                      <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>
+                        <div className="truncate-cell" title={p.rfid_code || ""}>{p.rfid_code || "Chưa gán"}</div>
+                      </td>
                       <td style={{ padding: '16px' }}>
                         <span style={{
                           background: 'rgba(99, 102, 241, 0.1)',
@@ -1099,7 +1105,7 @@ export default function ProductPage() {
                             onClick={() => { setEditingId(p.id); setName(p.name); setUnit(p.unit || ""); setRfid(p.rfid_code || ""); }}
                             style={{
                               background: '#3B82F6',
-                              color: '#fff',
+                              color: 'var(--text-primary)',
                               border: 'none',
                               padding: '6px 12px',
                               borderRadius: '6px',
@@ -1149,20 +1155,20 @@ export default function ProductPage() {
         >
           <div
             style={{
-              background: '#1F2937', padding: '32px', borderRadius: '16px',
+              background: 'var(--bg-elevated)', padding: '32px', borderRadius: '16px',
               maxWidth: '400px', width: '90%', textAlign: 'center'
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 style={{ color: '#fff', marginBottom: '16px' }}>{modalProduct.name}</h3>
-            <p style={{ color: '#9CA3AF', marginBottom: '24px' }}>Barcode: {modalProduct.barcode}</p>
+            <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>{modalProduct.name}</h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Barcode: {modalProduct.barcode}</p>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginBottom: '24px' }}>
               <button
                 onClick={() => setModalType('qr')}
                 style={{
                   background: modalType === 'qr' ? '#6366F1' : 'rgba(99, 102, 241, 0.1)',
-                  color: modalType === 'qr' ? '#fff' : '#A5B4FC',
+                  color: modalType === 'qr' ? 'var(--text-primary)' : '#A5B4FC',
                   border: '1px solid rgba(99, 102, 241, 0.2)',
                   padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 500
                 }}
@@ -1173,7 +1179,7 @@ export default function ProductPage() {
                 onClick={() => setModalType('barcode')}
                 style={{
                   background: modalType === 'barcode' ? '#6366F1' : 'rgba(99, 102, 241, 0.1)',
-                  color: modalType === 'barcode' ? '#fff' : '#A5B4FC',
+                  color: modalType === 'barcode' ? 'var(--text-primary)' : '#A5B4FC',
                   border: '1px solid rgba(99, 102, 241, 0.2)',
                   padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 500
                 }}
@@ -1184,14 +1190,14 @@ export default function ProductPage() {
 
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '24px' }}>
               {modalType === 'qr' ? (
-                <div style={{ background: '#fff', padding: '20px', borderRadius: '8px' }}>
+                <div style={{ background: 'var(--text-primary)', padding: '20px', borderRadius: '8px' }}>
                   <QRCodeSVG value={modalProduct.barcode} size={200} />
                   <p style={{ color: '#000', marginTop: '12px', fontSize: '14px', fontWeight: 500 }}>
                     {modalProduct.barcode}
                   </p>
                 </div>
               ) : (
-                <div style={{ background: '#fff', padding: '20px', borderRadius: '8px' }}>
+                <div style={{ background: 'var(--text-primary)', padding: '20px', borderRadius: '8px' }}>
                   <svg ref={(ref) => {
                     if (ref) {
                       JsBarcode(ref, modalProduct.barcode, {
@@ -1210,7 +1216,7 @@ export default function ProductPage() {
             <button
               onClick={() => setModalProduct(null)}
               style={{
-                background: '#374151', color: '#fff', border: 'none',
+                background: '#374151', color: 'var(--text-primary)', border: 'none',
                 padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 500
               }}
             >

@@ -11,4 +11,5 @@ type Export struct {
 	UpdatedAt time.Time    `json:"updated_at"`
 
 	Items []ExportItem `gorm:"foreignKey:ExportID" json:"items"`
+	User  *User        `gorm:"foreignKey:UserID" json:"user,omitempty"`
 }

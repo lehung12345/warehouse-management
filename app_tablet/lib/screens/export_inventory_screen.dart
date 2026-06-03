@@ -16,8 +16,8 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
   List<OrderModel> exportOrders = [];
   bool loading = true;
   String _selectedStatus = 'ALL';
-  final List<String> _statusOptions = ['ALL', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED'];
-  final List<String> _statusLabels = ['Tất cả', 'Done', 'Processing', 'Pending', 'Cancelled'];
+  final List<String> _statusOptions = ['ALL', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED', 'APPROVED'];
+  final List<String> _statusLabels = ['Tất cả', 'Done', 'Processing', 'Pending', 'Cancelled', 'Approved'];
 
   @override
   void initState() {
@@ -71,6 +71,8 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
         return const Color(0xFF6B7280);
       case 'CANCELLED':
         return const Color(0xFFEF4444);
+      case 'APPROVED':
+        return const Color(0xFF4F46E5);
       default:
         return const Color(0xFF6B7280);
     }
@@ -86,6 +88,8 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
         return const Color(0xFFE5E7EB);
       case 'CANCELLED':
         return const Color(0xFFFEE2E2);
+      case 'APPROVED':
+        return const Color(0xFFE0E7FF);
       default:
         return const Color(0xFFE5E7EB);
     }

@@ -80,4 +80,42 @@ class OrderService {
       throw Exception("Không thể tải đơn xuất: $e");
     }
   }
+
+  static Future<int?> getImportIdByCode(String code, String token) async {
+    try {
+      final res = await http.get(
+        Uri.parse('$baseUrl/api/orders/import/code/$code'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        return data['id'] as int?;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<int?> getExportIdByCode(String code, String token) async {
+    try {
+      final res = await http.get(
+        Uri.parse('$baseUrl/api/orders/export/code/$code'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        return data['id'] as int?;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 }

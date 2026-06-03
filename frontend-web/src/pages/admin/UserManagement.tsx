@@ -248,7 +248,7 @@
 
 //         {/* ─── Search Bar (Được chỉnh sửa nằm ngay trên đầu bảng, kéo dài bằng bảng) ─── */}
 //         <div className="table-container" style={{ marginBottom: '16px', paddingBottom: 0, background: 'transparent', boxShadow: 'none' }}>
-//           <div className="users-search-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: '#111827', border: '1px solid #1f2937', borderRadius: '12px', padding: '4px 16px' }}>
+//           <div className="users-search-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', background: 'var(--bg-overlay)', border: '1px solid #1f2937', borderRadius: '12px', padding: '4px 16px' }}>
 //             <div className="search-input-icon-block" style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
 //               <svg className="search-icon" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" strokeWidth="2">
 //                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -735,7 +735,7 @@ export default function UserManagement() {
       <div style={{ marginBottom: '16px' }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: '12px',
-          background: '#111827', border: '1px solid #1f2937',
+          background: 'var(--bg-overlay)', border: '1px solid #1f2937',
           borderRadius: '12px', padding: '4px 16px',
         }}>
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#9ca3af" strokeWidth="2">

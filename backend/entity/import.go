@@ -11,4 +11,5 @@ type Import struct {
 	UpdatedAt time.Time    `json:"updated_at"`
 
 	Items []ImportItem `gorm:"foreignKey:ImportID" json:"items"`
+	User  *User        `gorm:"foreignKey:UserID" json:"user,omitempty"`
 }

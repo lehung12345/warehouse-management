@@ -520,7 +520,7 @@
 //               marginLeft: "8px", 
 //               fontSize: "11px", 
 //               color: "#9ca3af",
-//               background: "rgba(255, 255, 255, 0.05)",
+//               background: "var(--border)",
 //               padding: "2px 6px",
 //               borderRadius: "4px"
 //             }}>
@@ -530,7 +530,7 @@
 
 //           {/* Nếu được click mở ra và có con thì xổ xuống tiếp */}
 //           {isExpanded && hasChildren && (
-//             <div style={{ paddingLeft: "16px", borderLeft: "1px dashed rgba(255,255,255,0.1)", marginLeft: "14px", marginTop: "4px" }}>
+//             <div style={{ paddingLeft: "16px", borderLeft: "1px dashed var(--border)", marginLeft: "14px", marginTop: "4px" }}>
 //               {renderSubTree(node.children!, level + 1)}
 //             </div>
 //           )}
@@ -541,7 +541,7 @@
 
 //   return (
 //     <AdminLayout>
-//         <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "20px" }}>
+//         <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "20px" }}>
 //           📍 Quản lý vị trí kho
 //         </h1>
 
@@ -555,12 +555,12 @@
 //             alignItems: "center", 
 //             gap: "12px", 
 //             background: "#1f2937", 
-//             border: "1px solid rgba(255, 255, 255, 0.06)", 
+//             border: "1px solid var(--border)", 
 //             borderRadius: "12px",
 //             flexWrap: "wrap"
 //           }}
 //         >
-//           <h3 style={{ fontSize: "15px", fontWeight: 600, color: "#fff", margin: "0 8px 0 0", display: "flex", alignItems: "center", gap: "6px" }}>
+//           <h3 style={{ fontSize: "15px", fontWeight: 600, color: "var(--text-primary)", margin: "0 8px 0 0", display: "flex", alignItems: "center", gap: "6px" }}>
 //             <span>➕</span> Tạo vị trí
 //           </h3>
 
@@ -573,10 +573,10 @@
 //               flex: "2",
 //               minWidth: "160px",
 //               padding: "10px 14px",
-//               background: "#111827",
-//               border: "1px solid rgba(255, 255, 255, 0.08)",
+//               background: "var(--bg-overlay)",
+//               border: "1px solid var(--border)",
 //               borderRadius: "8px",
-//               color: "#fff",
+//               color: "var(--text-primary)",
 //               fontSize: "14px",
 //               outline: "none"
 //             }}
@@ -592,10 +592,10 @@
 //               flex: "1",
 //               minWidth: "90px",
 //               padding: "10px 14px",
-//               background: "#111827",
-//               border: "1px solid rgba(255, 255, 255, 0.08)",
+//               background: "var(--bg-overlay)",
+//               border: "1px solid var(--border)",
 //               borderRadius: "8px",
-//               color: "#fff",
+//               color: "var(--text-primary)",
 //               fontSize: "14px",
 //               outline: "none"
 //             }}
@@ -613,10 +613,10 @@
 //             }
 //             style={{
 //               padding: "10px 14px",
-//               background: "#111827",
-//               border: "1px solid rgba(255, 255, 255, 0.08)",
+//               background: "var(--bg-overlay)",
+//               border: "1px solid var(--border)",
 //               borderRadius: "8px",
-//               color: "#fff",
+//               color: "var(--text-primary)",
 //               fontSize: "14px",
 //               outline: "none",
 //               cursor: "pointer"
@@ -640,7 +640,7 @@
 //               }
 //               style={{
 //                 padding: "10px 14px",
-//                 background: "#111827",
+//                 background: "var(--bg-overlay)",
 //                 border: "1px solid rgba(251, 191, 36, 0.4)",
 //                 borderRadius: "8px",
 //                 color: "#fbbf24",
@@ -652,14 +652,14 @@
 //               <option value="" style={{ color: "#9ca3af" }}>-- Chọn parent --</option>
 //               {form.type === "SHELF" &&
 //                 tree.map((w) => (
-//                   <option key={w.id} value={w.id} style={{ color: "#fff" }}>
+//                   <option key={w.id} value={w.id} style={{ color: "var(--text-primary)" }}>
 //                     {w.name}
 //                   </option>
 //                 ))}
 //               {form.type === "BIN" &&
 //                 tree.flatMap((w) =>
 //                   w.children?.map((s) => (
-//                     <option key={s.id} value={s.id} style={{ color: "#fff" }}>
+//                     <option key={s.id} value={s.id} style={{ color: "var(--text-primary)" }}>
 //                       {w.name} → {s.name}
 //                     </option>
 //                   )) || []
@@ -672,7 +672,7 @@
 //             style={{
 //               padding: "10px 20px",
 //               background: "#4f46e5",
-//               color: "#fff",
+//               color: "var(--text-primary)",
 //               border: "none",
 //               borderRadius: "8px",
 //               fontSize: "14px",
@@ -714,7 +714,7 @@
 //                     minWidth: "280px",
 //                     background: "#1f2937",
 //                     borderRadius: "12px",
-//                     border: "1px solid rgba(255, 255, 255, 0.06)",
+//                     border: "1px solid var(--border)",
 //                     padding: "16px",
 //                     boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
 //                     display: "flex",
@@ -730,7 +730,7 @@
 //                       justifyContent: "between",
 //                       cursor: "pointer",
 //                       paddingBottom: isWarehouseExpanded && hasShelves ? "12px" : "0px",
-//                       borderBottom: isWarehouseExpanded && hasShelves ? "1px solid rgba(255,255,255,0.06)" : "none",
+//                       borderBottom: isWarehouseExpanded && hasShelves ? "1px solid var(--border)" : "none",
 //                       width: "100%"
 //                     }}
 //                   >
@@ -800,7 +800,7 @@
 //         }
 //         .sub-tree-node:hover {
 //           background: rgba(255, 255, 255, 0.07) !important;
-//           border-color: rgba(255, 255, 255, 0.1) !important;
+//           border-color: var(--border) !important;
 //         }
 //       `}</style>
 //     </AdminLayout>
@@ -897,13 +897,13 @@ export default function LocationPage() {
             </span>
             <span style={{
               marginLeft: "8px", fontSize: "11px", color: "#9ca3af",
-              background: "rgba(255,255,255,0.05)", padding: "2px 6px", borderRadius: "4px",
+              background: "var(--border)", padding: "2px 6px", borderRadius: "4px",
             }}>
               {node.capacity || 0}
             </span>
           </div>
           {isExpanded && hasChildren && (
-            <div style={{ paddingLeft: "16px", borderLeft: "1px dashed rgba(255,255,255,0.1)", marginLeft: "14px", marginTop: "4px" }}>
+            <div style={{ paddingLeft: "16px", borderLeft: "1px dashed var(--border)", marginLeft: "14px", marginTop: "4px" }}>
               {renderSubTree(node.children!, level + 1)}
             </div>
           )}
@@ -920,7 +920,7 @@ export default function LocationPage() {
         .modern-inline-btn:hover { background: #4338ca !important; }
         .warehouse-card { transition: border-color 0.2s ease; }
         .warehouse-card:hover { border-color: rgba(96,165,250,0.3) !important; }
-        .sub-tree-node:hover { background: rgba(255,255,255,0.07) !important; border-color: rgba(255,255,255,0.1) !important; }
+        .sub-tree-node:hover { background: rgba(255,255,255,0.07) !important; border-color: var(--border) !important; }
         .modern-inline-select:hover { border-color: rgba(255,255,255,0.2) !important; }
         .modern-inline-select::-webkit-scrollbar { width: 8px; }
         .modern-inline-select::-webkit-scrollbar-track { background: #1f2937; border-radius: 4px; }
@@ -940,7 +940,7 @@ export default function LocationPage() {
         }
       `}</style>
 
-      <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "20px" }}>
+      <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "20px" }}>
         📍 Quản lý vị trí kho
       </h1>
 
@@ -950,11 +950,11 @@ export default function LocationPage() {
         style={{
           padding: "16px 20px", marginBottom: "24px",
           display: "flex", alignItems: "center", gap: "12px",
-          background: "#1f2937", border: "1px solid rgba(255,255,255,0.06)",
+          background: "#1f2937", border: "1px solid var(--border)",
           borderRadius: "12px", flexWrap: "wrap",
         }}
       >
-        <h3 style={{ fontSize: "15px", fontWeight: 600, color: "#fff", margin: "0 8px 0 0", display: "flex", alignItems: "center", gap: "6px" }}>
+        <h3 style={{ fontSize: "15px", fontWeight: 600, color: "var(--text-primary)", margin: "0 8px 0 0", display: "flex", alignItems: "center", gap: "6px" }}>
           <span>➕</span> Tạo vị trí
         </h3>
         <input
@@ -962,7 +962,7 @@ export default function LocationPage() {
           placeholder="Tên vị trí..."
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
-          style={{ flex: "2", minWidth: "160px", padding: "10px 14px", background: "#111827", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none" }}
+          style={{ flex: "2", minWidth: "160px", padding: "10px 14px", background: "var(--bg-overlay)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-primary)", fontSize: "14px", outline: "none" }}
         />
         <input
           className="modern-inline-input"
@@ -970,13 +970,13 @@ export default function LocationPage() {
           placeholder="Sức chứa"
           value={form.capacity === 0 ? "" : form.capacity}
           onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })}
-          style={{ flex: "1", minWidth: "90px", padding: "10px 14px", background: "#111827", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none" }}
+          style={{ flex: "1", minWidth: "90px", padding: "10px 14px", background: "var(--bg-overlay)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-primary)", fontSize: "14px", outline: "none" }}
         />
         <select
           className="modern-inline-select"
           value={form.type}
           onChange={(e) => setForm({ ...form, type: e.target.value as any, parent_id: null })}
-          style={{ padding: "10px 36px 10px 12px", background: "#111827", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", color: "#fff", fontSize: "14px", outline: "none", cursor: "pointer", appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", backgroundSize: "16px", transition: "all 0.2s ease" }}
+          style={{ padding: "10px 36px 10px 12px", background: "var(--bg-overlay)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-primary)", fontSize: "14px", outline: "none", cursor: "pointer", appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", backgroundSize: "16px", transition: "all 0.2s ease" }}
         >
           <option value="WAREHOUSE">Warehouse</option>
           <option value="SHELF">Shelf</option>
@@ -987,15 +987,15 @@ export default function LocationPage() {
             className="modern-inline-select parent-highlight"
             value={form.parent_id ?? ""}
             onChange={(e) => setForm({ ...form, parent_id: e.target.value ? Number(e.target.value) : null })}
-            style={{ padding: "10px 36px 10px 12px", background: "#111827", border: "1px solid rgba(251,191,36,0.4)", borderRadius: "8px", color: "#fbbf24", fontSize: "14px", outline: "none", cursor: "pointer", appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", backgroundSize: "16px", transition: "all 0.2s ease" }}
+            style={{ padding: "10px 36px 10px 12px", background: "var(--bg-overlay)", border: "1px solid rgba(251,191,36,0.4)", borderRadius: "8px", color: "#fbbf24", fontSize: "14px", outline: "none", cursor: "pointer", appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center", backgroundSize: "16px", transition: "all 0.2s ease" }}
           >
             <option value="" style={{ color: "#9ca3af" }}>-- Chọn parent --</option>
             {form.type === "SHELF" && tree.map((w) => (
-              <option key={w.id} value={w.id} style={{ color: "#fff" }}>{w.name}</option>
+              <option key={w.id} value={w.id} style={{ color: "var(--text-primary)" }}>{w.name}</option>
             ))}
             {form.type === "BIN" && tree.flatMap((w) =>
               w.children?.map((s) => (
-                <option key={s.id} value={s.id} style={{ color: "#fff" }}>{w.name} → {s.name}</option>
+                <option key={s.id} value={s.id} style={{ color: "var(--text-primary)" }}>{w.name} → {s.name}</option>
               )) || []
             )}
           </select>
@@ -1003,7 +1003,7 @@ export default function LocationPage() {
         <button
           onClick={handleCreate}
           className="modern-inline-btn"
-          style={{ padding: "10px 20px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
+          style={{ padding: "10px 20px", background: "#4f46e5", color: "var(--text-primary)", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
         >
           Tạo vị trí
         </button>
@@ -1026,7 +1026,7 @@ export default function LocationPage() {
                 className="warehouse-card"
                 style={{
                   background: "#1f2937", borderRadius: "12px",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  border: "1px solid var(--border)",
                   padding: "16px", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
                   display: "flex", flexDirection: "column",
                 }}
@@ -1037,7 +1037,7 @@ export default function LocationPage() {
                   style={{
                     display: "flex", alignItems: "center", cursor: "pointer",
                     paddingBottom: isWarehouseExpanded && hasShelves ? "12px" : "0px",
-                    borderBottom: isWarehouseExpanded && hasShelves ? "1px solid rgba(255,255,255,0.06)" : "none",
+                    borderBottom: isWarehouseExpanded && hasShelves ? "1px solid var(--border)" : "none",
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>

@@ -17,6 +17,7 @@ func OrderRoutes(r *gin.RouterGroup, db *gorm.DB) {
 		api.POST("/import", controller.CreateImport)
 		api.GET("/import", controller.GetImports)
 		api.GET("/import/:id", controller.GetImportByID)
+		api.GET("/import/code/:code", controller.GetImportByCode)
 		api.POST("/import/:id/cancel", controller.CancelImport)
 		api.POST("/import/:id/approve", controller.ApproveImport)
 
@@ -24,6 +25,7 @@ func OrderRoutes(r *gin.RouterGroup, db *gorm.DB) {
 		api.POST("/export", controller.CreateExport)
 		api.GET("/export", controller.GetExports)
 		api.GET("/export/:id", controller.GetExportByID)
+		api.GET("/export/code/:code", controller.GetExportByCode)
 		api.POST("/export/:id/cancel", controller.CancelExport)
 		api.POST("/export/:id/approve", controller.ApproveExport)
 	}

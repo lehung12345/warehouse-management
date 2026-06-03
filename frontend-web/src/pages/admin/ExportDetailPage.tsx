@@ -130,7 +130,7 @@
 
 //   const renderStatus = (status: string) => {
 //     let bg = "rgba(107,114,128,0.1)";
-//     let color = "#9CA3AF";
+//     let color = "var(--text-secondary)";
 
 //     if (status === "DONE") {
 //       bg = "rgba(16,185,129,0.1)";
@@ -157,7 +157,7 @@
 //   };
 
 //   if (!order) {
-//     return <div style={{ color: "#fff", padding: 20 }}>Loading...</div>;
+//     return <div style={{ color: "var(--text-primary)", padding: 20 }}>Loading...</div>;
 //   }
 
 //   return (
@@ -166,10 +166,10 @@
         
 //         {/* HEADER */}
 //         <div style={{ marginBottom: "24px" }}>
-//           <h1 style={{ fontSize: "26px", fontWeight: 700, color: "#fff" }}>
+//           <h1 style={{ fontSize: "26px", fontWeight: 700, color: "var(--text-primary)" }}>
 //             📤 Chi tiết đơn xuất
 //           </h1>
-//           <p style={{ color: "#9CA3AF" }}>
+//           <p style={{ color: "var(--text-secondary)" }}>
 //             Theo dõi tiến độ xuất kho theo từng sản phẩm
 //           </p>
 //         </div>
@@ -199,7 +199,7 @@
 
 //         {/* TABLE */}
 //         <div style={card}>
-//           <h3 style={{ color: "#fff", marginBottom: "16px" }}>
+//           <h3 style={{ color: "var(--text-primary)", marginBottom: "16px" }}>
 //             Danh sách sản phẩm
 //           </h3>
 
@@ -237,7 +237,7 @@
 //                               }}
 //                             />
 //                           </div>
-//                           <span style={{ fontSize: "12px", color: "#9CA3AF" }}>
+//                           <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
 //                             {percent}%
 //                           </span>
 //                         </div>
@@ -262,15 +262,15 @@
 // /* ================= STYLE ================= */
 
 // const card = {
-//   background: "#1F2937",
+//   background: "var(--bg-elevated)",
 //   borderRadius: "16px",
 //   padding: "20px",
 //   marginBottom: "20px",
-//   border: "1px solid rgba(255,255,255,0.06)",
+//   border: "1px solid var(--border)",
 // };
 
 // const label = {
-//   color: "#9CA3AF",
+//   color: "var(--text-secondary)",
 //   fontSize: "12px",
 // };
 
@@ -281,18 +281,18 @@
 
 // const thead = {
 //   textAlign: "left" as const,
-//   borderBottom: "1px solid rgba(255,255,255,0.1)",
-//   color: "#9CA3AF",
+//   borderBottom: "1px solid var(--border)",
+//   color: "var(--text-secondary)",
 // };
 
 // const row = {
-//   borderBottom: "1px solid rgba(255,255,255,0.05)",
+//   borderBottom: "1px solid var(--border)",
 // };
 
 // const progressBg = {
 //   width: "100%",
 //   height: "8px",
-//   background: "rgba(255,255,255,0.1)",
+//   background: "var(--border)",
 //   borderRadius: "8px",
 //   overflow: "hidden",
 // };
@@ -304,7 +304,7 @@
 // const btnPrimary = {
 //   marginTop: "16px",
 //   background: "#10B981",
-//   color: "#fff",
+//   color: "var(--text-primary)",
 //   padding: "10px 16px",
 //   borderRadius: "8px",
 //   border: "none",
@@ -313,7 +313,7 @@
 
 // const btnSecondary = {
 //   background: "transparent",
-//   color: "#fff",
+//   color: "var(--text-primary)",
 //   border: "1px solid rgba(255,255,255,0.2)",
 //   padding: "10px 16px",
 //   borderRadius: "8px",
@@ -386,7 +386,7 @@ export default function ExportDetailPage() {
 
   const renderStatus = (status: string) => {
     let bg = "rgba(107,114,128,0.1)";
-    let color = "#9CA3AF";
+    let color = "var(--text-secondary)";
 
     if (status === "DONE") {
       bg = "rgba(16,185,129,0.1)";
@@ -419,16 +419,16 @@ export default function ExportDetailPage() {
   };
 
   if (!order) {
-    return <AdminLayout><div style={{ color: "#fff", padding: 20 }}>Loading...</div></AdminLayout>;
+    return <AdminLayout><div style={{ color: "var(--text-primary)", padding: 20 }}>Loading...</div></AdminLayout>;
   }
 
   return (
     <AdminLayout>
         <div style={{ marginBottom: "24px" }}>
-          <h1 style={{ fontSize: "26px", fontWeight: 700, color: "#fff" }}>
+          <h1 style={{ fontSize: "26px", fontWeight: 700, color: "var(--text-primary)" }}>
             📤 Chi tiết đơn xuất
           </h1>
-          <p style={{ color: "#9CA3AF" }}>
+          <p style={{ color: "var(--text-secondary)" }}>
             Theo dõi tiến độ xuất kho theo từng sản phẩm
           </p>
         </div>
@@ -467,7 +467,7 @@ export default function ExportDetailPage() {
         </div>
 
         <div style={card}>
-          <h3 style={{ color: "#fff", marginBottom: "16px" }}>
+          <h3 style={{ color: "var(--text-primary)", marginBottom: "16px" }}>
             Danh sách sản phẩm
           </h3>
           <div style={{ overflowX: "auto" }}>
@@ -507,7 +507,7 @@ export default function ExportDetailPage() {
                           <div style={progressBg}>
                             <div style={{ ...progressBar, width: `${percent}%`, background: "#10B981" }} />
                           </div>
-                          <span style={{ fontSize: "12px", color: "#9CA3AF" }}>
+                          <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
                             {percent}%
                           </span>
                         </div>
@@ -528,37 +528,37 @@ export default function ExportDetailPage() {
 }
 
 const card = {
-  background: "#1F2937",
+  background: "var(--bg-elevated)",
   borderRadius: "16px",
   padding: "20px",
   marginBottom: "20px",
-  border: "1px solid rgba(255,255,255,0.06)",
+  border: "1px solid var(--border)",
 };
 
 const label = {
-  color: "#9CA3AF",
+  color: "var(--text-secondary)",
   fontSize: "12px",
 };
 
 const table = {
   width: "100%",
-  borderCollapse: "collapse",
+  borderCollapse: "collapse" as any,
 };
 
 const thead = {
   textAlign: "left" as const,
-  borderBottom: "1px solid rgba(255,255,255,0.1)",
-  color: "#9CA3AF",
+  borderBottom: "1px solid var(--border)",
+  color: "var(--text-secondary)",
 };
 
 const row = {
-  borderBottom: "1px solid rgba(255,255,255,0.05)",
+  borderBottom: "1px solid var(--border)",
 };
 
 const progressBg = {
   width: "100%",
   height: "8px",
-  background: "rgba(255,255,255,0.1)",
+  background: "var(--border)",
   borderRadius: "8px",
   overflow: "hidden",
 };
@@ -570,7 +570,7 @@ const progressBar = {
 const btnPrimary = {
   marginTop: "16px",
   background: "#10B981",
-  color: "#fff",
+  color: "var(--text-primary)",
   padding: "10px 16px",
   borderRadius: "8px",
   border: "none",
@@ -579,7 +579,7 @@ const btnPrimary = {
 
 const btnSecondary = {
   background: "transparent",
-  color: "#fff",
+  color: "var(--text-primary)",
   border: "1px solid rgba(255,255,255,0.2)",
   padding: "10px 16px",
   borderRadius: "8px",

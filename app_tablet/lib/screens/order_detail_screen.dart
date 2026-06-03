@@ -157,6 +157,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
   }
 
+  String _getButtonText() {
+    final status = order?['status'];
+    if (status == 'CANCELLED') return 'ĐƠN ĐÃ BỊ HỦY';
+    if (status == 'APPROVED') return 'ĐƠN ĐÃ ĐƯỢC QUẢN LÝ DUYỆT';
+    if (status == 'DONE') return 'ĐƠN ĐÃ HOÀN THÀNH';
+    return 'QUÉT SẢN PHẨM';
+  }
+
+  Color _getButtonColor() {
+    final status = order?['status'];
+    if (status == 'CANCELLED' || status == 'APPROVED' || status == 'DONE') return Colors.grey;
+    return Colors.blue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,7 +192,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 return Card(
                   margin: const EdgeInsets.all(8),
                   child: InkWell(
-                    onTap: order?['status'] == 'CANCELLED' ? null : () {
+                    onTap: (order?['status'] == 'CANCELLED' || order?['status'] == 'APPROVED' || order?['status'] == 'DONE') ? null : () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -209,12 +223,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
-              onPressed: null, // Non-clickable, display only
+              onPressed: null,
               icon: const Icon(Icons.qr_code_scanner),
-              label: Text(order?['status'] == 'CANCELLED' ? 'ĐƠN ĐÃ BỊ HỦY' : 'QUÉT SẢN PHẨM'),
+              label: Text(_getButtonText()),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                backgroundColor: order?['status'] == 'CANCELLED' ? Colors.grey : Colors.blue,
+                backgroundColor: _getButtonColor(),
               ),
             ),
           ),

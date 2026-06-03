@@ -6,8 +6,6 @@ import (
 	"warehouse-backend/config"
 	"warehouse-backend/entity"
 	"warehouse-backend/routes"
-	"warehouse-backend/services"
-	"warehouse-backend/utils"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -48,8 +46,8 @@ func main() {
 	}
 	log.Println("✅ MIGRATE THÀNH CÔNG")
 
-	// 5️⃣ Seed admin mặc định
-	seedDefaultAdmin(db)
+	// 5️⃣ Reset sequences để tránh duplicate primary key
+	fixSequences(db)
 
 	// 6️⃣ Khởi tạo server
 	r := gin.Default()
@@ -69,25 +67,6 @@ func main() {
 	// r.Run("0.0.0.0:" + config.ENV.Port) dùng súng rfid thì dùng
 }
 
-// =======================
-// Seed Admin
-// =======================
-func seedDefaultAdmin(db *gorm.DB) {
-	adminUsername := config.ENV.AdminUsername
-	adminEmail := config.ENV.AdminEmail
-	adminPassword := config.ENV.AdminPassword
-
-	hashedPw, err := utils.HashPassword(adminPassword)
-	if err != nil {
-		log.Println("⚠️ Không thể hash password:", err)
-		return
-	}
-
-	err = services.SeedAdminIfNotExists(db, adminUsername, adminEmail, hashedPw)
-	if err != nil {
-		log.Println("⚠️ Seed admin lỗi:", err)
-	}
-}
 
 // =======================
 // CORS Middleware
@@ -105,5 +84,23 @@ func corsMiddleware() gin.HandlerFunc {
 		}
 
 		c.Next()
+	}
+}
+
+// =======================
+// Fix PostgreSQL Sequences
+// =======================
+func fixSequences(db *gorm.DB) {
+	tables := []string{
+		"products", "locations", "imports", "exports",
+		"import_items", "export_items", "inventories", "users", "transactions",
+	}
+	for _, table := range tables {
+		query := `SELECT setval(pg_get_serial_sequence('` + table + `', 'id'), COALESCE((SELECT MAX(id) FROM "` + table + `"), 0) + 1, false)`
+		if err := db.Exec(query).Error; err != nil {
+			log.Printf("⚠️  Không thể reset sequence cho bảng %s: %v", table, err)
+		} else {
+			log.Printf("🔧 Reset sequence: %s", table)
+		}
 	}
 }

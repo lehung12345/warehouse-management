@@ -184,3 +184,27 @@ func (c *OrderController) ApproveExport(ctx *gin.Context) {
 
 	ctx.JSON(200, gin.H{"message": "Export approved successfully"})
 }
+
+func (c *OrderController) GetImportByCode(ctx *gin.Context) {
+	code := ctx.Param("code")
+
+	var data entity.Import
+	if err := c.Service.DB.Where("code = ?", code).First(&data).Error; err != nil {
+		ctx.JSON(404, gin.H{"error": "Import not found"})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"id": data.ID})
+}
+
+func (c *OrderController) GetExportByCode(ctx *gin.Context) {
+	code := ctx.Param("code")
+
+	var data entity.Export
+	if err := c.Service.DB.Where("code = ?", code).First(&data).Error; err != nil {
+		ctx.JSON(404, gin.H{"error": "Export not found"})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"id": data.ID})
+}

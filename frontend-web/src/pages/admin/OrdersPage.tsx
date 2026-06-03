@@ -569,7 +569,7 @@
 //   // Helper render Badge trạng thái phát sáng (Glow Effect) cực chất
 //   const renderStatusBadge = (status: string) => {
 //     let bg = "rgba(107, 114, 128, 0.1)";
-//     let color = "#9CA3AF";
+//     let color = "var(--text-secondary)";
 
 //     if (status === "DONE") {
 //       bg = "rgba(16, 185, 129, 0.1)";
@@ -629,10 +629,10 @@
 //         {/* Tiêu đề trang & Nút bấm tác vụ */}
 //         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexShrink: 0 }}>
 //           <div>
-//             <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+//             <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
 //               📑 Quản lý đơn hàng
 //             </h1>
-//             <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+//             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
 //               Theo dõi, điều phối luồng sản phẩm nhập kho và xuất kho quy chuẩn
 //             </p>
 //           </div>
@@ -642,7 +642,7 @@
 //             <button 
 //               onClick={() => navigate("/admin/orders/create-import")}
 //               style={{
-//                 background: "#4F46E5", color: "#fff", border: "none", padding: "10px 18px",
+//                 background: "#4F46E5", color: "var(--text-primary)", border: "none", padding: "10px 18px",
 //                 borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
 //               }}
 //             >
@@ -651,7 +651,7 @@
 //             <button
 //               onClick={() => navigate("/admin/orders/create-export")}
 //               style={{
-//                 background: "rgba(255, 255, 255, 0.05)", color: "#fff", border: "1px solid rgba(255,255,255,0.1)",
+//                 background: "var(--border)", color: "var(--text-primary)", border: "1px solid var(--border)",
 //                 padding: "10px 18px", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
 //               }}
 //             >
@@ -664,24 +664,24 @@
 //         <div style={{ display: "flex", gap: "20px", flex: 1, minHeight: 0, marginBottom: "20px" }}>
           
 //           {/* CỘT TRÁI: ĐƠN NHẬP KHO */}
-//           <div className="stat-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "#1F2937", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "20px", minWidth: 0 }}>
-//             <h2 style={{ fontSize: "18px", color: "#fff", fontWeight: 600, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+//           <div className="stat-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: "14px", padding: "20px", minWidth: 0 }}>
+//             <h2 style={{ fontSize: "18px", color: "var(--text-primary)", fontWeight: 600, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
 //               <span>📥</span> Đơn nhập (Import)
 //             </h2>
             
 //             <div style={{ flex: 1, overflowY: "auto", width: "100%", paddingRight: "4px" }} className="custom-scroll">
 //               <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
 //                 <thead>
-//                   <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", background: "rgba(255,255,255,0.01)" }}>
-//                     <th style={{ padding: "12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Mã đơn</th>
-//                     <th style={{ padding: "12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Người tạo</th>
-//                     <th style={{ padding: "12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
+//                   <tr style={{ borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.01)" }}>
+//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Mã đơn</th>
+//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Người tạo</th>
+//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
 //                   </tr>
 //                 </thead>
 //                 <tbody>
 //                   {imports.length === 0 ? (
 //                     <tr>
-//                       <td colSpan={3} style={{ textAlign: "center", padding: "30px", color: "#6B7280", fontSize: "14px" }}>Không có dữ liệu đơn nhập</td>
+//                       <td colSpan={3} style={{ textAlign: "center", padding: "30px", color: "var(--text-secondary)", fontSize: "14px" }}>Không có dữ liệu đơn nhập</td>
 //                     </tr>
 //                   ) : (
 //                     imports.map((item) => {
@@ -710,24 +710,24 @@
 //           </div>
 
 //           {/* CỘT PHẢI: ĐƠN XUẤT KHO */}
-//           <div className="stat-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "#1F2937", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "20px", minWidth: 0 }}>
-//             <h2 style={{ fontSize: "18px", color: "#fff", fontWeight: 600, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+//           <div className="stat-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: "14px", padding: "20px", minWidth: 0 }}>
+//             <h2 style={{ fontSize: "18px", color: "var(--text-primary)", fontWeight: 600, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
 //               <span>📤</span> Đơn xuất (Export)
 //             </h2>
 
 //             <div style={{ flex: 1, overflowY: "auto", width: "100%", paddingRight: "4px" }} className="custom-scroll">
 //               <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
 //                 <thead>
-//                   <tr style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.08)", background: "rgba(255,255,255,0.01)" }}>
-//                     <th style={{ padding: "12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Mã đơn</th>
-//                     <th style={{ padding: "12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Người tạo</th>
-//                     <th style={{ padding: "12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
+//                   <tr style={{ borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.01)" }}>
+//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Mã đơn</th>
+//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Người tạo</th>
+//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
 //                   </tr>
 //                 </thead>
 //                 <tbody>
 //                   {exports.length === 0 ? (
 //                     <tr>
-//                       <td colSpan={3} style={{ textAlign: "center", padding: "30px", color: "#6B7280", fontSize: "14px" }}>Không có dữ liệu đơn xuất</td>
+//                       <td colSpan={3} style={{ textAlign: "center", padding: "30px", color: "var(--text-secondary)", fontSize: "14px" }}>Không có dữ liệu đơn xuất</td>
 //                     </tr>
 //                   ) : (
 //                     exports.map((item) => {
@@ -770,7 +770,7 @@
 //           background: transparent;
 //         }
 //         .custom-scroll::-webkit-scrollbar-thumb {
-//           background: rgba(255, 255, 255, 0.1);
+//           background: var(--border);
 //           border-radius: 10px;
 //         }
 //         .custom-scroll::-webkit-scrollbar-thumb:hover {
@@ -827,7 +827,7 @@
 
 //   const renderStatusBadge = (status: string) => {
 //     let bg = "rgba(107, 114, 128, 0.1)";
-//     let color = "#9CA3AF";
+//     let color = "var(--text-secondary)";
 //     if (status === "DONE") {
 //       bg = "rgba(16, 185, 129, 0.1)";
 //       color = "#10B981";
@@ -886,13 +886,13 @@
 //               style={{
 //                 fontSize: "28px",
 //                 fontWeight: 700,
-//                 color: "#fff",
+//                 color: "var(--text-primary)",
 //                 marginBottom: "4px",
 //               }}
 //             >
 //               📑 Quản lý đơn hàng
 //             </h1>
-//             <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+//             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
 //               Theo dõi, điều phối luồng sản phẩm nhập kho và xuất kho quy chuẩn
 //             </p>
 //           </div>
@@ -901,7 +901,7 @@
 //               onClick={() => navigate("/admin/orders/create-import")}
 //               style={{
 //                 background: "#4F46E5",
-//                 color: "#fff",
+//                 color: "var(--text-primary)",
 //                 border: "none",
 //                 padding: "10px 18px",
 //                 borderRadius: "8px",
@@ -915,9 +915,9 @@
 //             <button
 //               onClick={() => navigate("/admin/orders/create-export")}
 //               style={{
-//                 background: "rgba(255, 255, 255, 0.05)",
-//                 color: "#fff",
-//                 border: "1px solid rgba(255,255,255,0.1)",
+//                 background: "var(--border)",
+//                 color: "var(--text-primary)",
+//                 border: "1px solid var(--border)",
 //                 padding: "10px 18px",
 //                 borderRadius: "8px",
 //                 fontSize: "14px",
@@ -947,8 +947,8 @@
 //               flex: 1,
 //               display: "flex",
 //               flexDirection: "column",
-//               background: "#1F2937",
-//               border: "1px solid rgba(255,255,255,0.06)",
+//               background: "var(--bg-elevated)",
+//               border: "1px solid var(--border)",
 //               borderRadius: "14px",
 //               padding: "20px",
 //               minWidth: 0,
@@ -957,7 +957,7 @@
 //             <h2
 //               style={{
 //                 fontSize: "18px",
-//                 color: "#fff",
+//                 color: "var(--text-primary)",
 //                 fontWeight: 600,
 //                 marginBottom: "16px",
 //                 display: "flex",
@@ -986,14 +986,14 @@
 //                 <thead>
 //                   <tr
 //                     style={{
-//                       borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+//                       borderBottom: "1px solid var(--border)",
 //                       background: "rgba(255,255,255,0.01)",
 //                     }}
 //                   >
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1004,7 +1004,7 @@
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1015,7 +1015,7 @@
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1026,7 +1026,7 @@
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1045,7 +1045,7 @@
 //                         style={{
 //                           textAlign: "center",
 //                           padding: "30px",
-//                           color: "#6B7280",
+//                           color: "var(--text-secondary)",
 //                           fontSize: "14px",
 //                         }}
 //                       >
@@ -1125,8 +1125,8 @@
 //               flex: 1,
 //               display: "flex",
 //               flexDirection: "column",
-//               background: "#1F2937",
-//               border: "1px solid rgba(255,255,255,0.06)",
+//               background: "var(--bg-elevated)",
+//               border: "1px solid var(--border)",
 //               borderRadius: "14px",
 //               padding: "20px",
 //               minWidth: 0,
@@ -1135,7 +1135,7 @@
 //             <h2
 //               style={{
 //                 fontSize: "18px",
-//                 color: "#fff",
+//                 color: "var(--text-primary)",
 //                 fontWeight: 600,
 //                 marginBottom: "16px",
 //                 display: "flex",
@@ -1164,14 +1164,14 @@
 //                 <thead>
 //                   <tr
 //                     style={{
-//                       borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+//                       borderBottom: "1px solid var(--border)",
 //                       background: "rgba(255,255,255,0.01)",
 //                     }}
 //                   >
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1182,7 +1182,7 @@
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1193,7 +1193,7 @@
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1204,7 +1204,7 @@
 //                     <th
 //                       style={{
 //                         padding: "12px",
-//                         color: "#9CA3AF",
+//                         color: "var(--text-secondary)",
 //                         fontSize: "12px",
 //                         fontWeight: 600,
 //                         textTransform: "uppercase",
@@ -1223,7 +1223,7 @@
 //                         style={{
 //                           textAlign: "center",
 //                           padding: "30px",
-//                           color: "#6B7280",
+//                           color: "var(--text-secondary)",
 //                           fontSize: "14px",
 //                         }}
 //                       >
@@ -1308,7 +1308,7 @@
 //           background: transparent;
 //         }
 //         .custom-scroll::-webkit-scrollbar-thumb {
-//           background: rgba(255, 255, 255, 0.1);
+//           background: var(--border);
 //           border-radius: 10px;
 //         }
 //         .custom-scroll::-webkit-scrollbar-thumb:hover {
@@ -1399,7 +1399,7 @@ export default function OrdersPage() {
   };
 
   const renderStatusBadge = (status: string) => {
-    const cfg = statusConfig[status] || { bg: "rgba(107,114,128,0.1)", color: "#9CA3AF" };
+    const cfg = statusConfig[status] || { bg: "rgba(107,114,128,0.1)", color: "var(--text-secondary)" };
     return (
       <span style={{
         display: "inline-flex", alignItems: "center", gap: "6px",
@@ -1444,10 +1444,10 @@ export default function OrdersPage() {
   const countByStatus = (status: string) => rawData.filter(i => i.status === status).length;
 
   const statusTabs: { key: StatusFilter; label: string; color: string }[] = [
-    { key: "ALL",        label: "Tất cả",      color: "#fff" },
-    { key: "DONE",       label: "Hoàn thành",  color: "#10B981" },
-    { key: "PROCESSING", label: "Đang xử lý",  color: "#F59E0B" },
-    { key: "PENDING",    label: "Chờ duyệt",   color: "#818CF8" },
+    { key: "ALL",        label: "Tất cả",      color: "var(--text-primary)" },
+    { key: "DONE",       label: "Hoàn thành scan",  color: "#10B981" },
+    { key: "PROCESSING", label: "Đang scan",  color: "#F59E0B" },
+    { key: "PENDING",    label: "Chờ scan",   color: "#818CF8" },
     { key: "CANCELLED",  label: "Đã hủy",      color: "#EF4444" },
     { key: "APPROVED",   label: "Đã duyệt",    color: "#3B82F6" },
   ];
@@ -1475,10 +1475,10 @@ export default function OrdersPage() {
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "28px" }}>
         <div>
-          <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+          <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
             📑 Quản lý đơn hàng
           </h1>
-          <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
             Theo dõi, điều phối luồng sản phẩm nhập kho và xuất kho quy chuẩn
           </p>
         </div>
@@ -1486,7 +1486,7 @@ export default function OrdersPage() {
           <button
             onClick={() => navigate("/admin/orders/create-import")}
             style={{
-              background: "#4F46E5", color: "#fff", border: "none",
+              background: "#4F46E5", color: "var(--text-primary)", border: "none",
               padding: "10px 18px", borderRadius: "8px", fontSize: "14px",
               fontWeight: 600, cursor: "pointer",
             }}
@@ -1496,8 +1496,8 @@ export default function OrdersPage() {
           <button
             onClick={() => navigate("/admin/orders/create-export")}
             style={{
-              background: "rgba(255,255,255,0.05)", color: "#fff",
-              border: "1px solid rgba(255,255,255,0.1)",
+              background: "var(--border)", color: "var(--text-primary)",
+              border: "1px solid var(--border)",
               padding: "10px 18px", borderRadius: "8px", fontSize: "14px",
               fontWeight: 600, cursor: "pointer",
             }}
@@ -1510,7 +1510,7 @@ export default function OrdersPage() {
       {/* ── Search bar ── */}
       <div style={{ marginBottom: "20px" }}>
         <div style={{ position: "relative" }}>
-          <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }}>🔍</span>
+          <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--text-secondary)" }}>🔍</span>
           <input
             type="text"
             placeholder="Tìm kiếm theo tên sản phẩm hoặc mã đơn..."
@@ -1522,10 +1522,10 @@ export default function OrdersPage() {
             style={{
               width: "100%",
               padding: "12px 16px 12px 40px",
-              background: "#111827",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "var(--bg-overlay)",
+              border: "1px solid var(--border)",
               borderRadius: "10px",
-              color: "#fff",
+              color: "var(--text-primary)",
               fontSize: "14px",
               outline: "none",
             }}
@@ -1541,10 +1541,10 @@ export default function OrdersPage() {
                 right: "14px",
                 top: "50%",
                 transform: "translateY(-50%)",
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "var(--border)",
+                border: "1px solid var(--border)",
                 borderRadius: "6px",
-                color: "#9CA3AF",
+                color: "var(--text-secondary)",
                 cursor: "pointer",
                 fontSize: "12px",
                 padding: "4px 8px",
@@ -1557,10 +1557,10 @@ export default function OrdersPage() {
       </div>
 
       {/* ── Tab nhập / xuất + Sub status bar (liền nhau) ── */}
-      <div style={{ background: "#1F2937", borderRadius: "12px", marginBottom: "20px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ background: "var(--bg-elevated)", borderRadius: "12px", marginBottom: "20px", overflow: "hidden", border: "1px solid var(--border)" }}>
 
         {/* Row 1: Tab nhập / xuất */}
-        <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ display: "flex", borderBottom: "1px solid var(--border)" }}>
           {(["import", "export"] as const).map((tab) => {
             const isActive = activeTab === tab;
             const label = tab === "import" ? "📥 Đơn nhập" : "📤 Đơn xuất";
@@ -1576,7 +1576,7 @@ export default function OrdersPage() {
                   border: "none",
                   borderBottom: isActive ? `2px solid ${activeColor}` : "2px solid transparent",
                   background: isActive ? `${activeColor}11` : "transparent",
-                  color: isActive ? "#fff" : "#6B7280",
+                  color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                   fontSize: "14px", fontWeight: 600, cursor: "pointer",
                   transition: "all 0.15s",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
@@ -1585,7 +1585,7 @@ export default function OrdersPage() {
                 {label}
                 <span style={{
                   background: isActive ? `${activeColor}33` : "rgba(107,114,128,0.15)",
-                  color: isActive ? activeColor === "#6366F1" ? "#818CF8" : "#A78BFA" : "#6B7280",
+                  color: isActive ? activeColor === "#6366F1" ? "#818CF8" : "#A78BFA" : "var(--text-secondary)",
                   padding: "2px 8px", borderRadius: "10px", fontSize: "12px", fontWeight: 600,
                 }}>
                   {count}
@@ -1608,7 +1608,7 @@ export default function OrdersPage() {
                   border: "none",
                   borderBottom: isActive ? `2px solid ${s.color}` : "2px solid transparent",
                   background: "transparent",
-                  color: isActive ? s.color : "#6B7280",
+                  color: isActive ? s.color : "var(--text-secondary)",
                   fontSize: "13px", fontWeight: isActive ? 600 : 500,
                   cursor: "pointer",
                   transition: "all 0.15s",
@@ -1619,7 +1619,7 @@ export default function OrdersPage() {
                 {s.label}
                 <span style={{
                   background: isActive ? `${s.color}22` : "rgba(107,114,128,0.1)",
-                  color: isActive ? s.color : "#6B7280",
+                  color: isActive ? s.color : "var(--text-secondary)",
                   padding: "1px 7px", borderRadius: "10px", fontSize: "11px", fontWeight: 600,
                 }}>
                   {statusCount[s.key]}
@@ -1635,14 +1635,14 @@ export default function OrdersPage() {
         {/* Card header */}
         <div style={{
           padding: "16px 24px",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid var(--border)",
           display: "flex", alignItems: "center", gap: "10px",
         }}>
           <span style={{ fontSize: "15px" }}>{activeTab === "import" ? "📥" : "📤"}</span>
-          <span style={{ color: "#fff", fontWeight: 600, fontSize: "14px" }}>
+          <span style={{ color: "var(--text-primary)", fontWeight: 600, fontSize: "14px" }}>
             {activeTab === "import" ? "Danh sách đơn nhập" : "Danh sách đơn xuất"}
             {statusFilter !== "ALL" && (
-              <span style={{ color: "#9CA3AF", fontWeight: 400, fontSize: "13px", marginLeft: "8px" }}>
+              <span style={{ color: "var(--text-secondary)", fontWeight: 400, fontSize: "13px", marginLeft: "8px" }}>
                 — {statusTabs.find(s => s.key === statusFilter)?.label}
               </span>
             )}
@@ -1660,17 +1660,17 @@ export default function OrdersPage() {
         <div className="orders-scroll" style={{ maxHeight: "480px", overflowY: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "14px" }}>
             <thead style={{ position: "sticky", top: 0, zIndex: 10 }}>
-              <tr style={{ background: "#111827", borderBottom: "1px solid #1F2937" }}>
-                <th style={{ padding: "13px 20px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "25%" }}>Mã đơn</th>
-                <th style={{ padding: "13px 20px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "25%" }}>Người tạo</th>
-                <th style={{ padding: "13px 20px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "25%" }}>Ngày tạo</th>
-                <th style={{ padding: "13px 20px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center", width: "25%" }}>Trạng thái</th>
+              <tr style={{ background: "var(--bg-overlay)", borderBottom: "1px solid var(--bg-elevated)" }}>
+                <th style={{ padding: "13px 20px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "25%" }}>Mã đơn</th>
+                <th style={{ padding: "13px 20px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "25%" }}>Người tạo</th>
+                <th style={{ padding: "13px 20px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "25%" }}>Ngày tạo</th>
+                <th style={{ padding: "13px 20px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center", width: "25%" }}>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.length === 0 ? (
                 <tr>
-                  <td colSpan={4} style={{ textAlign: "center", padding: "48px", color: "#6B7280", fontSize: "14px" }}>
+                  <td colSpan={4} style={{ textAlign: "center", padding: "48px", color: "var(--text-secondary)", fontSize: "14px" }}>
                     Không có đơn nào phù hợp
                   </td>
                 </tr>

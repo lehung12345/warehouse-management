@@ -115,16 +115,16 @@
 //         <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
 //           <div style={{
 //             background: 'rgba(255,255,255,0.03)',
-//             border: '1px solid rgba(255,255,255,0.08)',
+//             border: '1px solid var(--border)',
 //             padding: '8px 16px',
 //             borderRadius: '20px',
 //             fontSize: '14px',
 //             display: 'flex',
 //             alignItems: 'center',
 //             gap: '8px',
-//             color: '#9CA3AF'
+//             color: 'var(--text-secondary)'
 //           }}>
-//             <span style={{ fontSize: '16px' }}>👥</span> Tổng sản phẩm (có tồn): <strong style={{ color: '#fff' }}>{totalProductsWithStock}</strong>
+//             <span style={{ fontSize: '16px' }}>👥</span> Tổng sản phẩm (có tồn): <strong style={{ color: 'var(--text-primary)' }}>{totalProductsWithStock}</strong>
 //           </div>
 //           <div style={{
 //             background: 'rgba(239, 68, 68, 0.05)',
@@ -145,7 +145,7 @@
 //         {/* Thanh tìm kiếm */}
 //         <div className="search-bar-wrapper" style={{ marginBottom: '20px', display: 'flex', gap: '12px' }}>
 //           <div style={{ position: 'relative', flex: 1 }}>
-//             <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#6B7280' }}>🔍</span>
+//             <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }}>🔍</span>
 //             <input 
 //               type="text" 
 //               placeholder="Tìm sản phẩm theo SKU hoặc vị trí kho..." 
@@ -154,10 +154,10 @@
 //               style={{
 //                 width: '100%',
 //                 padding: '12px 16px 12px 40px',
-//                 background: '#111827',
-//                 border: '1px solid rgba(255,255,255,0.08)',
+//                 background: 'var(--bg-overlay)',
+//                 border: '1px solid var(--border)',
 //                 borderRadius: '10px',
-//                 color: '#fff',
+//                 color: 'var(--text-primary)',
 //                 fontSize: '14px',
 //                 outline: 'none'
 //               }}
@@ -168,10 +168,10 @@
 //               onClick={() => setSearchTerm("")}
 //               style={{
 //                 padding: '0 16px',
-//                 background: 'rgba(255,255,255,0.05)',
-//                 border: '1px solid rgba(255,255,255,0.08)',
+//                 background: 'var(--border)',
+//                 border: '1px solid var(--border)',
 //                 borderRadius: '10px',
-//                 color: '#9CA3AF',
+//                 color: 'var(--text-secondary)',
 //                 cursor: 'pointer',
 //                 fontSize: '13px'
 //               }}
@@ -199,14 +199,14 @@
 //               <tbody>
 //                 {filteredData.length === 0 ? (
 //                   <tr>
-//                     <td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: '#6B7280' }}>
+//                     <td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
 //                       Không tìm thấy dữ liệu tồn kho phù hợp.
 //                     </td>
 //                   </tr>
 //                 ) : (
 //                   filteredData.map((item, idx) => (
 //                     <tr key={idx}>
-//                       <td style={{ textAlign: 'center', color: '#6B7280' }}>{idx + 1}</td>
+//                       <td style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>{idx + 1}</td>
 //                       <td>
 //                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
 //                           <div style={{
@@ -214,7 +214,7 @@
 //                             height: '32px',
 //                             borderRadius: '50%',
 //                             background: '#6366F1',
-//                             color: '#fff',
+//                             color: 'var(--text-primary)',
 //                             display: 'flex',
 //                             alignItems: 'center',
 //                             justifyContent: 'center',
@@ -223,23 +223,23 @@
 //                           }}>
 //                             {getAvatarChar(item.product)}
 //                           </div>
-//                           <span style={{ fontWeight: 500, color: '#F3F4F6' }}>{item.product}</span>
+//                           <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{item.product}</span>
 //                         </div>
 //                       </td>
 //                       <td>
 //                         <span style={{ 
 //                           fontFamily: 'monospace', 
-//                           color: '#9CA3AF', 
+//                           color: 'var(--text-secondary)', 
 //                           background: 'rgba(255,255,255,0.03)', 
 //                           padding: '4px 8px', 
 //                           borderRadius: '4px',
-//                           border: '1px solid rgba(255,255,255,0.05)'
+//                           border: '1px solid var(--border)'
 //                         }}>
 //                           {item.sku}
 //                         </span>
 //                       </td>
-//                       <td style={{ fontWeight: 600, color: '#fff' }}>{item.quantity}</td>
-//                       <td style={{ color: '#D1D5DB', fontSize: '13px' }}>{item.location}</td>
+//                       <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.quantity}</td>
+//                       <td style={{ color: 'var(--text-primary)', fontSize: '13px' }}>{item.location}</td>
 
 //                       {/* Trạng thái phát sáng chấm xanh/đỏ */}
 //                       <td style={{ textAlign: 'center' }}>
@@ -369,10 +369,10 @@
 
 //         {/* Tiêu đề trang */}
 //         <div style={{ marginBottom: "20px" }}>
-//           <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+//           <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
 //             🏬 Tồn kho
 //           </h1>
-//           <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+//           <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
 //             Thống kê tồn kho chi tiết và vị trí các sản phẩm trong hệ thống
 //           </p>
 //         </div>
@@ -381,16 +381,16 @@
 //         <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
 //           <div style={{
 //             background: "rgba(255, 255, 255, 0.03)",
-//             border: "1px solid rgba(255, 255, 255, 0.08)",
+//             border: "1px solid var(--border)",
 //             padding: "6px 14px",
 //             borderRadius: "20px",
 //             fontSize: "13px",
-//             color: "#9CA3AF",
+//             color: "var(--text-secondary)",
 //             display: "flex",
 //             alignItems: "center",
 //             gap: "6px"
 //           }}>
-//             <span>📦</span> Tổng sản phẩm (có tồn): <strong style={{ color: "#fff" }}>{totalProducts}</strong>
+//             <span>📦</span> Tổng sản phẩm (có tồn): <strong style={{ color: "var(--text-primary)" }}>{totalProducts}</strong>
 //           </div>
 //           <div style={{
 //             background: "rgba(239, 68, 68, 0.05)",
@@ -411,7 +411,7 @@
 //         {/* Thanh tìm kiếm thời gian thực */}
 //         <div style={{ marginBottom: "20px", display: "flex", gap: "12px" }}>
 //           <div style={{ position: "relative", flex: 1 }}>
-//             <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }}>🔍</span>
+//             <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--text-secondary)" }}>🔍</span>
 //             <input 
 //               type="text" 
 //               placeholder="Tìm sản phẩm theo SKU hoặc vị trí kho..." 
@@ -420,10 +420,10 @@
 //               style={{
 //                 width: "100%",
 //                 padding: "12px 16px 12px 40px",
-//                 background: "#111827",
-//                 border: "1px solid rgba(255,255,255,0.08)",
+//                 background: "var(--bg-overlay)",
+//                 border: "1px solid var(--border)",
 //                 borderRadius: "10px",
-//                 color: "#fff",
+//                 color: "var(--text-primary)",
 //                 fontSize: "14px",
 //                 outline: "none"
 //               }}
@@ -434,10 +434,10 @@
 //               onClick={() => setSearchTerm("")}
 //               style={{
 //                 padding: "0 16px",
-//                 background: "rgba(255,255,255,0.05)",
-//                 border: "1px solid rgba(255,255,255,0.08)",
+//                 background: "var(--border)",
+//                 border: "1px solid var(--border)",
 //                 borderRadius: "10px",
-//                 color: "#9CA3AF",
+//                 color: "var(--text-secondary)",
 //                 cursor: "pointer",
 //                 fontSize: "13px"
 //               }}
@@ -448,31 +448,31 @@
 //         </div>
 
 //         {/* Khung chứa bảng dữ liệu Modern Dark */}
-//         <div className="stat-card" style={{ padding: "0", overflow: "hidden", border: "1px solid rgba(255, 255, 255, 0.06)", background: "#1F2937" }}>
+//         <div className="stat-card" style={{ padding: "0", overflow: "hidden", border: "1px solid var(--border)", background: "var(--bg-elevated)" }}>
 //           <div style={{ overflowX: "auto" }}>
 //             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
 //               <thead>
-//                 <tr style={{ background: "rgba(255, 255, 255, 0.02)", borderBottom: "1px solid rgba(255, 255, 255, 0.06)" }}>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "50px", textAlign: "center" }}>#</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Sản phẩm</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>SKU</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Số lượng</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Vị trí (Kho &gt; Kệ &gt; Ô tầng)</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
+//                 <tr style={{ background: "rgba(255, 255, 255, 0.02)", borderBottom: "1px solid var(--border)" }}>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "50px", textAlign: "center" }}>#</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Sản phẩm</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>SKU</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Số lượng</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Vị trí (Kho &gt; Kệ &gt; Ô tầng)</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
 //                 </tr>
 //               </thead>
 
 //               <tbody>
 //                 {filteredData.length === 0 ? (
 //                   <tr>
-//                     <td colSpan={6} style={{ textAlign: "center", padding: "40px", color: "#6B7280", fontSize: "14px" }}>
+//                     <td colSpan={6} style={{ textAlign: "center", padding: "40px", color: "var(--text-secondary)", fontSize: "14px" }}>
 //                       Không tìm thấy dữ liệu tồn kho phù hợp.
 //                     </td>
 //                   </tr>
 //                 ) : (
 //                   filteredData.map((item, idx) => (
 //                     <tr key={idx} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)", transition: "background 0.2s" }}>
-//                       <td style={{ padding: "14px 16px", color: "#6B7280", fontSize: "14px", textAlign: "center" }}>{idx + 1}</td>
+//                       <td style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "14px", textAlign: "center" }}>{idx + 1}</td>
                       
 //                       {/* Cột sản phẩm kèm Avatar tròn */}
 //                       <td style={{ padding: "14px 16px" }}>
@@ -482,7 +482,7 @@
 //                             height: "30px",
 //                             borderRadius: "50%",
 //                             background: "#4F46E5",
-//                             color: "#fff",
+//                             color: "var(--text-primary)",
 //                             display: "flex",
 //                             alignItems: "center",
 //                             justifyContent: "center",
@@ -491,7 +491,7 @@
 //                           }}>
 //                             {getProductInitial(item.product)}
 //                           </div>
-//                           <span style={{ fontWeight: 500, color: "#F3F4F6", fontSize: "14px" }}>{item.product}</span>
+//                           <span style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: "14px" }}>{item.product}</span>
 //                         </div>
 //                       </td>
 
@@ -499,8 +499,8 @@
 //                       <td style={{ padding: "14px 16px" }}>
 //                         <span style={{
 //                           fontFamily: "monospace",
-//                           color: "#9CA3AF",
-//                           background: "rgba(255, 255, 255, 0.05)",
+//                           color: "var(--text-secondary)",
+//                           background: "var(--border)",
 //                           padding: "3px 6px",
 //                           borderRadius: "4px",
 //                           fontSize: "13px",
@@ -510,8 +510,8 @@
 //                         </span>
 //                       </td>
 
-//                       <td style={{ padding: "14px 16px", fontWeight: 600, color: "#fff", fontSize: "14px" }}>{item.quantity}</td>
-//                       <td style={{ padding: "14px 16px", color: "#D1D5DB", fontSize: "13px" }}>{item.location}</td>
+//                       <td style={{ padding: "14px 16px", fontWeight: 600, color: "var(--text-primary)", fontSize: "14px" }}>{item.quantity}</td>
+//                       <td style={{ padding: "14px 16px", color: "var(--text-primary)", fontSize: "13px" }}>{item.location}</td>
 
 //                       {/* Trạng thái dạng Badge phát sáng bo góc */}
 //                       <td style={{ padding: "14px 16px", textAlign: "center" }}>
@@ -636,10 +636,10 @@
 
 //         {/* Tiêu đề trang */}
 //         <div style={{ marginBottom: "20px" }}>
-//           <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+//           <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
 //             Quản lý Tồn kho
 //           </h1>
-//           <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+//           <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
 //             Hệ thống giám sát và phân vị trí hàng hóa lưu kho thời gian thực
 //           </p>
 //         </div>
@@ -648,16 +648,16 @@
 //         <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
 //           <div style={{
 //             background: "rgba(255, 255, 255, 0.03)",
-//             border: "1px solid rgba(255, 255, 255, 0.08)",
+//             border: "1px solid var(--border)",
 //             padding: "6px 14px",
 //             borderRadius: "20px",
 //             fontSize: "13px",
-//             color: "#9CA3AF",
+//             color: "var(--text-secondary)",
 //             display: "flex",
 //             alignItems: "center",
 //             gap: "6px"
 //           }}>
-//             <span>📦</span> Tổng sản phẩm hệ thống: <strong style={{ color: "#fff" }}>{total}</strong>
+//             <span>📦</span> Tổng sản phẩm hệ thống: <strong style={{ color: "var(--text-primary)" }}>{total}</strong>
 //           </div>
 //           <div style={{
 //             background: "rgba(239, 68, 68, 0.05)",
@@ -678,7 +678,7 @@
 //         {/* Thanh tìm kiếm */}
 //         <div style={{ marginBottom: "20px", display: "flex", gap: "12px" }}>
 //           <div style={{ position: "relative", flex: 1 }}>
-//             <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }}>🔍</span>
+//             <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--text-secondary)" }}>🔍</span>
 //             <input 
 //               type="text" 
 //               placeholder="Tìm kiếm sản phẩm trên trang hiện tại..." 
@@ -687,10 +687,10 @@
 //               style={{
 //                 width: "100%",
 //                 padding: "12px 16px 12px 40px",
-//                 background: "#111827",
-//                 border: "1px solid rgba(255,255,255,0.08)",
+//                 background: "var(--bg-overlay)",
+//                 border: "1px solid var(--border)",
 //                 borderRadius: "10px",
-//                 color: "#fff",
+//                 color: "var(--text-primary)",
 //                 fontSize: "14px",
 //                 outline: "none"
 //               }}
@@ -699,48 +699,48 @@
 //         </div>
 
 //         {/* Khung chứa bảng dữ liệu */}
-//         <div className="stat-card" style={{ padding: "0", overflow: "hidden", border: "1px solid rgba(255, 255, 255, 0.06)", background: "#1F2937", borderRadius: "12px", display: "flex", flexDirection: "column" }}>
+//         <div className="stat-card" style={{ padding: "0", overflow: "hidden", border: "1px solid var(--border)", background: "var(--bg-elevated)", borderRadius: "12px", display: "flex", flexDirection: "column" }}>
 //           <div style={{ overflowX: "auto", width: "100%" }}>
 //             <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
 //               <thead>
-//                 <tr style={{ background: "rgba(255, 255, 255, 0.02)", borderBottom: "1px solid rgba(255, 255, 255, 0.06)" }}>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "60px", textAlign: "center" }}>#</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Sản phẩm</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>SKU</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Số lượng</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>SL Tối thiểu</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Vị trí (Kho &gt; Kệ &gt; Ô tầng)</th>
-//                   <th style={{ padding: "14px 16px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
+//                 <tr style={{ background: "rgba(255, 255, 255, 0.02)", borderBottom: "1px solid var(--border)" }}>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "60px", textAlign: "center" }}>#</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Sản phẩm</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>SKU</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Số lượng</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>SL Tối thiểu</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Vị trí (Kho &gt; Kệ &gt; Ô tầng)</th>
+//                   <th style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
 //                 </tr>
 //               </thead>
 
 //               <tbody>
 //                 {filteredData.length === 0 ? (
 //                   <tr>
-//                     <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "#6B7280", fontSize: "14px" }}>
+//                     <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "var(--text-secondary)", fontSize: "14px" }}>
 //                       Không tìm thấy dữ liệu tồn kho phù hợp.
 //                     </td>
 //                   </tr>
 //                 ) : (
 //                   filteredData.map((item, idx) => (
 //                     <tr key={idx} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
-//                       <td style={{ padding: "14px 16px", color: "#6B7280", fontSize: "14px", textAlign: "center" }}>
+//                       <td style={{ padding: "14px 16px", color: "var(--text-secondary)", fontSize: "14px", textAlign: "center" }}>
 //                         {(currentPage - 1) * pageSize + idx + 1}
 //                       </td>
 //                       <td style={{ padding: "14px 16px" }}>
 //                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
 //                           <div style={{
 //                             width: "30px", height: "30px", borderRadius: "50%", background: "#4F46E5",
-//                             color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: "12px"
+//                             color: "var(--text-primary)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: "12px"
 //                           }}>
 //                             {getProductInitial(item.product)}
 //                           </div>
-//                           <span style={{ fontWeight: 500, color: "#F3F4F6", fontSize: "14px" }}>{item.product}</span>
+//                           <span style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: "14px" }}>{item.product}</span>
 //                         </div>
 //                       </td>
 //                       <td style={{ padding: "14px 16px" }}>
 //                         <span style={{
-//                           fontFamily: "monospace", color: "#9CA3AF", background: "rgba(255, 255, 255, 0.05)",
+//                           fontFamily: "monospace", color: "var(--text-secondary)", background: "var(--border)",
 //                           padding: "3px 6px", borderRadius: "4px", fontSize: "13px", border: "1px solid rgba(255, 255, 255, 0.03)"
 //                         }}>
 //                           {item.sku}
@@ -749,7 +749,7 @@
 //                       <td style={{ 
 //                         padding: "14px 16px", 
 //                         fontWeight: 600, 
-//                         color: (item.min_quantity && item.quantity < item.min_quantity) ? "#EF4444" : "#fff", 
+//                         color: (item.min_quantity && item.quantity < item.min_quantity) ? "#EF4444" : "var(--text-primary)", 
 //                         fontSize: "14px" 
 //                       }}>
 //                         {item.quantity}
@@ -764,17 +764,17 @@
 //                           style={{
 //                             width: "70px",
 //                             padding: "6px 8px",
-//                             background: "rgba(255, 255, 255, 0.05)",
-//                             border: "1px solid rgba(255, 255, 255, 0.1)",
+//                             background: "var(--border)",
+//                             border: "1px solid var(--border)",
 //                             borderRadius: "6px",
-//                             color: "#fff",
+//                             color: "var(--text-primary)",
 //                             fontSize: "13px",
 //                             outline: "none",
 //                             textAlign: "center"
 //                           }}
 //                         />
 //                       </td>
-//                       <td style={{ padding: "14px 16px", color: "#D1D5DB", fontSize: "13px" }}>{item.location}</td>
+//                       <td style={{ padding: "14px 16px", color: "var(--text-primary)", fontSize: "13px" }}>{item.location}</td>
 //                       <td style={{ padding: "14px 16px", textAlign: "center" }}>
 //                         <span style={{
 //                           display: "inline-flex", alignItems: "center", gap: "6px",
@@ -800,12 +800,12 @@
 //             alignItems: "center",
 //             padding: "16px 24px",
 //             background: "rgba(15, 23, 42, 0.4)",
-//             borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+//             borderTop: "1px solid var(--border)",
 //             width: "100%",
 //             boxSizing: "border-box"
 //           }}>
 //             {/* Thống kê số dòng nằm bên trái */}
-//             <div style={{ color: "#9CA3AF", fontSize: "13px" }}>
+//             <div style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
 //               Hiển thị từ <strong>{total === 0 ? 0 : (currentPage - 1) * pageSize + 1}</strong> đến <strong>{Math.min(currentPage * pageSize, total)}</strong> trên tổng số <strong>{total}</strong> dòng dữ liệu
 //             </div>
             
@@ -817,9 +817,9 @@
 //                 style={{
 //                   padding: "6px 14px",
 //                   background: currentPage === 1 ? "rgba(255,255,255,0.02)" : "#374151",
-//                   border: "1px solid rgba(255,255,255,0.05)",
+//                   border: "1px solid var(--border)",
 //                   borderRadius: "6px",
-//                   color: currentPage === 1 ? "#4B5563" : "#fff",
+//                   color: currentPage === 1 ? "#4B5563" : "var(--text-primary)",
 //                   cursor: currentPage === 1 ? "not-allowed" : "pointer",
 //                   fontSize: "13px",
 //                   transition: "all 0.2s"
@@ -839,9 +839,9 @@
 //                       minWidth: "32px",
 //                       height: "32px",
 //                       background: isActive ? "#4F46E5" : "transparent",
-//                       border: isActive ? "none" : "1px solid rgba(255,255,255,0.1)",
+//                       border: isActive ? "none" : "1px solid var(--border)",
 //                       borderRadius: "6px",
-//                       color: "#fff",
+//                       color: "var(--text-primary)",
 //                       fontWeight: isActive ? 600 : 400,
 //                       cursor: "pointer",
 //                       fontSize: "13px",
@@ -859,9 +859,9 @@
 //                 style={{
 //                   padding: "6px 14px",
 //                   background: currentPage === totalPages ? "rgba(255,255,255,0.02)" : "#374151",
-//                   border: "1px solid rgba(255,255,255,0.05)",
+//                   border: "1px solid var(--border)",
 //                   borderRadius: "6px",
-//                   color: currentPage === totalPages ? "#4B5563" : "#fff",
+//                   color: currentPage === totalPages ? "#4B5563" : "var(--text-primary)",
 //                   cursor: currentPage === totalPages ? "not-allowed" : "pointer",
 //                   fontSize: "13px",
 //                   transition: "all 0.2s"
@@ -953,10 +953,10 @@ export default function InventoryPage() {
 
         {/* Tiêu đề trang */}
         <div style={{ marginBottom: "20px" }}>
-          <h1 style={{ fontSize: "28px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+          <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
             Quản lý Tồn kho
           </h1>
-          <p style={{ color: "#9CA3AF", fontSize: "14px" }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
             Hệ thống giám sát và phân vị trí hàng hóa lưu kho thời gian thực
           </p>
         </div>
@@ -965,16 +965,16 @@ export default function InventoryPage() {
         <div style={{ display: "flex", gap: "12px", marginBottom: "24px" }}>
           <div style={{
             background: "rgba(255, 255, 255, 0.03)",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
+            border: "1px solid var(--border)",
             padding: "6px 14px",
             borderRadius: "20px",
             fontSize: "13px",
-            color: "#9CA3AF",
+            color: "var(--text-secondary)",
             display: "flex",
             alignItems: "center",
             gap: "6px"
           }}>
-            <span>📦</span> Tổng sản phẩm hệ thống: <strong style={{ color: "#fff" }}>{total}</strong>
+            <span>📦</span> Tổng sản phẩm hệ thống: <strong style={{ color: "var(--text-primary)" }}>{total}</strong>
           </div>
           <div style={{
             background: "rgba(239, 68, 68, 0.05)",
@@ -995,7 +995,7 @@ export default function InventoryPage() {
         {/* Thanh tìm kiếm */}
         <div style={{ marginBottom: "20px", display: "flex", gap: "12px" }}>
           <div style={{ position: "relative", flex: 1 }}>
-            <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "#6B7280" }}>🔍</span>
+            <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", color: "var(--text-secondary)" }}>🔍</span>
             <input 
               type="text" 
               placeholder="Tìm kiếm sản phẩm trên trang hiện tại..." 
@@ -1004,10 +1004,10 @@ export default function InventoryPage() {
               style={{
                 width: "100%",
                 padding: "12px 16px 12px 40px",
-                background: "#111827",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "var(--bg-overlay)",
+                border: "1px solid var(--border)",
                 borderRadius: "10px",
-                color: "#fff",
+                color: "var(--text-primary)",
                 fontSize: "14px",
                 outline: "none"
               }}
@@ -1016,7 +1016,7 @@ export default function InventoryPage() {
         </div>
 
         {/* Khung chứa bảng dữ liệu */}
-        <div className="stat-card" style={{ padding: "0", overflow: "hidden", border: "1px solid rgba(255, 255, 255, 0.06)", background: "#1F2937", borderRadius: "12px", display: "flex", flexDirection: "column" }}>
+        <div className="stat-card" style={{ padding: "0", overflow: "hidden", border: "1px solid var(--border)", background: "var(--bg-elevated)", borderRadius: "12px", display: "flex", flexDirection: "column" }}>
           <div style={{ overflowX: "auto", width: "100%", minHeight: "200px" }}>
             <table style={{ 
               width: "100%", 
@@ -1025,28 +1025,28 @@ export default function InventoryPage() {
               tableLayout: "fixed"
             }}>
               <thead>
-                <tr style={{ background: "rgba(255, 255, 255, 0.02)", borderBottom: "1px solid rgba(255, 255, 255, 0.06)" }}>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "50px", textAlign: "center", whiteSpace: "nowrap" }}>#</th>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "200px", whiteSpace: "nowrap" }}>Sản phẩm</th>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "120px", whiteSpace: "nowrap" }}>SKU</th>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "100px", textAlign: "center", whiteSpace: "nowrap" }}>Số lượng</th>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "100px", textAlign: "center", whiteSpace: "nowrap" }}>SL Tối thiểu</th>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "300px", whiteSpace: "nowrap" }}>Vị trí (Kho &gt; Kệ &gt; Ô tầng)</th>
-                  <th style={{ padding: "14px 12px", color: "#9CA3AF", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "80px", textAlign: "center", whiteSpace: "nowrap" }}>Trạng thái</th>
+                <tr style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border)" }}>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "50px", textAlign: "center", whiteSpace: "nowrap" }}>#</th>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "200px", whiteSpace: "nowrap" }}>Sản phẩm</th>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "120px", whiteSpace: "nowrap" }}>SKU</th>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "100px", textAlign: "center", whiteSpace: "nowrap" }}>Số lượng</th>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "100px", textAlign: "center", whiteSpace: "nowrap" }}>SL Tối thiểu</th>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "300px", whiteSpace: "nowrap" }}>Vị trí (Kho &gt; Kệ &gt; Ô tầng)</th>
+                  <th style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", width: "80px", textAlign: "center", whiteSpace: "nowrap" }}>Trạng thái</th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "#6B7280", fontSize: "14px" }}>
+                    <td colSpan={7} style={{ textAlign: "center", padding: "40px", color: "var(--text-secondary)", fontSize: "14px" }}>
                       Không tìm thấy dữ liệu tồn kho phù hợp.
                     </td>
                   </tr>
                 ) : (
                   filteredData.map((item, idx) => (
                     <tr key={idx} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.04)" }}>
-                      <td style={{ padding: "14px 12px", color: "#6B7280", fontSize: "14px", textAlign: "center", whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "14px 12px", color: "var(--text-secondary)", fontSize: "14px", textAlign: "center", whiteSpace: "nowrap" }}>
                         {(currentPage - 1) * pageSize + idx + 1}
                       </td>
                       <td style={{ padding: "14px 12px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -1057,7 +1057,7 @@ export default function InventoryPage() {
                             height: "30px", 
                             borderRadius: "50%", 
                             background: "#4F46E5",
-                            color: "#fff", 
+                            color: "var(--text-primary)", 
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center", 
@@ -1069,7 +1069,8 @@ export default function InventoryPage() {
                           </div>
                           <span 
                             title={item.product}
-                            style={{ fontWeight: 500, color: "#F3F4F6", fontSize: "13px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", cursor: "help" }}
+                            className="truncate-cell"
+                            style={{ fontWeight: 500, color: "var(--text-primary)", fontSize: "13px", cursor: "help" }}
                           >
                             {item.product}
                           </span>
@@ -1078,15 +1079,15 @@ export default function InventoryPage() {
                       <td style={{ padding: "14px 12px", whiteSpace: "nowrap" }}>
                         <span 
                           title={item.sku}
+                          className="truncate-cell"
                           style={{
                             fontFamily: "monospace", 
-                            color: "#9CA3AF", 
-                            background: "rgba(255, 255, 255, 0.05)",
+                            color: "var(--text-secondary)", 
+                            background: "var(--border)",
                             padding: "3px 6px", 
                             borderRadius: "4px", 
                             fontSize: "12px", 
                             border: "1px solid rgba(255, 255, 255, 0.03)",
-                            display: "inline-block",
                             cursor: "help"
                           }}>
                           {item.sku}
@@ -1095,7 +1096,7 @@ export default function InventoryPage() {
                       <td style={{ 
                         padding: "14px 12px", 
                         fontWeight: 600, 
-                        color: (item.min_quantity && item.quantity < item.min_quantity) ? "#EF4444" : "#fff", 
+                        color: (item.min_quantity && item.quantity < item.min_quantity) ? "#EF4444" : "var(--text-primary)", 
                         fontSize: "14px",
                         textAlign: "center",
                         whiteSpace: "nowrap"
@@ -1112,20 +1113,18 @@ export default function InventoryPage() {
                           style={{
                             width: "70px",
                             padding: "6px 8px",
-                            background: "rgba(255, 255, 255, 0.05)",
-                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            background: "var(--border)",
+                            border: "1px solid var(--border)",
                             borderRadius: "6px",
-                            color: "#fff",
+                            color: "var(--text-primary)",
                             fontSize: "13px",
                             outline: "none",
                             textAlign: "center"
                           }}
                         />
                       </td>
-                      <td 
-                        title={item.location}
-                        style={{ padding: "14px 12px", color: "#D1D5DB", fontSize: "13px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", cursor: "help" }}>
-                        {item.location}
+                      <td style={{ padding: "14px 12px", color: "var(--text-primary)", fontSize: "13px", cursor: "help" }}>
+                        <div title={item.location} className="truncate-cell">{item.location}</div>
                       </td>
                       <td style={{ padding: "14px 12px", textAlign: "center", whiteSpace: "nowrap" }}>
                         <span style={{
@@ -1156,15 +1155,15 @@ export default function InventoryPage() {
             justifyContent: "space-between",
             alignItems: "center",
             padding: "16px 24px",
-            background: "rgba(15, 23, 42, 0.4)",
-            borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+            background: "var(--bg-surface)",
+            borderTop: "1px solid var(--border)",
             width: "100%",
             boxSizing: "border-box",
             flexWrap: "wrap",
             gap: "16px"
           }}>
             {/* Thống kê số dòng nằm bên trái */}
-            <div style={{ color: "#9CA3AF", fontSize: "13px", whiteSpace: "nowrap" }}>
+            <div style={{ color: "var(--text-secondary)", fontSize: "13px", whiteSpace: "nowrap" }}>
               Hiển thị từ <strong>{total === 0 ? 0 : (currentPage - 1) * pageSize + 1}</strong> đến <strong>{Math.min(currentPage * pageSize, total)}</strong> trên tổng số <strong>{total}</strong> dòng dữ liệu
             </div>
             
@@ -1176,9 +1175,9 @@ export default function InventoryPage() {
                 style={{
                   padding: "6px 14px",
                   background: currentPage === 1 ? "rgba(255,255,255,0.02)" : "#374151",
-                  border: "1px solid rgba(255,255,255,0.05)",
+                  border: "1px solid var(--border)",
                   borderRadius: "6px",
-                  color: currentPage === 1 ? "#4B5563" : "#fff",
+                  color: currentPage === 1 ? "#4B5563" : "var(--text-primary)",
                   cursor: currentPage === 1 ? "not-allowed" : "pointer",
                   fontSize: "13px",
                   transition: "all 0.2s",
@@ -1199,9 +1198,9 @@ export default function InventoryPage() {
                       minWidth: "32px",
                       height: "32px",
                       background: isActive ? "#4F46E5" : "transparent",
-                      border: isActive ? "none" : "1px solid rgba(255,255,255,0.1)",
+                      border: isActive ? "none" : "1px solid var(--border)",
                       borderRadius: "6px",
-                      color: "#fff",
+                      color: "var(--text-primary)",
                       fontWeight: isActive ? 600 : 400,
                       cursor: "pointer",
                       fontSize: "13px",
@@ -1219,9 +1218,9 @@ export default function InventoryPage() {
                 style={{
                   padding: "6px 14px",
                   background: currentPage === totalPages ? "rgba(255,255,255,0.02)" : "#374151",
-                  border: "1px solid rgba(255,255,255,0.05)",
+                  border: "1px solid var(--border)",
                   borderRadius: "6px",
-                  color: currentPage === totalPages ? "#4B5563" : "#fff",
+                  color: currentPage === totalPages ? "#4B5563" : "var(--text-primary)",
                   cursor: currentPage === totalPages ? "not-allowed" : "pointer",
                   fontSize: "13px",
                   transition: "all 0.2s",
