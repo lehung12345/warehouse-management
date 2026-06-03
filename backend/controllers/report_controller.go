@@ -46,3 +46,14 @@ func (c *ReportController) TopProducts(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, data)
 }
+
+func (c *ReportController) TopImportedProducts(ctx *gin.Context) {
+
+	data, err := c.Service.TopImportedProducts()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, data)
+}

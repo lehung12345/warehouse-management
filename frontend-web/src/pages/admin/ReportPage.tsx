@@ -869,7 +869,7 @@ ChartJS.register(
   Filler
 );
 
-type TabType = "importExport" | "stock" | "top";
+type TabType = "importExport" | "stock" | "top" | "topImport";
 
 import AdminLayout from "./AdminLayout";
 
@@ -881,6 +881,7 @@ export default function ReportPage() {
   const [importExport, setImportExport] = useState<any>(null);
   const [stock, setStock] = useState<any[]>([]);
   const [topProducts, setTopProducts] = useState<any[]>([]);
+  const [topImportedProducts, setTopImportedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -897,10 +898,11 @@ export default function ReportPage() {
     try {
       const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
-      const [res1, res2, res3] = await Promise.all([
+      const [res1, res2, res3, res4] = await Promise.all([
         axios.get(`${baseURL}/api/reports/import-export`, getAuthHeader()),
         axios.get(`${baseURL}/api/reports/stock`, getAuthHeader()),
-        axios.get(`${baseURL}/api/reports/top-products`, getAuthHeader())
+        axios.get(`${baseURL}/api/reports/top-products`, getAuthHeader()),
+        axios.get(`${baseURL}/api/reports/top-imported-products`, getAuthHeader())
       ]);
 
       // Xử lý sắp xếp ngày tăng dần
@@ -927,6 +929,7 @@ export default function ReportPage() {
 
       setStock(res2.data);
       setTopProducts(res3.data);
+      setTopImportedProducts(res4.data);
       setError(null);
     } catch (error: any) {
       console.error("Lỗi khi tải dữ liệu báo cáo:", error);
@@ -973,7 +976,25 @@ export default function ReportPage() {
 
   return (
     <AdminLayout>
-      <h1 style={{ color: "#fff", marginBottom: 24 }}>📈 Reports Dashboard</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <h1 style={{ color: "#fff", margin: 0 }}>📈 Reports Dashboard</h1>
+        <button
+          onClick={fetchReports}
+          disabled={loading}
+          style={{
+            background: loading ? "#374151" : "#4F46E5",
+            color: "#fff",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            border: "none",
+            cursor: loading ? "not-allowed" : "pointer",
+            fontWeight: "500",
+            transition: "all 0.2s ease"
+          }}
+        >
+          {loading ? "Đang tải..." : "🔄 Refresh"}
+        </button>
+      </div>
 
       {/* KPI */}
       <div style={grid3}>
@@ -1014,6 +1035,13 @@ export default function ReportPage() {
           onClick={() => setActiveTab("top")}
         >
           🔥 Top sản phẩm xuất
+        </button>
+
+        <button
+          style={activeTab === "topImport" ? activeTabStyle : tabStyle}
+          onClick={() => setActiveTab("topImport")}
+        >
+          📥 Top sản phẩm nhập
         </button>
       </div>
 
@@ -1154,6 +1182,15 @@ export default function ReportPage() {
                           borderBottom: "1px solid #374151"
                         }}
                       >
+                        <div style={{
+                          color: "#9CA3AF",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          minWidth: "20px",
+                          textAlign: "center"
+                        }}>
+                          {index + 1}
+                        </div>
                         <div
                           style={{
                             width: "14px",
@@ -1212,7 +1249,7 @@ export default function ReportPage() {
           </>
         )}
 
-        {/* 3. BIỂU ĐỒ CỘT TOP SẢN PHẨM - trục số nguyên */}
+        {/* 3. BIỂU ĐỒ CỘT TOP SẢN PHẨM XUẤT - trục số nguyên */}
         {activeTab === "top" && (
           <>
             <h3 style={title}>Top sản phẩm xuất (Dữ liệu thực tế từ DB)</h3>
@@ -1241,6 +1278,60 @@ export default function ReportPage() {
                         label: (context) => {
                           const value = context.raw as number;
                           return `Số lượng xuất: ${value}`;
+                        }
+                      }
+                    }
+                  },
+                  scales: {
+                    x: {
+                      beginAtZero: true,
+                      ticks: { 
+                        color: "#9CA3AF",
+                        stepSize: 1,
+                        callback: (value) => Number.isInteger(value) ? value.toString() : ''
+                      },
+                      grid: { color: "rgba(255,255,255,0.05)" }
+                    },
+                    y: {
+                      ticks: { color: "#fff", font: { size: 12 } },
+                      grid: { display: false }
+                    }
+                  }
+                }}
+              />
+            </div>
+          </>
+        )}
+
+        {/* 4. BIỂU ĐỒ CỘT TOP SẢN PHẨM NHẬP - trục số nguyên */}
+        {activeTab === "topImport" && (
+          <>
+            <h3 style={title}>Top sản phẩm nhập (Dữ liệu thực tế từ DB)</h3>
+            <div style={{ position: "relative", height: `${Math.max(400, topImportedProducts.length * 40)}px`, width: "100%" }}>
+              <Bar
+                data={{
+                  labels: topImportedProducts.map((p) => p.name),
+                  datasets: [
+                    {
+                      label: "Số lượng nhập",
+                      data: topImportedProducts.map((p) => p.total),
+                      backgroundColor: "#22C55E",
+                      borderRadius: 6,
+                      barThickness: 24
+                    }
+                  ]
+                }}
+                options={{
+                  indexAxis: "y" as const,
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { labels: { color: "#fff" } },
+                    tooltip: {
+                      callbacks: {
+                        label: (context) => {
+                          const value = context.raw as number;
+                          return `Số lượng nhập: ${value}`;
                         }
                       }
                     }

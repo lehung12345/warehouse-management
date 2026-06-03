@@ -21,7 +21,7 @@
 #### 1.3 Product Management
 - CRUD sản phẩm (GET/POST/PUT/DELETE /api/products)
 - Sản phẩm có: Name, SKU, Barcode, RFIDCode, Unit
-- Tự động sinh SKU/Barcode
+- Tự động sinh SKU/Barcode, RFIDCode
 - Hỗ trợ QR code và Barcode
 
 #### 1.4 Location Management
@@ -141,7 +141,7 @@
 
 #### 3.4 Orders Screen
 - Tab đơn nhập/xuất
-- Lọc theo status (ALL, DONE, PROCESSING, PENDING, CANCELLED)
+- Lọc theo status (ALL, DONE, PROCESSING, PENDING, CANCELLED, APPROVED)
 - Sắp xếp theo ngày
 - Card UI cho từng đơn
 - Badge status với màu sắc
@@ -215,5 +215,6 @@
 - http (HTTP client)
 - flutter_dotenv (Environment variables)
 - QR Scanner (Camera integration)
+- Có thể xuất apk để chạy trên máy thật
 
 

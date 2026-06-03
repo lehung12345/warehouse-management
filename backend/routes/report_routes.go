@@ -17,5 +17,6 @@ func ReportRoutes(r *gin.RouterGroup, db *gorm.DB) {
 		api.GET("/import-export", controller.ImportExport)
 		api.GET("/stock", controller.Stock)
 		api.GET("/top-products", controller.TopProducts)
+		api.GET("/top-imported-products", controller.TopImportedProducts)
 	}
 }

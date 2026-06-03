@@ -116,10 +116,46 @@ func (s *ReportService) TopProducts() ([]map[string]interface{}, error) {
 
 	var results []Result
 
-	err := s.DB.Table("transactions").
-		Select("products.name as name, SUM(transactions.quantity) as total").
-		Joins("JOIN products ON products.id = transactions.product_id").
-		Where("transactions.type = ?", "EXPORT").
+	err := s.DB.Table("export_items").
+		Select("products.name as name, SUM(export_items.quantity) as total").
+		Joins("JOIN products ON products.id = export_items.product_id").
+		Joins("JOIN exports ON exports.id = export_items.export_id").
+		Where("exports.status IN ?", []string{"DONE", "APPROVED"}).
+		Group("products.name").
+		Order("total DESC").
+		Limit(10).
+		Scan(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	var response []map[string]interface{}
+
+	for _, r := range results {
+		response = append(response, map[string]interface{}{
+			"name":  r.Name,
+			"total": r.Total,
+		})
+	}
+
+	return response, nil
+}
+
+func (s *ReportService) TopImportedProducts() ([]map[string]interface{}, error) {
+
+	type Result struct {
+		Name  string
+		Total int
+	}
+
+	var results []Result
+
+	err := s.DB.Table("import_items").
+		Select("products.name as name, SUM(import_items.quantity) as total").
+		Joins("JOIN products ON products.id = import_items.product_id").
+		Joins("JOIN imports ON imports.id = import_items.import_id").
+		Where("imports.status IN ?", []string{"DONE", "APPROVED"}).
 		Group("products.name").
 		Order("total DESC").
 		Limit(10).
