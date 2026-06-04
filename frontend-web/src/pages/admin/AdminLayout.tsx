@@ -1,6 +1,8 @@
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
 import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import api from '../../api/auth'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -10,6 +12,54 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Unseen counts for notification badge
+  const [unseenCounts, setUnseenCounts] = useState<{
+    import_total: number;
+    export_total: number;
+  }>({
+    import_total: 0,
+    export_total: 0,
+  });
+
+  const fetchUnseenCounts = async () => {
+    try {
+      const res = await api.get("/api/orders/unseen-counts");
+      setUnseenCounts(res.data || {
+        import_total: 0,
+        export_total: 0,
+      });
+    } catch (err) {
+      console.error("Fetch unseen counts error:", err);
+    }
+  };
+
+  const markAllOrdersAsSeen = async () => {
+    try {
+      // Mark all import orders as seen
+      await api.post("/api/orders/mark-seen", {
+        order_id: 0, // 0 means all orders
+        order_type: "import",
+      });
+      // Mark all export orders as seen
+      await api.post("/api/orders/mark-seen", {
+        order_id: 0, // 0 means all orders
+        order_type: "export",
+      });
+      setUnseenCounts({ import_total: 0, export_total: 0 });
+    } catch (err) {
+      console.error("Mark all orders as seen error:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnseenCounts();
+    // Periodic refresh for unseen counts (every 5 seconds)
+    const interval = setInterval(() => {
+      fetchUnseenCounts();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     logout()
@@ -27,7 +77,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { path: '/admin', label: 'Dashboard', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z' },
     { path: '/admin/products', label: 'Sản phẩm', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4' },
     { path: '/admin/inventory', label: 'Tồn kho', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
-    { path: '/admin/orders', label: 'Đơn hàng', icon: 'M12 4v16m8-8H4' },
+    { path: '/admin/orders', label: 'Đơn hàng', icon: 'M12 4v16m8-8H4', showBadge: true },
     { path: '/admin/locations', label: 'Vị trí kho', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' },
     { path: '/admin/reports', label: 'Báo cáo', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
     { path: '/admin/users', label: 'Nhân viên', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
@@ -58,11 +108,21 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               key={item.path}
               className={`nav-item ${isActive(item.path) ? 'active' : ''}`}
               href={item.path}
+              onClick={(e) => {
+                if (item.path === '/admin/orders') {
+                  e.preventDefault();
+                  markAllOrdersAsSeen();
+                  navigate('/admin/orders');
+                }
+              }}
             >
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
               </svg>
               {item.label}
+              {item.showBadge && (unseenCounts.import_total + unseenCounts.export_total > 0) && (
+                <span className="nav-badge">{unseenCounts.import_total + unseenCounts.export_total}</span>
+              )}
             </a>
           ))}
         </nav>

@@ -12,14 +12,14 @@ import (
 )
 
 func main() {
-	// 1️⃣ Load config từ .env
+	// Load config từ .env
 	config.LoadConfig()
 
-	// 2️⃣ Kết nối database (chuẩn)
+	// Kết nối database (chuẩn)
 	config.ConnectDB()
 	db := config.DB
 
-	// 3️⃣ Ping database
+	// Ping database
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatal("❌ Không lấy được SQL DB:", err)
@@ -29,7 +29,7 @@ func main() {
 	}
 	log.Println("✅ KẾT NỐI DATABASE THÀNH CÔNG")
 
-	// 4️⃣ Auto migrate
+	// Auto migrate
 	err = db.AutoMigrate(
 		&entity.User{},
 		&entity.Product{},
@@ -40,37 +40,35 @@ func main() {
 		&entity.Export{},
 		&entity.ExportItem{},
 		&entity.Transaction{},
+		&entity.OrderSeenStatus{},
 	)
 	if err != nil {
 		log.Fatal("❌ MIGRATE LỖI:", err)
 	}
 	log.Println("✅ MIGRATE THÀNH CÔNG")
 
-	// 5️⃣ Reset sequences để tránh duplicate primary key
+	// Reset sequences để tránh duplicate primary key
 	fixSequences(db)
 
-	// 6️⃣ Khởi tạo server
+	// Khởi tạo server
 	r := gin.Default()
 	r.Use(corsMiddleware())
 
-	// 7️⃣ API test
+	// API test
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 
-	// 8️⃣ Routes
+	// Routes
 	routes.SetupRoutes(r, db)
 
-	// 9️⃣ Run server
+	// Run server
 	log.Println("🚀 Server chạy tại port:", config.ENV.Port)
 	r.Run(":" + config.ENV.Port)
 	// r.Run("0.0.0.0:" + config.ENV.Port) dùng súng rfid thì dùng
 }
 
-
-// =======================
 // CORS Middleware
-// =======================
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -87,13 +85,11 @@ func corsMiddleware() gin.HandlerFunc {
 	}
 }
 
-// =======================
 // Fix PostgreSQL Sequences
-// =======================
 func fixSequences(db *gorm.DB) {
 	tables := []string{
 		"products", "locations", "imports", "exports",
-		"import_items", "export_items", "inventories", "users", "transactions",
+		"import_items", "export_items", "inventories", "users", "transactions", "order_seen_statuses",
 	}
 	for _, table := range tables {
 		query := `SELECT setval(pg_get_serial_sequence('` + table + `', 'id'), COALESCE((SELECT MAX(id) FROM "` + table + `"), 0) + 1, false)`

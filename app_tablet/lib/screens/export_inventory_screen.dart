@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -16,13 +17,65 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
   List<OrderModel> exportOrders = [];
   bool loading = true;
   String _selectedStatus = 'ALL';
-  final List<String> _statusOptions = ['ALL', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED', 'APPROVED'];
-  final List<String> _statusLabels = ['Tất cả', 'Done', 'Processing', 'Pending', 'Cancelled', 'Approved'];
+  final List<String> _statusOptions = ['ALL', 'APPROVED', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED'];
+  final List<String> _statusLabels = ['Tất cả', 'Approved', 'Done', 'Processing', 'Pending', 'Cancelled'];
+  Timer? _refreshTimer;
+
+  // Unseen counts for notification highlighting
+  Map<String, int> _unseenCounts = {
+    'export_all': 0,
+    'export_approved': 0,
+    'export_done': 0,
+    'export_processing': 0,
+    'export_pending': 0,
+    'export_cancelled': 0,
+  };
 
   @override
   void initState() {
     super.initState();
     _fetchData();
+    // Mark all export orders as seen when page loads
+    _markAllExportOrdersAsSeen();
+    // Start periodic refresh for unseen counts (every 5 seconds)
+    _refreshTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      _refreshUnseenCounts();
+    });
+  }
+
+  Future<void> _markAllExportOrdersAsSeen() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token == null) return;
+
+    try {
+      await OrderService.markOrderAsSeen(0, 'export', token);
+    } catch (e) {
+      // Silently fail
+    }
+  }
+
+  Future<void> _refreshUnseenCounts() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token != null) {
+      try {
+        final unseen = await OrderService.getUnseenCounts(token);
+        if (mounted) {
+          setState(() {
+            _unseenCounts = unseen;
+          });
+        }
+      } catch (e) {
+        // Silent fail on refresh errors
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _fetchData() async {
@@ -32,14 +85,34 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
     setState(() => loading = true);
     try {
       final exp = await OrderService.getExports(token);
+      final unseen = await OrderService.getUnseenCounts(token);
       setState(() {
         exportOrders = _sortOrdersByDate(exp);
+        _unseenCounts = unseen;
         loading = false;
       });
     } catch (e) {
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
     }
+  }
+
+  Future<void> _markOrdersAsSeen(String status) async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token == null) return;
+
+    final ordersToMark = exportOrders.where((order) => order.status == status).toList();
+
+    for (final order in ordersToMark) {
+      await OrderService.markOrderAsSeen(order.id, 'export', token);
+    }
+
+    // Refresh unseen counts
+    final unseen = await OrderService.getUnseenCounts(token);
+    setState(() {
+      _unseenCounts = unseen;
+    });
   }
 
   List<OrderModel> _sortOrdersByDate(List<OrderModel> orders) {
@@ -139,28 +212,47 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
             final label = _statusLabels[index];
             final isSelected = _selectedStatus == status;
 
+            // Check if this status has unseen orders
+            bool hasUnseen = false;
+            if (status == 'ALL') hasUnseen = _unseenCounts['export_all']! > 0;
+            else if (status == 'APPROVED') hasUnseen = _unseenCounts['export_approved']! > 0;
+            else if (status == 'DONE') hasUnseen = _unseenCounts['export_done']! > 0;
+            else if (status == 'PROCESSING') hasUnseen = _unseenCounts['export_processing']! > 0;
+            else if (status == 'PENDING') hasUnseen = _unseenCounts['export_pending']! > 0;
+            else if (status == 'CANCELLED') hasUnseen = _unseenCounts['export_cancelled']! > 0;
+
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: GestureDetector(
                 onTap: () {
                   setState(() => _selectedStatus = status);
+                  // Mark orders as seen when user taps on a status filter
+                  if (status != 'ALL') {
+                    _markOrdersAsSeen(status);
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFF59E0B) : const Color(0xFFF3F4F6),
+                    color: hasUnseen && !isSelected 
+                        ? const Color(0xFFFEE2E2) 
+                        : (isSelected ? const Color(0xFFF59E0B) : const Color(0xFFF3F4F6)),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFF59E0B) : const Color(0xFFE5E7EB),
+                      color: hasUnseen && !isSelected 
+                          ? const Color(0xFFEF4444) 
+                          : (isSelected ? const Color(0xFFF59E0B) : const Color(0xFFE5E7EB)),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     label,
                     style: TextStyle(
-                      color: isSelected ? Colors.white : const Color(0xFF6B7280),
+                      color: hasUnseen && !isSelected 
+                          ? const Color(0xFFEF4444) 
+                          : (isSelected ? Colors.white : const Color(0xFF6B7280)),
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: hasUnseen && !isSelected ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
                 ),
@@ -263,6 +355,18 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () async {
+                // Mark this specific order as seen
+                final auth = Provider.of<AuthProvider>(context, listen: false);
+                final token = auth.token;
+                if (token != null) {
+                  await OrderService.markOrderAsSeen(order.id, 'export', token);
+                  // Refresh unseen counts
+                  final unseen = await OrderService.getUnseenCounts(token);
+                  setState(() {
+                    _unseenCounts = unseen;
+                  });
+                }
+                
                 await Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -713,6 +713,31 @@ body,
   flex-shrink: 0;
 }
 
+.nav-badge {
+  margin-left: auto;
+  background: var(--red-500);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
 .sidebar-footer {
   padding: 12px;
   border-top: 1px solid var(--border);

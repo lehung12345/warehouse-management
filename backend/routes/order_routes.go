@@ -28,5 +28,9 @@ func OrderRoutes(r *gin.RouterGroup, db *gorm.DB) {
 		api.GET("/export/code/:code", controller.GetExportByCode)
 		api.POST("/export/:id/cancel", controller.CancelExport)
 		api.POST("/export/:id/approve", controller.ApproveExport)
+
+		// Notification/Seen status
+		api.POST("/mark-seen", controller.MarkOrderAsSeen)
+		api.GET("/unseen-counts", controller.GetUnseenCounts)
 	}
 }

@@ -16,10 +16,4 @@ func InventoryRoutes(r *gin.RouterGroup, db *gorm.DB) {
 		api.GET("", controller.GetInventories)
 		api.PUT("/:id/min-quantity", controller.UpdateMinQuantity)
 	}
-
-	// scan := r.Group("/api/scan")
-	// {
-	// 	scan.POST("/import", controller.ImportProduct)
-	// 	scan.POST("/export", controller.ExportProduct)
-	// }
 }

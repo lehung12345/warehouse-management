@@ -1,131 +1,3 @@
-// package services
-
-// import (
-// 	"warehouse-backend/entity"
-// 	"gorm.io/gorm"
-// 	"errors"
-// )
-
-// type OrderService struct {
-// 	DB *gorm.DB
-// }
-
-// func NewOrderService(db *gorm.DB) *OrderService {
-// 	return &OrderService{DB: db}
-// }
-
-// func (s *OrderService) CreateImport(order entity.Import) error {
-// 	return s.DB.Create(&order).Error
-// }
-
-// func (s *OrderService) CreateExport(order entity.Export) error {
-// 	return s.DB.Create(&order).Error
-// }
-
-// func (s *OrderService) GetImports() ([]entity.Import, error) {
-// 	var data []entity.Import
-// 	err := s.DB.Preload("Items.Product").Find(&data).Error
-// 	return data, err
-// }
-
-// func (s *OrderService) GetExports() ([]entity.Export, error) {
-// 	var data []entity.Export
-// 	err := s.DB.Preload("Items.Product").Find(&data).Error
-// 	return data, err
-// }
-
-// func (s *OrderService) UpdateImportStatus(id uint, status string) error {
-// 	return s.DB.Model(&entity.Import{}).
-// 		Where("id = ?", id).
-// 		Update("status", status).Error
-// }
-
-// func (s *OrderService) UpdateExportStatus(id uint, status string) error {
-// 	return s.DB.Model(&entity.Export{}).
-// 		Where("id = ?", id).
-// 		Update("status", status).Error
-// }
-
-// // func (s *OrderService) CompleteImport(id uint) error {
-
-// // 	var order entity.Import
-// // 	s.DB.Preload("Items").First(&order, id)
-
-// // 	tx := s.DB.Begin()
-
-// // 	for _, i := range order.Items {
-
-// // 		var inv entity.Inventory
-// // 		tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
-// // 			First(&inv)
-
-// // 		inv.Quantity += i.Quantity
-// // 		tx.Save(&inv)
-// // 	}
-
-// // 	tx.Model(&entity.Import{}).
-// // 		Where("id = ?", id).
-// // 		Update("status", "DONE")
-
-// // 	tx.Commit()
-// // 	return nil
-// // }
-
-// // func (s *OrderService) CompleteExport(id uint) error {
-
-// // 	var order entity.Export
-// // 	s.DB.Preload("Items").First(&order, id)
-
-// // 	tx := s.DB.Begin()
-
-// // 	for _, i := range order.Items {
-
-// // 		var inv entity.Inventory
-// // 		tx.Where("product_id = ? AND location_id = ?", i.ProductID, i.LocationID).
-// // 			First(&inv)
-
-// // 		inv.Quantity -= i.Quantity
-// // 		tx.Save(&inv)
-// // 	}
-
-// // 	tx.Model(&entity.Export{}).
-// // 		Where("id = ?", id).
-// // 		Update("status", "DONE")
-
-// // 	tx.Commit()
-// // 	return nil
-// // }
-
-// func (s *OrderService) CancelImport(id uint) error {
-// 	var order entity.Import
-// 	if err := s.DB.First(&order, id).Error; err != nil {
-// 		return err
-// 	}
-// 	if order.Status == "DONE" {
-// 		return errors.New("đơn đã hoàn thành, không thể hủy")
-// 	}
-// 	if order.Status == "CANCELLED" {
-// 		return errors.New("đơn đã bị hủy trước đó")
-// 	}
-// 	return s.DB.Model(&order).Update("status", "CANCELLED").Error
-// }
-
-
-// func (s *OrderService) CancelExport(id uint) error {
-// 	var order entity.Export
-// 	if err := s.DB.First(&order, id).Error; err != nil {
-// 		return err
-// 	}
-// 	if order.Status == "DONE" {
-// 		return errors.New("đơn đã hoàn thành, không thể hủy")
-// 	}
-// 	if order.Status == "CANCELLED" {
-// 		return errors.New("đơn đã bị hủy trước đó")
-// 	}
-// 	return s.DB.Model(&order).Update("status", "CANCELLED").Error
-// }
-
-
 package services
 
 import (
@@ -208,11 +80,23 @@ func (s *OrderService) GetExports() ([]entity.Export, error) {
 }
 
 func (s *OrderService) UpdateImportStatus(id uint, status string) error {
-	return s.DB.Model(&entity.Import{}).Where("id = ?", id).Update("status", status).Error
+	err := s.DB.Model(&entity.Import{}).Where("id = ?", id).Update("status", status).Error
+	if err != nil {
+		return err
+	}
+	// Xóa OrderSeenStatus để admin nhận thông báo mới khi status thay đổi
+	s.DB.Where("order_id = ? AND order_type = 'import'", id).Delete(&entity.OrderSeenStatus{})
+	return nil
 }
 
 func (s *OrderService) UpdateExportStatus(id uint, status string) error {
-	return s.DB.Model(&entity.Export{}).Where("id = ?", id).Update("status", status).Error
+	err := s.DB.Model(&entity.Export{}).Where("id = ?", id).Update("status", status).Error
+	if err != nil {
+		return err
+	}
+	// Xóa OrderSeenStatus để admin nhận thông báo mới khi status thay đổi
+	s.DB.Where("order_id = ? AND order_type = 'export'", id).Delete(&entity.OrderSeenStatus{})
+	return nil
 }
 
 func (s *OrderService) CancelImport(id uint) error {
@@ -226,7 +110,13 @@ func (s *OrderService) CancelImport(id uint) error {
 	if order.Status == "CANCELLED" {
 		return errors.New("đơn đã bị hủy trước đó")
 	}
-	return s.DB.Model(&order).Update("status", "CANCELLED").Error
+	err := s.DB.Model(&order).Update("status", "CANCELLED").Error
+	if err != nil {
+		return err
+	}
+	// Xóa OrderSeenStatus để admin nhận thông báo mới khi status thay đổi
+	s.DB.Where("order_id = ? AND order_type = 'import'", id).Delete(&entity.OrderSeenStatus{})
+	return nil
 }
 
 func (s *OrderService) CancelExport(id uint) error {
@@ -240,7 +130,13 @@ func (s *OrderService) CancelExport(id uint) error {
 	if order.Status == "CANCELLED" {
 		return errors.New("đơn đã bị hủy trước đó")
 	}
-	return s.DB.Model(&order).Update("status", "CANCELLED").Error
+	err := s.DB.Model(&order).Update("status", "CANCELLED").Error
+	if err != nil {
+		return err
+	}
+	// Xóa OrderSeenStatus để admin nhận thông báo mới khi status thay đổi
+	s.DB.Where("order_id = ? AND order_type = 'export'", id).Delete(&entity.OrderSeenStatus{})
+	return nil
 }
 
 func (s *OrderService) ApproveImport(id uint) error {
@@ -263,6 +159,9 @@ func (s *OrderService) ApproveImport(id uint) error {
 		tx.Rollback()
 		return err
 	}
+
+	// Xóa OrderSeenStatus để admin nhận thông báo mới khi status thay đổi
+	tx.Where("order_id = ? AND order_type = 'import'", id).Delete(&entity.OrderSeenStatus{})
 
 	// Cập nhật inventory cho tất cả các item trong đơn
 	var items []entity.ImportItem
@@ -322,6 +221,9 @@ func (s *OrderService) ApproveExport(id uint) error {
 		return err
 	}
 
+	// Xóa OrderSeenStatus để admin nhận thông báo mới khi status thay đổi
+	tx.Where("order_id = ? AND order_type = 'export'", id).Delete(&entity.OrderSeenStatus{})
+
 	// Cập nhật inventory cho tất cả các item trong đơn
 	var items []entity.ExportItem
 	if err := tx.Where("export_id = ?", id).Find(&items).Error; err != nil {
@@ -360,4 +262,94 @@ func (s *OrderService) ApproveExport(id uint) error {
 
 	tx.Commit()
 	return nil
+}
+
+// MarkOrderAsSeen marks an order as seen by a specific user
+// If orderID is 0, mark all orders of that type as seen
+func (s *OrderService) MarkOrderAsSeen(userID uint, orderID uint, orderType string) error {
+	if orderID == 0 {
+		// Mark all orders of this type as seen
+		var orderIDs []uint
+		var err error
+		
+		if orderType == "import" {
+			err = s.DB.Model(&entity.Import{}).Pluck("id", &orderIDs).Error
+		} else if orderType == "export" {
+			err = s.DB.Model(&entity.Export{}).Pluck("id", &orderIDs).Error
+		} else {
+			return errors.New("invalid order type")
+		}
+		
+		if err != nil {
+			return err
+		}
+		
+		// Create seen status for all orders
+		for _, id := range orderIDs {
+			seenStatus := entity.OrderSeenStatus{
+				UserID:    userID,
+				OrderID:   id,
+				OrderType: orderType,
+			}
+			// Use OnConflict to ignore duplicates
+			s.DB.Where("user_id = ? AND order_id = ? AND order_type = ?", userID, id, orderType).
+				FirstOrCreate(&seenStatus)
+		}
+		
+		return nil
+	}
+	
+	// Mark specific order as seen
+	var seenStatus entity.OrderSeenStatus
+	err := s.DB.Where("user_id = ? AND order_id = ? AND order_type = ?", userID, orderID, orderType).
+		First(&seenStatus).Error
+	
+	if err != nil {
+		// Create new seen status if not exists
+		seenStatus = entity.OrderSeenStatus{
+			UserID:    userID,
+			OrderID:   orderID,
+			OrderType: orderType,
+		}
+		return s.DB.Create(&seenStatus).Error
+	}
+	
+	// Update seen_at if already exists
+	return s.DB.Model(&seenStatus).Update("seen_at", time.Now()).Error
+}
+
+// GetUnseenImportCount returns count of unseen import orders for a user
+func (s *OrderService) GetUnseenImportCount(userID uint) (int64, error) {
+	var count int64
+	err := s.DB.Table("imports").
+		Where("id NOT IN (SELECT order_id FROM order_seen_statuses WHERE user_id = ? AND order_type = 'import')", userID).
+		Count(&count).Error
+	return count, err
+}
+
+// GetUnseenExportCount returns count of unseen export orders for a user
+func (s *OrderService) GetUnseenExportCount(userID uint) (int64, error) {
+	var count int64
+	err := s.DB.Table("exports").
+		Where("id NOT IN (SELECT order_id FROM order_seen_statuses WHERE user_id = ? AND order_type = 'export')", userID).
+		Count(&count).Error
+	return count, err
+}
+
+// GetUnseenImportCountByStatus returns count of unseen import orders by status for a user
+func (s *OrderService) GetUnseenImportCountByStatus(userID uint, status string) (int64, error) {
+	var count int64
+	err := s.DB.Table("imports").
+		Where("status = ? AND id NOT IN (SELECT order_id FROM order_seen_statuses WHERE user_id = ? AND order_type = 'import')", status, userID).
+		Count(&count).Error
+	return count, err
+}
+
+// GetUnseenExportCountByStatus returns count of unseen export orders by status for a user
+func (s *OrderService) GetUnseenExportCountByStatus(userID uint, status string) (int64, error) {
+	var count int64
+	err := s.DB.Table("exports").
+		Where("status = ? AND id NOT IN (SELECT order_id FROM order_seen_statuses WHERE user_id = ? AND order_type = 'export')", status, userID).
+		Count(&count).Error
+	return count, err
 }

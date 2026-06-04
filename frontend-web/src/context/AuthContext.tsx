@@ -33,14 +33,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedToken && savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser) as User
-        if (parsedUser.role === 'ADMIN') {
-          setToken(savedToken)
-          setUser(parsedUser)
-        } else {
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-        }
-      } catch {
+        // Set token and user regardless of role check - role validation happens at backend
+        setToken(savedToken)
+        setUser(parsedUser)
+      } catch (e) {
+        console.error('Error parsing user from localStorage:', e)
         localStorage.removeItem('token')
         localStorage.removeItem('user')
       }

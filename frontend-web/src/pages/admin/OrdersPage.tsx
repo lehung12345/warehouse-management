@@ -1,1325 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../../context/AuthContext";
-// import api from "../../api/auth";
-// import { Link } from "react-router-dom";
-
-// export default function OrdersPage() {
-//   const { user, logout } = useAuth();
-//   const navigate = useNavigate();
-
-//   const [imports, setImports] = useState<any[]>([]);
-//   const [exports, setExports] = useState<any[]>([]);
-
-//   const fetchData = async () => {
-//     try {
-//       const [importRes, exportRes] = await Promise.all([
-//         api.get("/api/orders/import"),
-//         api.get("/api/orders/export"),
-//       ]);
-
-//       setImports(importRes.data || []);
-//       setExports(exportRes.data || []);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const handleLogout = () => {
-//     logout();
-//     navigate("/login", { replace: true });
-//   };
-
-//   const getStatusColor = (status: string) => {
-//     switch (status) {
-//       case "DONE":
-//         return "lime";
-//       case "PROCESSING":
-//         return "orange";
-//       default:
-//         return "gray";
-//     }
-//   };
-
-//   return (
-//     <div className="dashboard-root">
-
-//       {/* SIDEBAR */}
-//       <aside className="sidebar">
-//         <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-//           WareFlow
-//         </div>
-
-//         <nav className="sidebar-nav">
-//             <Link to="/admin">Dashboard</Link>
-//             <Link to="/admin/products">Sản phẩm</Link>
-//             <Link to="/admin/inventory">Tồn kho</Link>
-//             <Link className="active" to="/admin/orders">Đơn hàng</Link>
-//         </nav>
-
-//         <div className="sidebar-footer">
-//           <div>{user?.username}</div>
-//           <button onClick={handleLogout}>Logout</button>
-//         </div>
-//       </aside>
-
-//       {/* MAIN */}
-//       <main className="dashboard-main">
-
-//         <h1>📑 Quản lý đơn hàng</h1>
-
-//         <div style={{ marginBottom: 20 }}>
-//         <button onClick={() => navigate("/admin/orders/create-import")}>
-//             + Tạo đơn nhập
-//         </button>
-
-//         <button
-//             style={{ marginLeft: 10 }}
-//             onClick={() => navigate("/admin/orders/create-export")}
-//         >
-//             + Tạo đơn xuất
-//         </button>
-//         </div>
-
-//         {/* IMPORT */}
-//         <div className="stat-card">
-//           <h2>📥 Đơn nhập (Import)</h2>
-
-//           <table style={{ width: "100%" }}>
-//             <thead>
-//               <tr>
-//                 <th>Mã</th>
-//                 <th>Người tạo</th>
-//                 <th>Trạng thái</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//                 {imports.map((item) => (
-//                     <tr
-//                     key={item.ID || item.id}
-//                     onClick={() => navigate(`/admin/orders/import/${item.ID}`)}
-//                     style={{ cursor: "pointer" }}
-//                     >
-//                     <td>{item.Code}</td>
-//                     <td>{item.UserID}</td>
-//                     <td style={{ color: getStatusColor(item.Status) }}>
-//                         {item.Status}
-//                     </td>
-//                     </tr>
-//                 ))}
-//             </tbody>
-//           </table>
-//         </div>
-
-//         {/* EXPORT */}
-//         <div className="stat-card" style={{ marginTop: 20 }}>
-//           <h2>📤 Đơn xuất (Export)</h2>
-
-//           <table style={{ width: "100%" }}>
-//             <thead>
-//               <tr>
-//                 <th>Mã</th>
-//                 <th>Người tạo</th>
-//                 <th>Trạng thái</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//                 {exports.map((item) => (
-//                     <tr
-//                     key={item.ID || item.id}
-//                     onClick={() => navigate(`/admin/orders/export/${item.ID}`)}
-//                     style={{ cursor: "pointer" }}
-//                     >
-//                     <td>{item.Code}</td>
-//                     <td>{item.UserID}</td>
-//                     <td style={{ color: getStatusColor(item.Status) }}>
-//                         {item.Status}
-//                     </td>
-//                     </tr>
-//                 ))}
-//             </tbody>
-//           </table>
-//         </div>
-
-//       </main>
-//     </div>
-//   );
-// }
-
-
-
-// import { useEffect, useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
-// import { useAuth } from "../../context/AuthContext";
-// import api from "../../api/auth";
-
-// export default function OrdersPage() {
-//   const { user, logout } = useAuth();
-//   const navigate = useNavigate();
-
-//   const [imports, setImports] = useState<any[]>([]);
-//   const [exports, setExports] = useState<any[]>([]);
-
-//   // 🔥 FIX: chuẩn hóa dữ liệu (ID / id)
-//   const getId = (item: any) => item.ID || item.id;
-
-//   const fetchData = async () => {
-//     try {
-//       const [importRes, exportRes] = await Promise.all([
-//         api.get("/api/orders/import"),
-//         api.get("/api/orders/export"),
-//       ]);
-
-//       setImports(importRes.data || []);
-//       setExports(exportRes.data || []);
-//     } catch (err) {
-//       console.error("Fetch orders error:", err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const handleLogout = () => {
-//     logout();
-//     navigate("/login", { replace: true });
-//   };
-
-//   const getStatusColor = (status: string) => {
-//     switch (status) {
-//       case "DONE":
-//         return "lime";
-//       case "PROCESSING":
-//         return "orange";
-//       case "PENDING":
-//         return "gray";
-//       default:
-//         return "black";
-//     }
-//   };
-
-//   return (
-//     <div className="dashboard-root">
-
-//       {/* SIDEBAR */}
-//       <aside className="sidebar">
-//         <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-//           WareFlow
-//         </div>
-
-//         <nav className="sidebar-nav">
-//           <Link to="/admin">Dashboard</Link>
-//           <Link to="/admin/products">Sản phẩm</Link>
-//           <Link to="/admin/inventory">Tồn kho</Link>
-//           <Link className="active" to="/admin/orders">Đơn hàng</Link>
-//         </nav>
-
-//         <div className="sidebar-footer">
-//           <div>{user?.username}</div>
-//           <button onClick={handleLogout}>Logout</button>
-//         </div>
-//       </aside>
-
-//       {/* MAIN */}
-//       <main className="dashboard-main">
-
-//         <h1>📑 Quản lý đơn hàng</h1>
-
-//         {/* 🔥 BUTTONS */}
-//         <div style={{ marginBottom: 20 }}>
-//           <button onClick={() => navigate("/admin/orders/create-import")}>
-//             + Tạo đơn nhập
-//           </button>
-
-//           <button
-//             style={{ marginLeft: 10 }}
-//             onClick={() => navigate("/admin/orders/create-export")}
-//           >
-//             + Tạo đơn xuất
-//           </button>
-//         </div>
-
-//         {/* IMPORT TABLE */}
-//         <div className="stat-card">
-//           <h2>📥 Đơn nhập (Import)</h2>
-
-//           <table style={{ width: "100%" }}>
-//             <thead>
-//               <tr>
-//                 <th>Mã</th>
-//                 <th>Người tạo</th>
-//                 <th>Trạng thái</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {imports.length === 0 ? (
-//                 <tr>
-//                   <td colSpan={3} style={{ textAlign: "center" }}>
-//                     Không có dữ liệu
-//                   </td>
-//                 </tr>
-//               ) : (
-//                 imports.map((item) => {
-//                   const id = getId(item);
-//                   const status = item.Status || item.status;
-
-//                   return (
-//                     <tr
-//                       key={id}
-//                       onClick={() => navigate(`/admin/orders/import/${id}`)}
-//                       style={{ cursor: "pointer" }}
-//                     >
-//                       <td>{item.Code || item.code}</td>
-//                       <td>{item.UserID || item.user_id}</td>
-//                       <td style={{ color: getStatusColor(status) }}>
-//                         {status}
-//                       </td>
-//                     </tr>
-//                   );
-//                 })
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-
-//         {/* EXPORT TABLE */}
-//         <div className="stat-card" style={{ marginTop: 20 }}>
-//           <h2>📤 Đơn xuất (Export)</h2>
-
-//           <table style={{ width: "100%" }}>
-//             <thead>
-//               <tr>
-//                 <th>Mã</th>
-//                 <th>Người tạo</th>
-//                 <th>Trạng thái</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {exports.length === 0 ? (
-//                 <tr>
-//                   <td colSpan={3} style={{ textAlign: "center" }}>
-//                     Không có dữ liệu
-//                   </td>
-//                 </tr>
-//               ) : (
-//                 exports.map((item) => {
-//                   const id = getId(item);
-//                   const status = item.Status || item.status;
-
-//                   return (
-//                     <tr
-//                       key={id}
-//                       onClick={() => navigate(`/admin/orders/export/${id}`)}
-//                       style={{ cursor: "pointer" }}
-//                     >
-//                       <td>{item.Code || item.code}</td>
-//                       <td>{item.UserID || item.user_id}</td>
-//                       <td style={{ color: getStatusColor(status) }}>
-//                         {status}
-//                       </td>
-//                     </tr>
-//                   );
-//                 })
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-
-//       </main>
-//     </div>
-//   );
-// }
-
-
-
-//bản xịn
-
-// import { useEffect, useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
-// import { useAuth } from "../../context/AuthContext";
-// import api from "../../api/auth";
-
-// export default function OrdersPage() {
-//   const { user, logout } = useAuth();
-//   const navigate = useNavigate();
-
-//   const [imports, setImports] = useState<any[]>([]);
-//   const [exports, setExports] = useState<any[]>([]);
-
-//   // 🚀 Chuẩn hóa lấy ID dạng chữ thường theo JSON mới từ Go
-//   const getId = (item: any) => item.id;
-
-//   const fetchData = async () => {
-//     try {
-//       const [importRes, exportRes] = await Promise.all([
-//         api.get("/api/orders/import"),
-//         api.get("/api/orders/export"),
-//       ]);
-
-//       setImports(importRes.data || []);
-//       setExports(exportRes.data || []);
-//     } catch (err) {
-//       console.error("Fetch orders error:", err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const handleLogout = () => {
-//     logout();
-//     navigate("/login", { replace: true });
-//   };
-
-//   const getStatusColor = (status: string) => {
-//     switch (status) {
-//       case "DONE":
-//         return "lime";
-//       case "PROCESSING":
-//         return "orange";
-//       case "PENDING":
-//         return "gray";
-//       default:
-//         return "black";
-//     }
-//   };
-
-//   return (
-//     <div className="dashboard-root">
-//       {/* SIDEBAR */}
-//       <aside className="sidebar">
-//         <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-//           WareFlow
-//         </div>
-
-//         <nav className="sidebar-nav">
-//           <Link to="/admin">Dashboard</Link>
-//           <Link to="/admin/products">Sản phẩm</Link>
-//           <Link to="/admin/inventory">Tồn kho</Link>
-//           <Link className="active" to="/admin/orders">
-//             Đơn hàng
-//           </Link>
-//         </nav>
-
-//         <div className="sidebar-footer">
-//           <div>{user?.username}</div>
-//           <button onClick={handleLogout}>Logout</button>
-//         </div>
-//       </aside>
-
-//       {/* MAIN */}
-//       <main className="dashboard-main">
-//         <h1>📑 Quản lý đơn hàng</h1>
-
-//         {/* BUTTONS */}
-//         <div style={{ marginBottom: 20 }}>
-//           <button onClick={() => navigate("/admin/orders/create-import")}>
-//             + Tạo đơn nhập
-//           </button>
-
-//           <button
-//             style={{ marginLeft: 10 }}
-//             onClick={() => navigate("/admin/orders/create-export")}
-//           >
-//             + Tạo đơn xuất
-//           </button>
-//         </div>
-
-//         {/* IMPORT TABLE */}
-//         <div className="stat-card">
-//           <h2>📥 Đơn nhập (Import)</h2>
-
-//           <table style={{ width: "100%" }}>
-//             <thead>
-//               <tr>
-//                 <th>Mã</th>
-//                 <th>Người tạo</th>
-//                 <th>Trạng thái</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {imports.length === 0 ? (
-//                 <tr>
-//                   <td colSpan={3} style={{ textAlign: "center" }}>
-//                     Không có dữ liệu
-//                   </td>
-//                 </tr>
-//               ) : (
-//                 imports.map((item) => {
-//                   const id = getId(item);
-//                   const status = item.status; // 🚀 Chỉ cần .status chữ thường
-
-//                   return (
-//                     <tr
-//                       key={id}
-//                       onClick={() => navigate(`/admin/orders/import/${id}`)}
-//                       style={{ cursor: "pointer" }}
-//                     >
-//                       <td>{item.code}</td> {/* 🚀 Chỉ cần .code */}
-//                       <td>{item.user_id}</td> {/* 🚀 Chỉ cần .user_id */}
-//                       <td style={{ color: getStatusColor(status) }}>
-//                         {status}
-//                       </td>
-//                     </tr>
-//                   );
-//                 })
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-
-//         {/* EXPORT TABLE */}
-//         <div className="stat-card" style={{ marginTop: 20 }}>
-//           <h2>📤 Đơn xuất (Export)</h2>
-
-//           <table style={{ width: "100%" }}>
-//             <thead>
-//               <tr>
-//                 <th>Mã</th>
-//                 <th>Người tạo</th>
-//                 <th>Trạng thái</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {exports.length === 0 ? (
-//                 <tr>
-//                   <td colSpan={3} style={{ textAlign: "center" }}>
-//                     Không có dữ liệu
-//                   </td>
-//                 </tr>
-//               ) : (
-//                 exports.map((item) => {
-//                   const id = getId(item);
-//                   const status = item.status; // 🚀 Chỉ cần .status chữ thường
-
-//                   return (
-//                     <tr
-//                       key={id}
-//                       onClick={() => navigate(`/admin/orders/export/${id}`)}
-//                       style={{ cursor: "pointer" }}
-//                     >
-//                       <td>{item.code}</td> {/* 🚀 Chỉ cần .code */}
-//                       <td>{item.user_id}</td> {/* 🚀 Chỉ cần .user_id */}
-//                       <td style={{ color: getStatusColor(status) }}>
-//                         {status}
-//                       </td>
-//                     </tr>
-//                   );
-//                 })
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
-
-
-
-//bản đổi giao diện 
-// import { useEffect, useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
-// import { useAuth } from "../../context/AuthContext";
-// import api from "../../api/auth";
-
-// export default function OrdersPage() {
-//   const { user, logout } = useAuth();
-//   const navigate = useNavigate();
-
-//   const [imports, setImports] = useState<any[]>([]);
-//   const [exports, setExports] = useState<any[]>([]);
-
-//   const getId = (item: any) => item.id;
-
-//   const fetchData = async () => {
-//     try {
-//       const [importRes, exportRes] = await Promise.all([
-//         api.get("/api/orders/import"),
-//         api.get("/api/orders/export"),
-//       ]);
-//       setImports(importRes.data || []);
-//       setExports(exportRes.data || []);
-//     } catch (err) {
-//       console.error("Fetch orders error:", err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const handleLogout = () => {
-//     logout();
-//     navigate("/login", { replace: true });
-//   };
-
-//   // Helper render Badge trạng thái phát sáng (Glow Effect) cực chất
-//   const renderStatusBadge = (status: string) => {
-//     let bg = "rgba(107, 114, 128, 0.1)";
-//     let color = "var(--text-secondary)";
-
-//     if (status === "DONE") {
-//       bg = "rgba(16, 185, 129, 0.1)";
-//       color = "#10B981";
-//     } else if (status === "PROCESSING") {
-//       bg = "rgba(245, 158, 11, 0.1)";
-//       color = "#F59E0B";
-//     } else if (status === "CANCELLED") {
-//       bg = "rgba(239, 68, 68, 0.1)";
-//       color = "#EF4444";
-//     }
-
-//     return (
-//       <span style={{
-//         display: "inline-flex",
-//         alignItems: "center",
-//         gap: "6px",
-//         background: bg,
-//         color: color,
-//         padding: "4px 10px",
-//         borderRadius: "12px",
-//         fontSize: "12px",
-//         fontWeight: 600,
-//         letterSpacing: "0.5px"
-//       }}>
-//         <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: color }}></span>
-//         {status}
-//       </span>
-//     );
-//   };
-
-//   return (
-//     <div className="dashboard-root">
-      
-//       {/* ── SIDEBAR ĐÃ ĐỒNG BỘ MẦU SẮC CAO CẤP ────────────────── */}
-//       <aside className="sidebar">
-//         <div className="sidebar-brand" onClick={() => navigate("/admin")}>
-//           WareFlow
-//         </div>
-
-//         <nav className="sidebar-nav">
-//           <Link to="/admin">Dashboard</Link>
-//           <Link to="/admin/products">Sản phẩm</Link>
-//           <Link to="/admin/inventory">Tồn kho</Link>
-//           <Link className="active" to="/admin/orders">Đơn hàng</Link>
-//         </nav>
-
-//         <div className="sidebar-footer">
-//           <div style={{ fontWeight: 500 }}>{user?.username || "Nguyễn Huy An"}</div>
-//           <button onClick={handleLogout}>Logout</button>
-//         </div>
-//       </aside>
-
-//       {/* ── PHẦN KHÔNG GIAN CHÍNH (MAIN DASHBOARD) ────────────────── */}
-//       <main className="dashboard-main" style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
-        
-//         {/* Tiêu đề trang & Nút bấm tác vụ */}
-//         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexShrink: 0 }}>
-//           <div>
-//             <h1 style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-primary)", marginBottom: "4px" }}>
-//               📑 Quản lý đơn hàng
-//             </h1>
-//             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
-//               Theo dõi, điều phối luồng sản phẩm nhập kho và xuất kho quy chuẩn
-//             </p>
-//           </div>
-
-//           {/* Cụm nút bấm hành động chuẩn UI */}
-//           <div style={{ display: "flex", gap: "12px" }}>
-//             <button 
-//               onClick={() => navigate("/admin/orders/create-import")}
-//               style={{
-//                 background: "#4F46E5", color: "var(--text-primary)", border: "none", padding: "10px 18px",
-//                 borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
-//               }}
-//             >
-//               📥 Tạo đơn nhập
-//             </button>
-//             <button
-//               onClick={() => navigate("/admin/orders/create-export")}
-//               style={{
-//                 background: "var(--border)", color: "var(--text-primary)", border: "1px solid var(--border)",
-//                 padding: "10px 18px", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", transition: "all 0.2s"
-//               }}
-//             >
-//               📤 Tạo đơn xuất
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* ── LAYOUT 2 CỘT SONG SONG ĐẸP MẮT ────────────────── */}
-//         <div style={{ display: "flex", gap: "20px", flex: 1, minHeight: 0, marginBottom: "20px" }}>
-          
-//           {/* CỘT TRÁI: ĐƠN NHẬP KHO */}
-//           <div className="stat-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: "14px", padding: "20px", minWidth: 0 }}>
-//             <h2 style={{ fontSize: "18px", color: "var(--text-primary)", fontWeight: 600, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
-//               <span>📥</span> Đơn nhập (Import)
-//             </h2>
-            
-//             <div style={{ flex: 1, overflowY: "auto", width: "100%", paddingRight: "4px" }} className="custom-scroll">
-//               <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-//                 <thead>
-//                   <tr style={{ borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.01)" }}>
-//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Mã đơn</th>
-//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Người tạo</th>
-//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {imports.length === 0 ? (
-//                     <tr>
-//                       <td colSpan={3} style={{ textAlign: "center", padding: "30px", color: "var(--text-secondary)", fontSize: "14px" }}>Không có dữ liệu đơn nhập</td>
-//                     </tr>
-//                   ) : (
-//                     imports.map((item) => {
-//                       const id = getId(item);
-//                       return (
-//                         <tr
-//                           key={id}
-//                           onClick={() => navigate(`/admin/orders/import/${id}`)}
-//                           style={{ cursor: "pointer", borderBottom: "1px solid rgba(255, 255, 255, 0.04)", transition: "all 0.2s" }}
-//                           className="table-row-hover"
-//                         >
-//                           <td style={{ padding: "14px 12px" }}>
-//                             <span style={{ fontFamily: "monospace", color: "#38BDF8", background: "rgba(56, 189, 248, 0.08)", padding: "4px 8px", borderRadius: "4px", fontSize: "13px" }}>
-//                               {item.code}
-//                             </span>
-//                           </td>
-//                           <td style={{ padding: "14px 12px", color: "#E5E7EB", fontSize: "14px" }}>ID: {item.user_id}</td>
-//                           <td style={{ padding: "14px 12px", textAlign: "center" }}>{renderStatusBadge(item.status)}</td>
-//                         </tr>
-//                       );
-//                     })
-//                   )}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-
-//           {/* CỘT PHẢI: ĐƠN XUẤT KHO */}
-//           <div className="stat-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: "14px", padding: "20px", minWidth: 0 }}>
-//             <h2 style={{ fontSize: "18px", color: "var(--text-primary)", fontWeight: 600, marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
-//               <span>📤</span> Đơn xuất (Export)
-//             </h2>
-
-//             <div style={{ flex: 1, overflowY: "auto", width: "100%", paddingRight: "4px" }} className="custom-scroll">
-//               <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-//                 <thead>
-//                   <tr style={{ borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.01)" }}>
-//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Mã đơn</th>
-//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase" }}>Người tạo</th>
-//                     <th style={{ padding: "12px", color: "var(--text-secondary)", fontSize: "12px", fontWeight: 600, textTransform: "uppercase", textAlign: "center" }}>Trạng thái</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {exports.length === 0 ? (
-//                     <tr>
-//                       <td colSpan={3} style={{ textAlign: "center", padding: "30px", color: "var(--text-secondary)", fontSize: "14px" }}>Không có dữ liệu đơn xuất</td>
-//                     </tr>
-//                   ) : (
-//                     exports.map((item) => {
-//                       const id = getId(item);
-//                       return (
-//                         <tr
-//                           key={id}
-//                           onClick={() => navigate(`/admin/orders/export/${id}`)}
-//                           style={{ cursor: "pointer", borderBottom: "1px solid rgba(255, 255, 255, 0.04)", transition: "all 0.2s" }}
-//                           className="table-row-hover"
-//                         >
-//                           <td style={{ padding: "14px 12px" }}>
-//                             <span style={{ fontFamily: "monospace", color: "#A78BFA", background: "rgba(167, 139, 250, 0.08)", padding: "4px 8px", borderRadius: "4px", fontSize: "13px" }}>
-//                               {item.code}
-//                             </span>
-//                           </td>
-//                           <td style={{ padding: "14px 12px", color: "#E5E7EB", fontSize: "14px" }}>ID: {item.user_id}</td>
-//                           <td style={{ padding: "14px 12px", textAlign: "center" }}>{renderStatusBadge(item.status)}</td>
-//                         </tr>
-//                       );
-//                     })
-//                   )}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-
-//         </div>
-//       </main>
-
-//       {/* Inject CSS Inline nâng cao trải nghiệm chuột */}
-//       <style>{`
-//         .table-row-hover:hover {
-//           background: rgba(255, 255, 255, 0.03) !important;
-//         }
-//         .custom-scroll::-webkit-scrollbar {
-//           width: 6px;
-//         }
-//         .custom-scroll::-webkit-scrollbar-track {
-//           background: transparent;
-//         }
-//         .custom-scroll::-webkit-scrollbar-thumb {
-//           background: var(--border);
-//           border-radius: 10px;
-//         }
-//         .custom-scroll::-webkit-scrollbar-thumb:hover {
-//           background: rgba(255, 255, 255, 0.2);
-//         }
-//       `}</style>
-//     </div>
-//   );
-// }
-
-
-//thêm cột created_at vào bảng OrdersPage
-// import { useEffect, useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
-// import { useAuth } from "../../context/AuthContext";
-// import api from "../../api/auth";
-// import AdminLayout from "./AdminLayout";
-
-// export default function OrdersPage() {
-//   const { user } = useAuth();
-//   const navigate = useNavigate();
-
-//   const [imports, setImports] = useState<any[]>([]);
-//   const [exports, setExports] = useState<any[]>([]);
-
-//   const getId = (item: any) => item.id;
-
-//   const fetchData = async () => {
-//     try {
-//       const [importRes, exportRes] = await Promise.all([
-//         api.get("/api/orders/import"),
-//         api.get("/api/orders/export"),
-//       ]);
-//       setImports(importRes.data || []);
-//       setExports(exportRes.data || []);
-//     } catch (err) {
-//       console.error("Fetch orders error:", err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   const formatDate = (dateStr: string) => {
-//     if (!dateStr) return "—";
-//     const date = new Date(dateStr);
-//     return date.toLocaleDateString("vi-VN", {
-//       day: "2-digit",
-//       month: "2-digit",
-//       year: "numeric",
-//     });
-//   };
-
-//   const renderStatusBadge = (status: string) => {
-//     let bg = "rgba(107, 114, 128, 0.1)";
-//     let color = "var(--text-secondary)";
-//     if (status === "DONE") {
-//       bg = "rgba(16, 185, 129, 0.1)";
-//       color = "#10B981";
-//     } else if (status === "PROCESSING") {
-//       bg = "rgba(245, 158, 11, 0.1)";
-//       color = "#F59E0B";
-//     } else if (status === "CANCELLED") {
-//       bg = "rgba(239, 68, 68, 0.1)";
-//       color = "#EF4444";
-//     }
-//     return (
-//       <span
-//         style={{
-//           display: "inline-flex",
-//           alignItems: "center",
-//           gap: "6px",
-//           background: bg,
-//           color: color,
-//           padding: "4px 10px",
-//           borderRadius: "12px",
-//           fontSize: "12px",
-//           fontWeight: 600,
-//           letterSpacing: "0.5px",
-//         }}
-//       >
-//         <span
-//           style={{
-//             width: "6px",
-//             height: "6px",
-//             borderRadius: "50%",
-//             background: color,
-//           }}
-//         />
-//         {status}
-//       </span>
-//     );
-//   };
-
-//   // 👇 Tên hiển thị cho cột "Người tạo" – lấy từ context auth
-//   const displayName = user?.username ? `${user.username} (Admin)` : "Administrator";
-
-//   return (
-//     <AdminLayout>
-//         {/* Header */}
-//         <div
-//           style={{
-//             display: "flex",
-//             justifyContent: "space-between",
-//             alignItems: "center",
-//             marginBottom: "24px",
-//             flexShrink: 0,
-//           }}
-//         >
-//           <div>
-//             <h1
-//               style={{
-//                 fontSize: "28px",
-//                 fontWeight: 700,
-//                 color: "var(--text-primary)",
-//                 marginBottom: "4px",
-//               }}
-//             >
-//               📑 Quản lý đơn hàng
-//             </h1>
-//             <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
-//               Theo dõi, điều phối luồng sản phẩm nhập kho và xuất kho quy chuẩn
-//             </p>
-//           </div>
-//           <div style={{ display: "flex", gap: "12px" }}>
-//             <button
-//               onClick={() => navigate("/admin/orders/create-import")}
-//               style={{
-//                 background: "#4F46E5",
-//                 color: "var(--text-primary)",
-//                 border: "none",
-//                 padding: "10px 18px",
-//                 borderRadius: "8px",
-//                 fontSize: "14px",
-//                 fontWeight: 600,
-//                 cursor: "pointer",
-//               }}
-//             >
-//               📥 Tạo đơn nhập
-//             </button>
-//             <button
-//               onClick={() => navigate("/admin/orders/create-export")}
-//               style={{
-//                 background: "var(--border)",
-//                 color: "var(--text-primary)",
-//                 border: "1px solid var(--border)",
-//                 padding: "10px 18px",
-//                 borderRadius: "8px",
-//                 fontSize: "14px",
-//                 fontWeight: 600,
-//                 cursor: "pointer",
-//               }}
-//             >
-//               📤 Tạo đơn xuất
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* 2 cột: Import + Export */}
-//         <div
-//           style={{
-//             display: "flex",
-//             gap: "20px",
-//             flex: 1,
-//             minHeight: 0,
-//             marginBottom: "20px",
-//           }}
-//         >
-//           {/* IMPORT TABLE */}
-//           <div
-//             className="stat-card"
-//             style={{
-//               flex: 1,
-//               display: "flex",
-//               flexDirection: "column",
-//               background: "var(--bg-elevated)",
-//               border: "1px solid var(--border)",
-//               borderRadius: "14px",
-//               padding: "20px",
-//               minWidth: 0,
-//             }}
-//           >
-//             <h2
-//               style={{
-//                 fontSize: "18px",
-//                 color: "var(--text-primary)",
-//                 fontWeight: 600,
-//                 marginBottom: "16px",
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             >
-//               <span>📥</span> Đơn nhập (Import)
-//             </h2>
-//             <div
-//               style={{
-//                 flex: 1,
-//                 overflowY: "auto",
-//                 width: "100%",
-//                 paddingRight: "4px",
-//               }}
-//               className="custom-scroll"
-//             >
-//               <table
-//                 style={{
-//                   width: "100%",
-//                   borderCollapse: "collapse",
-//                   textAlign: "left",
-//                 }}
-//               >
-//                 <thead>
-//                   <tr
-//                     style={{
-//                       borderBottom: "1px solid var(--border)",
-//                       background: "rgba(255,255,255,0.01)",
-//                     }}
-//                   >
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                       }}
-//                     >
-//                       Mã đơn
-//                     </th>
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                       }}
-//                     >
-//                       Người tạo
-//                     </th>
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                       }}
-//                     >
-//                       Ngày tạo
-//                     </th>
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                         textAlign: "center",
-//                       }}
-//                     >
-//                       Trạng thái
-//                     </th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {imports.length === 0 ? (
-//                     <tr>
-//                       <td
-//                         colSpan={4}
-//                         style={{
-//                           textAlign: "center",
-//                           padding: "30px",
-//                           color: "var(--text-secondary)",
-//                           fontSize: "14px",
-//                         }}
-//                       >
-//                         Không có dữ liệu đơn nhập
-//                       </td>
-//                     </tr>
-//                   ) : (
-//                     imports.map((item) => {
-//                       const id = getId(item);
-//                       return (
-//                         <tr
-//                           key={id}
-//                           onClick={() =>
-//                             navigate(`/admin/orders/import/${id}`)
-//                           }
-//                           style={{
-//                             cursor: "pointer",
-//                             borderBottom:
-//                               "1px solid rgba(255, 255, 255, 0.04)",
-//                           }}
-//                           className="table-row-hover"
-//                         >
-//                           <td style={{ padding: "14px 12px" }}>
-//                             <span
-//                               style={{
-//                                 fontFamily: "monospace",
-//                                 color: "#38BDF8",
-//                                 background: "rgba(56, 189, 248, 0.08)",
-//                                 padding: "4px 8px",
-//                                 borderRadius: "4px",
-//                                 fontSize: "13px",
-//                               }}
-//                             >
-//                               {item.code}
-//                             </span>
-//                           </td>
-//                           {/* 👇 Hiển thị tên admin đang đăng nhập */}
-//                           <td
-//                             style={{
-//                               padding: "14px 12px",
-//                               color: "#E5E7EB",
-//                               fontSize: "14px",
-//                             }}
-//                           >
-//                             {displayName}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: "14px 12px",
-//                               color: "#E5E7EB",
-//                               fontSize: "14px",
-//                             }}
-//                           >
-//                             {formatDate(item.created_at)}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: "14px 12px",
-//                               textAlign: "center",
-//                             }}
-//                           >
-//                             {renderStatusBadge(item.status)}
-//                           </td>
-//                         </tr>
-//                       );
-//                     })
-//                   )}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-
-//           {/* EXPORT TABLE */}
-//           <div
-//             className="stat-card"
-//             style={{
-//               flex: 1,
-//               display: "flex",
-//               flexDirection: "column",
-//               background: "var(--bg-elevated)",
-//               border: "1px solid var(--border)",
-//               borderRadius: "14px",
-//               padding: "20px",
-//               minWidth: 0,
-//             }}
-//           >
-//             <h2
-//               style={{
-//                 fontSize: "18px",
-//                 color: "var(--text-primary)",
-//                 fontWeight: 600,
-//                 marginBottom: "16px",
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             >
-//               <span>📤</span> Đơn xuất (Export)
-//             </h2>
-//             <div
-//               style={{
-//                 flex: 1,
-//                 overflowY: "auto",
-//                 width: "100%",
-//                 paddingRight: "4px",
-//               }}
-//               className="custom-scroll"
-//             >
-//               <table
-//                 style={{
-//                   width: "100%",
-//                   borderCollapse: "collapse",
-//                   textAlign: "left",
-//                 }}
-//               >
-//                 <thead>
-//                   <tr
-//                     style={{
-//                       borderBottom: "1px solid var(--border)",
-//                       background: "rgba(255,255,255,0.01)",
-//                     }}
-//                   >
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                       }}
-//                     >
-//                       Mã đơn
-//                     </th>
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                       }}
-//                     >
-//                       Người tạo
-//                     </th>
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                       }}
-//                     >
-//                       Ngày tạo
-//                     </th>
-//                     <th
-//                       style={{
-//                         padding: "12px",
-//                         color: "var(--text-secondary)",
-//                         fontSize: "12px",
-//                         fontWeight: 600,
-//                         textTransform: "uppercase",
-//                         textAlign: "center",
-//                       }}
-//                     >
-//                       Trạng thái
-//                     </th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {exports.length === 0 ? (
-//                     <tr>
-//                       <td
-//                         colSpan={4}
-//                         style={{
-//                           textAlign: "center",
-//                           padding: "30px",
-//                           color: "var(--text-secondary)",
-//                           fontSize: "14px",
-//                         }}
-//                       >
-//                         Không có dữ liệu đơn xuất
-//                       </td>
-//                     </tr>
-//                   ) : (
-//                     exports.map((item) => {
-//                       const id = getId(item);
-//                       return (
-//                         <tr
-//                           key={id}
-//                           onClick={() =>
-//                             navigate(`/admin/orders/export/${id}`)
-//                           }
-//                           style={{
-//                             cursor: "pointer",
-//                             borderBottom:
-//                               "1px solid rgba(255, 255, 255, 0.04)",
-//                           }}
-//                           className="table-row-hover"
-//                         >
-//                           <td style={{ padding: "14px 12px" }}>
-//                             <span
-//                               style={{
-//                                 fontFamily: "monospace",
-//                                 color: "#A78BFA",
-//                                 background: "rgba(167, 139, 250, 0.08)",
-//                                 padding: "4px 8px",
-//                                 borderRadius: "4px",
-//                                 fontSize: "13px",
-//                               }}
-//                             >
-//                               {item.code}
-//                             </span>
-//                           </td>
-//                           {/* 👇 Hiển thị tên admin đang đăng nhập */}
-//                           <td
-//                             style={{
-//                               padding: "14px 12px",
-//                               color: "#E5E7EB",
-//                               fontSize: "14px",
-//                             }}
-//                           >
-//                             {displayName}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: "14px 12px",
-//                               color: "#E5E7EB",
-//                               fontSize: "14px",
-//                             }}
-//                           >
-//                             {formatDate(item.created_at)}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: "14px 12px",
-//                               textAlign: "center",
-//                             }}
-//                           >
-//                             {renderStatusBadge(item.status)}
-//                           </td>
-//                         </tr>
-//                       );
-//                     })
-//                   )}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-//         </div>
-
-//       <style>{`
-//         .table-row-hover:hover {
-//           background: rgba(255, 255, 255, 0.03) !important;
-//         }
-//         .custom-scroll::-webkit-scrollbar {
-//           width: 6px;
-//         }
-//         .custom-scroll::-webkit-scrollbar-track {
-//           background: transparent;
-//         }
-//         .custom-scroll::-webkit-scrollbar-thumb {
-//           background: var(--border);
-//           border-radius: 10px;
-//         }
-//         .custom-scroll::-webkit-scrollbar-thumb:hover {
-//           background: rgba(255, 255, 255, 0.2);
-//         }
-//       `}</style>
-//     </AdminLayout>
-//   );
-// }
-
-//bản sửa giao diện
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -1338,17 +16,118 @@ export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState<"import" | "export">("import");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Unseen counts for notification highlighting
+  const [unseenCounts, setUnseenCounts] = useState<{
+    import_all: number;
+    import_approved: number;
+    import_done: number;
+    import_processing: number;
+    import_pending: number;
+    import_cancelled: number;
+    export_all: number;
+    export_approved: number;
+    export_done: number;
+    export_processing: number;
+    export_pending: number;
+    export_cancelled: number;
+  }>({
+    import_all: 0,
+    import_approved: 0,
+    import_done: 0,
+    import_processing: 0,
+    import_pending: 0,
+    import_cancelled: 0,
+    export_all: 0,
+    export_approved: 0,
+    export_done: 0,
+    export_processing: 0,
+    export_pending: 0,
+    export_cancelled: 0,
+  });
 
   const fetchData = async () => {
     try {
-      const [importRes, exportRes] = await Promise.all([
+      const [importRes, exportRes, unseenRes] = await Promise.all([
         api.get("/api/orders/import"),
         api.get("/api/orders/export"),
+        api.get("/api/orders/unseen-counts"),
       ]);
       setImports(importRes.data || []);
       setExports(exportRes.data || []);
+      setUnseenCounts(unseenRes.data || {
+        import_all: 0,
+        import_approved: 0,
+        import_done: 0,
+        import_processing: 0,
+        import_pending: 0,
+        import_cancelled: 0,
+        export_all: 0,
+        export_approved: 0,
+        export_done: 0,
+        export_processing: 0,
+        export_pending: 0,
+        export_cancelled: 0,
+      });
     } catch (err) {
       console.error("Fetch orders error:", err);
+    }
+  };
+
+  const markOrdersAsSeen = async (status: StatusFilter) => {
+    try {
+      const orderType = activeTab;
+      const ordersToMark = (orderType === "import" ? imports : exports)
+        .filter(item => item.status === status)
+        .map(item => item.id);
+
+      for (const orderId of ordersToMark) {
+        await api.post("/api/orders/mark-seen", {
+          order_id: orderId,
+          order_type: orderType,
+        });
+      }
+
+      // Refresh unseen counts
+      const unseenRes = await api.get("/api/orders/unseen-counts");
+      setUnseenCounts(unseenRes.data || {
+        import_all: 0,
+        import_approved: 0,
+        import_done: 0,
+        import_processing: 0,
+        import_pending: 0,
+        import_cancelled: 0,
+        export_all: 0,
+        export_approved: 0,
+        export_done: 0,
+        export_processing: 0,
+        export_pending: 0,
+        export_cancelled: 0,
+      });
+    } catch (err) {
+      console.error("Mark orders as seen error:", err);
+    }
+  };
+
+  const refreshUnseenCounts = async () => {
+    try {
+      const unseenRes = await api.get("/api/orders/unseen-counts");
+      setUnseenCounts(unseenRes.data || {
+        import_all: 0,
+        import_approved: 0,
+        import_done: 0,
+        import_processing: 0,
+        import_pending: 0,
+        import_cancelled: 0,
+        export_all: 0,
+        export_approved: 0,
+        export_done: 0,
+        export_processing: 0,
+        export_pending: 0,
+        export_cancelled: 0,
+      });
+    } catch (err) {
+      console.error("Refresh unseen counts error:", err);
     }
   };
 
@@ -1368,6 +147,13 @@ export default function OrdersPage() {
       setSearchTerm(searchParam);
     }
     fetchData();
+
+    // Periodic refresh for unseen counts (every 5 seconds)
+    const interval = setInterval(() => {
+      refreshUnseenCounts();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, [searchParams]);
 
   const handleTabChange = (tab: "import" | "export") => {
@@ -1379,6 +165,10 @@ export default function OrdersPage() {
 
   const handleStatusFilterChange = (status: StatusFilter) => {
     setStatusFilter(status);
+    // Mark orders as seen when user clicks on a status tab
+    if (status !== "ALL") {
+      markOrdersAsSeen(status);
+    }
     // Update URL query parameter to persist status filter state
     setSearchParams({ tab: activeTab, status, search: searchTerm });
   };
@@ -1445,11 +235,11 @@ export default function OrdersPage() {
 
   const statusTabs: { key: StatusFilter; label: string; color: string }[] = [
     { key: "ALL",        label: "Tất cả",      color: "var(--text-primary)" },
+    { key: "APPROVED",   label: "Đã duyệt",    color: "#3B82F6" },
     { key: "DONE",       label: "Hoàn thành scan",  color: "#10B981" },
     { key: "PROCESSING", label: "Đang scan",  color: "#F59E0B" },
     { key: "PENDING",    label: "Chờ scan",   color: "#818CF8" },
     { key: "CANCELLED",  label: "Đã hủy",      color: "#EF4444" },
-    { key: "APPROVED",   label: "Đã duyệt",    color: "#3B82F6" },
   ];
 
   const statusCount: Record<StatusFilter, number> = {
@@ -1599,6 +389,25 @@ export default function OrdersPage() {
         <div style={{ display: "flex", overflowX: "auto", padding: "0 4px", justifyContent: "space-around" }}>
           {statusTabs.map((s) => {
             const isActive = statusFilter === s.key;
+            
+            // Check if this status has unseen orders for ALL statuses
+            let hasUnseen = false;
+            if (activeTab === "import") {
+              if (s.key === "ALL") hasUnseen = unseenCounts.import_all > 0;
+              else if (s.key === "APPROVED") hasUnseen = unseenCounts.import_approved > 0;
+              else if (s.key === "DONE") hasUnseen = unseenCounts.import_done > 0;
+              else if (s.key === "PROCESSING") hasUnseen = unseenCounts.import_processing > 0;
+              else if (s.key === "PENDING") hasUnseen = unseenCounts.import_pending > 0;
+              else if (s.key === "CANCELLED") hasUnseen = unseenCounts.import_cancelled > 0;
+            } else {
+              if (s.key === "ALL") hasUnseen = unseenCounts.export_all > 0;
+              else if (s.key === "APPROVED") hasUnseen = unseenCounts.export_approved > 0;
+              else if (s.key === "DONE") hasUnseen = unseenCounts.export_done > 0;
+              else if (s.key === "PROCESSING") hasUnseen = unseenCounts.export_processing > 0;
+              else if (s.key === "PENDING") hasUnseen = unseenCounts.export_pending > 0;
+              else if (s.key === "CANCELLED") hasUnseen = unseenCounts.export_cancelled > 0;
+            }
+
             return (
               <button
                 key={s.key}
@@ -1608,8 +417,8 @@ export default function OrdersPage() {
                   border: "none",
                   borderBottom: isActive ? `2px solid ${s.color}` : "2px solid transparent",
                   background: "transparent",
-                  color: isActive ? s.color : "var(--text-secondary)",
-                  fontSize: "13px", fontWeight: isActive ? 600 : 500,
+                  color: hasUnseen && !isActive ? "#EF4444" : (isActive ? s.color : "var(--text-secondary)"),
+                  fontSize: "13px", fontWeight: (hasUnseen && !isActive) ? 700 : (isActive ? 600 : 500),
                   cursor: "pointer",
                   transition: "all 0.15s",
                   display: "flex", alignItems: "center", gap: "7px",
@@ -1618,9 +427,9 @@ export default function OrdersPage() {
               >
                 {s.label}
                 <span style={{
-                  background: isActive ? `${s.color}22` : "rgba(107,114,128,0.1)",
-                  color: isActive ? s.color : "var(--text-secondary)",
-                  padding: "1px 7px", borderRadius: "10px", fontSize: "11px", fontWeight: 600,
+                  background: hasUnseen && !isActive ? "rgba(239,68,68,0.2)" : (isActive ? `${s.color}22` : "rgba(107,114,128,0.1)"),
+                  color: hasUnseen && !isActive ? "#EF4444" : (isActive ? s.color : "var(--text-secondary)"),
+                  padding: "1px 7px", borderRadius: "10px", fontSize: "11px", fontWeight: (hasUnseen && !isActive) ? 700 : 600,
                 }}>
                   {statusCount[s.key]}
                 </span>
@@ -1679,7 +488,34 @@ export default function OrdersPage() {
                   <tr
                     key={item.id}
                     className="order-row"
-                    onClick={() => navigate(`/admin/orders/${activeTab}/${item.id}`)}
+                    onClick={async () => {
+                      // Mark this specific order as seen
+                      try {
+                        await api.post("/api/orders/mark-seen", {
+                          order_id: item.id,
+                          order_type: activeTab,
+                        });
+                        // Refresh unseen counts
+                        const unseenRes = await api.get("/api/orders/unseen-counts");
+                        setUnseenCounts(unseenRes.data || {
+                          import_all: 0,
+                          import_approved: 0,
+                          import_done: 0,
+                          import_processing: 0,
+                          import_pending: 0,
+                          import_cancelled: 0,
+                          export_all: 0,
+                          export_approved: 0,
+                          export_done: 0,
+                          export_processing: 0,
+                          export_pending: 0,
+                          export_cancelled: 0,
+                        });
+                      } catch (err) {
+                        console.error("Mark order as seen error:", err);
+                      }
+                      navigate(`/admin/orders/${activeTab}/${item.id}`);
+                    }}
                     style={{
                       cursor: "pointer",
                       borderBottom: "1px solid rgba(255,255,255,0.04)",

@@ -1,415 +1,4 @@
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-//
-// class OrdersScreen extends StatefulWidget {
-//   const OrdersScreen({super.key});
-//
-//   @override
-//
-//   State<OrdersScreen> createState() => _OrdersScreenState();
-// }
-//
-// class _OrdersScreenState extends State<OrdersScreen> {
-//   bool loading = true;
-//   List imports = [];
-//   List exports = [];
-//
-//   String get baseUrl =>
-//       dotenv.env['API_URL'] ?? 'http://10.0.2.2:8080';
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchData();
-//   }
-//
-//   Future<void> fetchData() async {
-//     try {
-//       final impRes = await http.get(Uri.parse('$baseUrl/imports'));
-//       final expRes = await http.get(Uri.parse('$baseUrl/exports'));
-//
-//       setState(() {
-//         imports = jsonDecode(impRes.body);
-//         exports = jsonDecode(expRes.body);
-//         loading = false;
-//       });
-//     } catch (e) {
-//       setState(() => loading = false);
-//     }
-//   }
-//
-//   Widget buildItem(dynamic item, String type) {
-//     return Card(
-//       child: ListTile(
-//         title: Text("Order #${item['id']}"),
-//         subtitle: Text("Status: ${item['status'] ?? 'PENDING'}"),
-//         trailing: Text(type),
-//       ),
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text("Orders")),
-//       body: loading
-//           ? const Center(child: CircularProgressIndicator())
-//           : RefreshIndicator(
-//         onRefresh: fetchData,
-//         child: ListView(
-//           children: [
-//             const Padding(
-//               padding: EdgeInsets.all(8),
-//               child: Text("IMPORT ORDERS"),
-//             ),
-//             ...imports.map((e) => buildItem(e, "IN")),
-//
-//             const Padding(
-//               padding: EdgeInsets.all(8),
-//               child: Text("EXPORT ORDERS"),
-//             ),
-//             ...exports.map((e) => buildItem(e, "OUT")),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
-
-
-
-
-//
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import '../providers/auth_provider.dart';
-// import '../services/order_service.dart';
-// import '../models/order_model.dart';
-//
-// class OrdersScreen extends StatefulWidget {
-//   const OrdersScreen({super.key});
-//
-//   @override
-//   State<OrdersScreen> createState() => _OrdersScreenState();
-// }
-//
-// class _OrdersScreenState extends State<OrdersScreen> {
-//   bool loading = true;
-//   List<OrderModel> imports = [];
-//   List<OrderModel> exports = [];
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchData();
-//   }
-//
-//   Future<void> fetchData() async {
-//     final auth = Provider.of<AuthProvider>(context, listen: false);
-//     final token = auth.token;
-//
-//     if (token == null) {
-//       setState(() => loading = false);
-//       return;
-//     }
-//
-//     setState(() => loading = true);
-//
-//     try {
-//       final imp = await OrderService.getImports(token);
-//       final exp = await OrderService.getExports(token);
-//       setState(() {
-//         imports = imp;
-//         exports = exp;
-//         loading = false;
-//       });
-//     } catch (e) {
-//       setState(() => loading = false);
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text("Lỗi tải đơn hàng: $e")),
-//       );
-//     }
-//   }
-//
-//   Widget buildItem(OrderModel item, String type) {
-//     return Card(
-//       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//       child: ListTile(
-//         title: Text("Đơn hàng #${item.id}"),
-//         subtitle: Text("Mã: ${item.code}\nTrạng thái: ${item.status}"),
-//         trailing: Chip(
-//           label: Text(type),
-//           backgroundColor: type == "IN" ? Colors.green.shade100 : Colors.orange.shade100,
-//         ),
-//       ),
-//     );
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text("Đơn hàng")),
-//       body: loading
-//           ? const Center(child: CircularProgressIndicator())
-//           : RefreshIndicator(
-//         onRefresh: fetchData,
-//         child: ListView(
-//           children: [
-//             const Padding(
-//               padding: EdgeInsets.all(12),
-//               child: Text("ĐƠN NHẬP KHO", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
-//             ),
-//             if (imports.isEmpty)
-//               const Padding(padding: EdgeInsets.all(12), child: Text("Không có đơn nhập")),
-//             ...imports.map((e) => buildItem(e, "IN")),
-//             const Padding(
-//               padding: EdgeInsets.all(12),
-//               child: Text("ĐƠN XUẤT KHO", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
-//             ),
-//             if (exports.isEmpty)
-//               const Padding(padding: EdgeInsets.all(12), child: Text("Không có đơn xuất")),
-//             ...exports.map((e) => buildItem(e, "OUT")),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-//bản cũ
-
-//
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../providers/auth_provider.dart';
-// import '../services/order_service.dart';
-// import '../models/order_model.dart';
-// import 'order_detail_screen.dart';
-//
-// class OrdersScreen extends StatefulWidget {
-//   const OrdersScreen({super.key});
-//
-//   @override
-//   State<OrdersScreen> createState() => _OrdersScreenState();
-// }
-//
-// class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderStateMixin {
-//   late TabController _tabController;
-//   List<OrderModel> imports = [];
-//   List<OrderModel> exports = [];
-//   bool loading = true;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _tabController = TabController(length: 2, vsync: this);
-//     _fetchData();
-//   }
-//
-//   Future<void> _fetchData() async {
-//     final auth = Provider.of<AuthProvider>(context, listen: false);
-//     final token = auth.token;
-//     if (token == null) return;
-//     setState(() => loading = true);
-//     try {
-//       final imp = await OrderService.getImports(token);
-//       final exp = await OrderService.getExports(token);
-//       setState(() {
-//         imports = imp;
-//         exports = exp;
-//         loading = false;
-//       });
-//     } catch (e) {
-//       setState(() => loading = false);
-//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Đơn hàng'),
-//         bottom: TabBar(
-//           controller: _tabController,
-//           tabs: const [
-//             Tab(text: 'NHẬP KHO', icon: Icon(Icons.download)),
-//             Tab(text: 'XUẤT KHO', icon: Icon(Icons.upload)),
-//           ],
-//         ),
-//       ),
-//       body: loading
-//           ? const Center(child: CircularProgressIndicator())
-//           : TabBarView(
-//         controller: _tabController,
-//         children: [
-//           _buildOrderList(imports, true),
-//           _buildOrderList(exports, false),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildOrderList(List<OrderModel> orders, bool isImport) {
-//     if (orders.isEmpty) {
-//       return const Center(child: Text('Không có đơn hàng nào'));
-//     }
-//     return RefreshIndicator(
-//       onRefresh: _fetchData,
-//       child: ListView.builder(
-//         itemCount: orders.length,
-//         itemBuilder: (context, index) {
-//           final order = orders[index];
-//           return Card(
-//             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//             child: ListTile(
-//               title: Text('Mã đơn: ${order.code}'),
-//               subtitle: Text('Trạng thái: ${order.status}'),
-//               trailing: order.status == 'DONE'
-//                   ? const Icon(Icons.check_circle, color: Colors.green)
-//                   : const Icon(Icons.pending, color: Colors.orange),
-//               onTap: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (_) => OrderDetailScreen(
-//                       orderId: order.id,
-//                       isImport: isImport,
-//                     ),
-//                   ),
-//                 ).then((_) => _fetchData());
-//               },
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-
-
-//bản mới
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../providers/auth_provider.dart';
-// import '../services/order_service.dart';
-// import '../models/order_model.dart';
-// import 'order_detail_screen.dart';
-//
-// class OrdersScreen extends StatefulWidget {
-//   const OrdersScreen({super.key});
-//
-//   @override
-//   State<OrdersScreen> createState() => _OrdersScreenState();
-// }
-//
-// class _OrdersScreenState extends State<OrdersScreen> with SingleTickerProviderStateMixin {
-//   late TabController _tabController;
-//   List<OrderModel> imports = [];
-//   List<OrderModel> exports = [];
-//   bool loading = true;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _tabController = TabController(length: 2, vsync: this);
-//     _fetchData();
-//   }
-//
-//   Future<void> _fetchData() async {
-//     final auth = Provider.of<AuthProvider>(context, listen: false);
-//     final token = auth.token;
-//     if (token == null) return;
-//     setState(() => loading = true);
-//     try {
-//       final imp = await OrderService.getImports(token);
-//       final exp = await OrderService.getExports(token);
-//       setState(() {
-//         imports = imp;
-//         exports = exp;
-//         loading = false;
-//       });
-//     } catch (e) {
-//       setState(() => loading = false);
-//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Đơn hàng'),
-//         bottom: TabBar(
-//           controller: _tabController,
-//           tabs: const [
-//             Tab(text: 'NHẬP KHO', icon: Icon(Icons.download)),
-//             Tab(text: 'XUẤT KHO', icon: Icon(Icons.upload)),
-//           ],
-//         ),
-//       ),
-//       body: loading
-//           ? const Center(child: CircularProgressIndicator())
-//           : TabBarView(
-//         controller: _tabController,
-//         children: [
-//           _buildOrderList(imports, true),
-//           _buildOrderList(exports, false),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildOrderList(List<OrderModel> orders, bool isImport) {
-//     if (orders.isEmpty) {
-//       return const Center(child: Text('Không có đơn hàng nào'));
-//     }
-//     return RefreshIndicator(
-//       onRefresh: _fetchData,
-//       child: ListView.builder(
-//         itemCount: orders.length,
-//         itemBuilder: (context, index) {
-//           final order = orders[index];
-//           return Card(
-//             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-//             child: ListTile(
-//               title: Text('Mã đơn: ${order.code}'),
-//               subtitle: Text('Trạng thái: ${order.status}'),
-//               trailing: order.status == 'DONE'
-//                   ? const Icon(Icons.check_circle, color: Colors.green)
-//                   : const Icon(Icons.pending, color: Colors.orange),
-//               onTap: () async {
-//                 await Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (_) => OrderDetailScreen(
-//                       orderId: order.id,
-//                       isImport: isImport,
-//                       orderCode: order.code, // ✅ truyền mã code
-//                     ),
-//                   ),
-//                 );
-//                 _fetchData(); // refresh sau khi quay về
-//               },
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-
-//bản sửa giao diện
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -429,21 +18,92 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
   List<OrderModel> imports = [];
   List<OrderModel> exports = [];
   bool loading = true;
+  Timer? _refreshTimer;
 
   // Status filter
   String _selectedStatus = 'ALL';
-  final List<String> _statusOptions = ['ALL', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED', 'APPROVED'];
-  final List<String> _statusLabels = ['Tất cả', 'Done', 'Processing', 'Pending', 'Cancelled', 'Approved'];
+  final List<String> _statusOptions = ['ALL', 'APPROVED', 'DONE', 'PROCESSING', 'PENDING', 'CANCELLED'];
+  final List<String> _statusLabels = ['Tất cả', 'Approved' , 'Done', 'Processing', 'Pending', 'Cancelled'];
+
+  // Unseen counts for notification highlighting
+  Map<String, int> _unseenCounts = {
+    'import_all': 0,
+    'import_approved': 0,
+    'import_done': 0,
+    'import_processing': 0,
+    'import_pending': 0,
+    'import_cancelled': 0,
+    'export_all': 0,
+    'export_approved': 0,
+    'export_done': 0,
+    'export_processing': 0,
+    'export_pending': 0,
+    'export_cancelled': 0,
+  };
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_onTabChanged);
     _fetchData();
+    // Mark all orders as seen when page loads
+    _markAllOrdersAsSeen();
+    // Start periodic refresh for unseen counts (every 5 seconds)
+    _refreshTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      _refreshUnseenCounts();
+    });
+  }
+
+  Future<void> _markAllOrdersAsSeen() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token == null) return;
+
+    try {
+      await OrderService.markOrderAsSeen(0, 'import', token);
+      await OrderService.markOrderAsSeen(0, 'export', token);
+    } catch (e) {
+      // Silently fail
+    }
+  }
+
+  void _onTabChanged() {
+    // Refresh unseen counts when tab changes
+    if (_tabController.indexIsChanging) {
+      final auth = Provider.of<AuthProvider>(context, listen: false);
+      final token = auth.token;
+      if (token != null) {
+        OrderService.getUnseenCounts(token).then((unseen) {
+          setState(() {
+            _unseenCounts = unseen;
+          });
+        });
+      }
+    }
+  }
+
+  Future<void> _refreshUnseenCounts() async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token != null) {
+      try {
+        final unseen = await OrderService.getUnseenCounts(token);
+        if (mounted) {
+          setState(() {
+            _unseenCounts = unseen;
+          });
+        }
+      } catch (e) {
+        // Silent fail on refresh errors
+      }
+    }
   }
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
+    _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
@@ -456,15 +116,37 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
     try {
       final imp = await OrderService.getImports(token);
       final exp = await OrderService.getExports(token);
+      final unseen = await OrderService.getUnseenCounts(token);
       setState(() {
         imports = _sortOrdersByDate(imp);
         exports = _sortOrdersByDate(exp);
+        _unseenCounts = unseen;
         loading = false;
       });
     } catch (e) {
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi: $e')));
     }
+  }
+
+  Future<void> _markOrdersAsSeen(String status) async {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token == null) return;
+
+    final isImport = _tabController.index == 0;
+    final orders = isImport ? imports : exports;
+    final ordersToMark = orders.where((order) => order.status == status).toList();
+
+    for (final order in ordersToMark) {
+      await OrderService.markOrderAsSeen(order.id, isImport ? 'import' : 'export', token);
+    }
+
+    // Refresh unseen counts
+    final unseen = await OrderService.getUnseenCounts(token);
+    setState(() {
+      _unseenCounts = unseen;
+    });
   }
 
   List<OrderModel> _sortOrdersByDate(List<OrderModel> orders) {
@@ -564,28 +246,57 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
             final label = _statusLabels[index];
             final isSelected = _selectedStatus == status;
 
+            // Check if this status has unseen orders for ALL statuses
+            bool hasUnseen = false;
+            final isImport = _tabController.index == 0;
+            if (isImport) {
+              if (status == 'ALL') hasUnseen = _unseenCounts['import_all']! > 0;
+              else if (status == 'APPROVED') hasUnseen = _unseenCounts['import_approved']! > 0;
+              else if (status == 'DONE') hasUnseen = _unseenCounts['import_done']! > 0;
+              else if (status == 'PROCESSING') hasUnseen = _unseenCounts['import_processing']! > 0;
+              else if (status == 'PENDING') hasUnseen = _unseenCounts['import_pending']! > 0;
+              else if (status == 'CANCELLED') hasUnseen = _unseenCounts['import_cancelled']! > 0;
+            } else {
+              if (status == 'ALL') hasUnseen = _unseenCounts['export_all']! > 0;
+              else if (status == 'APPROVED') hasUnseen = _unseenCounts['export_approved']! > 0;
+              else if (status == 'DONE') hasUnseen = _unseenCounts['export_done']! > 0;
+              else if (status == 'PROCESSING') hasUnseen = _unseenCounts['export_processing']! > 0;
+              else if (status == 'PENDING') hasUnseen = _unseenCounts['export_pending']! > 0;
+              else if (status == 'CANCELLED') hasUnseen = _unseenCounts['export_cancelled']! > 0;
+            }
+
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: GestureDetector(
                 onTap: () {
                   setState(() => _selectedStatus = status);
+                  // Mark orders as seen when user taps on a status filter
+                  if (status != 'ALL') {
+                    _markOrdersAsSeen(status);
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFFF3F4F6),
+                    color: hasUnseen && !isSelected 
+                        ? const Color(0xFFFEE2E2) 
+                        : (isSelected ? const Color(0xFF4F46E5) : const Color(0xFFF3F4F6)),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFF4F46E5) : const Color(0xFFE5E7EB),
+                      color: hasUnseen && !isSelected 
+                          ? const Color(0xFFEF4444) 
+                          : (isSelected ? const Color(0xFF4F46E5) : const Color(0xFFE5E7EB)),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     label,
                     style: TextStyle(
-                      color: isSelected ? Colors.white : const Color(0xFF6B7280),
+                      color: hasUnseen && !isSelected 
+                          ? const Color(0xFFEF4444) 
+                          : (isSelected ? Colors.white : const Color(0xFF6B7280)),
                       fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: hasUnseen && !isSelected ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
                 ),
@@ -737,6 +448,18 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () async {
+                // Mark this specific order as seen
+                final auth = Provider.of<AuthProvider>(context, listen: false);
+                final token = auth.token;
+                if (token != null) {
+                  await OrderService.markOrderAsSeen(order.id, isImport ? 'import' : 'export', token);
+                  // Refresh unseen counts
+                  final unseen = await OrderService.getUnseenCounts(token);
+                  setState(() {
+                    _unseenCounts = unseen;
+                  });
+                }
+                
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -747,6 +470,7 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                     ),
                   ),
                 );
+                // Refresh data and unseen counts when returning from detail
                 _fetchData();
               },
               child: Padding(

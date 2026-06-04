@@ -34,7 +34,8 @@ app_tablet/android/*.iml
 app_tablet/android/.idea/
 
 # Environment files (optional - uncomment if needed)
-# .env
-# backend/.env
-# frontend-web/.env
-# app_tablet/.env
+.env
+backend/.env
+frontend-web/.env
+app_tablet/.env
+*.env

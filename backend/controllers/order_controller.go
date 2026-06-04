@@ -208,3 +208,80 @@ func (c *OrderController) GetExportByCode(ctx *gin.Context) {
 
 	ctx.JSON(200, gin.H{"id": data.ID})
 }
+
+func (c *OrderController) MarkOrderAsSeen(ctx *gin.Context) {
+	userID, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	var req struct {
+		OrderID   uint   `json:"order_id" binding:"required"`
+		OrderType string `json:"order_type" binding:"required"` // "import" or "export"
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.Service.MarkOrderAsSeen(userID.(uint), req.OrderID, req.OrderType); err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, gin.H{"message": "order marked as seen"})
+}
+
+func (c *OrderController) GetUnseenCounts(ctx *gin.Context) {
+	userID, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	importCount, err := c.Service.GetUnseenImportCount(userID.(uint))
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	exportCount, err := c.Service.GetUnseenExportCount(userID.(uint))
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Get counts by status for ALL statuses
+	importAllCount, _ := c.Service.GetUnseenImportCountByStatus(userID.(uint), "ALL")
+	importApprovedCount, _ := c.Service.GetUnseenImportCountByStatus(userID.(uint), "APPROVED")
+	importDoneCount, _ := c.Service.GetUnseenImportCountByStatus(userID.(uint), "DONE")
+	importProcessingCount, _ := c.Service.GetUnseenImportCountByStatus(userID.(uint), "PROCESSING")
+	importPendingCount, _ := c.Service.GetUnseenImportCountByStatus(userID.(uint), "PENDING")
+	importCancelledCount, _ := c.Service.GetUnseenImportCountByStatus(userID.(uint), "CANCELLED")
+
+	exportAllCount, _ := c.Service.GetUnseenExportCountByStatus(userID.(uint), "ALL")
+	exportApprovedCount, _ := c.Service.GetUnseenExportCountByStatus(userID.(uint), "APPROVED")
+	exportDoneCount, _ := c.Service.GetUnseenExportCountByStatus(userID.(uint), "DONE")
+	exportProcessingCount, _ := c.Service.GetUnseenExportCountByStatus(userID.(uint), "PROCESSING")
+	exportPendingCount, _ := c.Service.GetUnseenExportCountByStatus(userID.(uint), "PENDING")
+	exportCancelledCount, _ := c.Service.GetUnseenExportCountByStatus(userID.(uint), "CANCELLED")
+
+	ctx.JSON(200, gin.H{
+		"import_total":        importCount,
+		"export_total":        exportCount,
+		"import_all":          importAllCount,
+		"import_approved":     importApprovedCount,
+		"import_done":         importDoneCount,
+		"import_processing":  importProcessingCount,
+		"import_pending":      importPendingCount,
+		"import_cancelled":    importCancelledCount,
+		"export_all":          exportAllCount,
+		"export_approved":     exportApprovedCount,
+		"export_done":         exportDoneCount,
+		"export_processing":  exportProcessingCount,
+		"export_pending":      exportPendingCount,
+		"export_cancelled":    exportCancelledCount,
+	})
+}
