@@ -353,3 +353,65 @@ func (s *OrderService) GetUnseenExportCountByStatus(userID uint, status string) 
 		Count(&count).Error
 	return count, err
 }
+
+// GetImportsByLocation gets import orders that have items at a specific location or its children
+func (s *OrderService) GetImportsByLocation(locationID uint) ([]entity.Import, error) {
+	var imports []entity.Import
+	
+	// Get all location IDs including children
+	var locationIDs []uint
+	locationIDs = append(locationIDs, locationID)
+	
+	// Recursively get all child locations
+	var getChildLocations func(parentID uint)
+	getChildLocations = func(parentID uint) {
+		var children []entity.Location
+		s.DB.Where("parent_id = ?", parentID).Find(&children)
+		for _, child := range children {
+			locationIDs = append(locationIDs, child.ID)
+			getChildLocations(child.ID)
+		}
+	}
+	getChildLocations(locationID)
+	
+	err := s.DB.
+		Distinct("imports.*").
+		Joins("JOIN import_items ON imports.id = import_items.import_id").
+		Where("import_items.location_id IN ?", locationIDs).
+		Preload("Items.Product").
+		Preload("Items.Location").
+		Preload("User").
+		Find(&imports).Error
+	return imports, err
+}
+
+// GetExportsByLocation gets export orders that have items at a specific location or its children
+func (s *OrderService) GetExportsByLocation(locationID uint) ([]entity.Export, error) {
+	var exports []entity.Export
+	
+	// Get all location IDs including children
+	var locationIDs []uint
+	locationIDs = append(locationIDs, locationID)
+	
+	// Recursively get all child locations
+	var getChildLocations func(parentID uint)
+	getChildLocations = func(parentID uint) {
+		var children []entity.Location
+		s.DB.Where("parent_id = ?", parentID).Find(&children)
+		for _, child := range children {
+			locationIDs = append(locationIDs, child.ID)
+			getChildLocations(child.ID)
+		}
+	}
+	getChildLocations(locationID)
+	
+	err := s.DB.
+		Distinct("exports.*").
+		Joins("JOIN export_items ON exports.id = export_items.export_id").
+		Where("export_items.location_id IN ?", locationIDs).
+		Preload("Items.Product").
+		Preload("Items.Location").
+		Preload("User").
+		Find(&exports).Error
+	return exports, err
+}

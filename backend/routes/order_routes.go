@@ -32,5 +32,9 @@ func OrderRoutes(r *gin.RouterGroup, db *gorm.DB) {
 		// Notification/Seen status
 		api.POST("/mark-seen", controller.MarkOrderAsSeen)
 		api.GET("/unseen-counts", controller.GetUnseenCounts)
+
+		// Orders by location
+		api.GET("/import/location/:locationId", controller.GetImportsByLocation)
+		api.GET("/export/location/:locationId", controller.GetExportsByLocation)
 	}
 }

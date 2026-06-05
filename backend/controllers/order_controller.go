@@ -285,3 +285,35 @@ func (c *OrderController) GetUnseenCounts(ctx *gin.Context) {
 		"export_cancelled":    exportCancelledCount,
 	})
 }
+
+func (c *OrderController) GetImportsByLocation(ctx *gin.Context) {
+	locationID, err := strconv.ParseUint(ctx.Param("locationId"), 10, 64)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "invalid location id"})
+		return
+	}
+
+	data, err := c.Service.GetImportsByLocation(uint(locationID))
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, data)
+}
+
+func (c *OrderController) GetExportsByLocation(ctx *gin.Context) {
+	locationID, err := strconv.ParseUint(ctx.Param("locationId"), 10, 64)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "invalid location id"})
+		return
+	}
+
+	data, err := c.Service.GetExportsByLocation(uint(locationID))
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, data)
+}

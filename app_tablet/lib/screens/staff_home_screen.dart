@@ -7,6 +7,7 @@ import 'scan_screen.dart';
 import 'orders_screen.dart';
 import 'import_inventory_screen.dart';
 import 'export_inventory_screen.dart';
+import 'warehouse_picker_screen.dart';
 
 class StaffHomeScreen extends StatelessWidget {
   const StaffHomeScreen({super.key});
@@ -137,16 +138,16 @@ class StaffHomeScreen extends StatelessWidget {
                 children: [
                   _buildActionCard(
                     context: context,
-                    title: 'Quét QR',
-                    subtitle: 'Scan sản phẩm',
-                    icon: Icons.qr_code_scanner_rounded,
+                    title: 'Vị trí kho',
+                    subtitle: 'Chọn kho',
+                    icon: Icons.warehouse_rounded,
                     color: const Color(0xFF3B82F6),
                     bgColor: const Color(0xFFEFF6FF),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const ScanScreen(isImport: true),
+                          builder: (_) => const WarehousePickerScreen(),
                         ),
                       );
                     },
