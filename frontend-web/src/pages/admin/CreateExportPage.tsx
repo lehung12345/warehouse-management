@@ -167,6 +167,7 @@ export default function CreateExportPage() {
 
     try {
       await api.post("/api/orders/export", {
+        name: "Đơn xuất kho",
         user_id: user?.id,
         status: "PENDING",
         items,

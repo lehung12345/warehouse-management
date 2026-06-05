@@ -57,8 +57,9 @@ CREATE TABLE inventories (
 CREATE TABLE imports (
     id SERIAL PRIMARY KEY,
     code TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
     user_id INT REFERENCES users(id),
-    status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING','PROCESSING','DONE','CANCELLED')),
+    status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING','APPROVED','PROCESSING','DONE','CANCELLED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -69,6 +70,7 @@ CREATE TABLE import_items (
     product_id INT REFERENCES products(id),
     location_id INT REFERENCES locations(id),
     quantity INT NOT NULL CHECK (quantity > 0),
+    scanned_quantity INT DEFAULT 0,
     UNIQUE(import_id, product_id, location_id)
 );
 
@@ -78,8 +80,9 @@ CREATE TABLE import_items (
 CREATE TABLE exports (
     id SERIAL PRIMARY KEY,
     code TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
     user_id INT REFERENCES users(id),
-    status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING','PROCESSING','DONE','CANCELLED')),
+    status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING','APPROVED','PROCESSING','DONE','CANCELLED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -109,9 +112,24 @@ CREATE TABLE transactions (
 );
 
 -- ========================
+-- ORDER SEEN STATUS
+-- ========================
+CREATE TABLE order_seen_status (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    order_id INT NOT NULL,
+    order_type VARCHAR(10) NOT NULL CHECK (order_type IN ('IMPORT','EXPORT')),
+    seen_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ========================
 -- INDEX (TỐI ƯU)
 -- ========================
 CREATE INDEX idx_inventory_product ON inventories(product_id);
 CREATE INDEX idx_inventory_location ON inventories(location_id);
 CREATE INDEX idx_transactions_product ON transactions(product_id);
 CREATE INDEX idx_transactions_created ON transactions(created_at);
+CREATE INDEX idx_order_seen_user ON order_seen_status(user_id);
+CREATE INDEX idx_order_seen_order ON order_seen_status(order_id);
+CREATE INDEX idx_order_seen_type ON order_seen_status(order_type);

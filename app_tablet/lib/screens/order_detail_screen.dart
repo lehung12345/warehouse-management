@@ -66,6 +66,74 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Colors.blue;
   }
 
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'DONE':
+        return const Color(0xFF10B981);
+      case 'PROCESSING':
+        return const Color(0xFFF59E0B);
+      case 'PENDING':
+        return const Color(0xFF6B7280);
+      case 'CANCELLED':
+        return const Color(0xFFEF4444);
+      case 'APPROVED':
+        return const Color(0xFF4F46E5);
+      default:
+        return const Color(0xFF6B7280);
+    }
+  }
+
+  Color _getStatusBackgroundColor(String status) {
+    switch (status) {
+      case 'DONE':
+        return const Color(0xFFD1FAE5);
+      case 'PROCESSING':
+        return const Color(0xFFFED7AA);
+      case 'PENDING':
+        return const Color(0xFFE5E7EB);
+      case 'CANCELLED':
+        return const Color(0xFFFEE2E2);
+      case 'APPROVED':
+        return const Color(0xFFE0E7FF);
+      default:
+        return const Color(0xFFE5E7EB);
+    }
+  }
+
+  Widget _buildStatusBadge() {
+    final status = order?['status'] ?? 'UNKNOWN';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: _getStatusBackgroundColor(status),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: _getStatusColor(status).withOpacity(0.3), width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: _getStatusColor(status),
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            status,
+            style: TextStyle(
+              color: _getStatusColor(status),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +144,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ? Center(child: Text(error!))
           : Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Mã đơn: ${widget.orderCode}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                _buildStatusBadge(),
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: order?['items']?.length ?? 0,

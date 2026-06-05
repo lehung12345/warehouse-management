@@ -121,6 +121,7 @@ export default function CreateImportPage() {
 
     try {
       await api.post("/api/orders/import", {
+        name: "Đơn nhập kho",
         user_id: user?.id,
         status: "PENDING",
         items,
