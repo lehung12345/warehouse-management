@@ -753,79 +753,89 @@ class _WarehouseOrdersScreenState extends State<WarehouseOrdersScreen> with Tick
   }
 
   Widget _buildStatusFilter() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: List.generate(_statusOptions.length, (index) {
-            final status = _statusOptions[index];
-            final label = _statusLabels[index];
-            final isSelected = _selectedStatus == status;
-            final isImport = _tabController.index == 0;
+    return Builder(
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isSmallScreen = screenWidth < 600;
+        
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 8 : 10),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(_statusOptions.length, (index) {
+                final status = _statusOptions[index];
+                final label = _statusLabels[index];
+                final isSelected = _selectedStatus == status;
+                final isImport = _tabController.index == 0;
 
-            // Check if this status has unseen orders
-            bool hasUnseen = false;
-            if (isImport) {
-              if (status == 'ALL') hasUnseen = _unseenCounts['import_all']! > 0;
-              else if (status == 'APPROVED') hasUnseen = _unseenCounts['import_approved']! > 0;
-              else if (status == 'DONE') hasUnseen = _unseenCounts['import_done']! > 0;
-              else if (status == 'PROCESSING') hasUnseen = _unseenCounts['import_processing']! > 0;
-              else if (status == 'PENDING') hasUnseen = _unseenCounts['import_pending']! > 0;
-              else if (status == 'CANCELLED') hasUnseen = _unseenCounts['import_cancelled']! > 0;
-            } else {
-              if (status == 'ALL') hasUnseen = _unseenCounts['export_all']! > 0;
-              else if (status == 'APPROVED') hasUnseen = _unseenCounts['export_approved']! > 0;
-              else if (status == 'DONE') hasUnseen = _unseenCounts['export_done']! > 0;
-              else if (status == 'PROCESSING') hasUnseen = _unseenCounts['export_processing']! > 0;
-              else if (status == 'PENDING') hasUnseen = _unseenCounts['export_pending']! > 0;
-              else if (status == 'CANCELLED') hasUnseen = _unseenCounts['export_cancelled']! > 0;
-            }
+                // Check if this status has unseen orders
+                bool hasUnseen = false;
+                if (isImport) {
+                  if (status == 'ALL') hasUnseen = _unseenCounts['import_all']! > 0;
+                  else if (status == 'APPROVED') hasUnseen = _unseenCounts['import_approved']! > 0;
+                  else if (status == 'DONE') hasUnseen = _unseenCounts['import_done']! > 0;
+                  else if (status == 'PROCESSING') hasUnseen = _unseenCounts['import_processing']! > 0;
+                  else if (status == 'PENDING') hasUnseen = _unseenCounts['import_pending']! > 0;
+                  else if (status == 'CANCELLED') hasUnseen = _unseenCounts['import_cancelled']! > 0;
+                } else {
+                  if (status == 'ALL') hasUnseen = _unseenCounts['export_all']! > 0;
+                  else if (status == 'APPROVED') hasUnseen = _unseenCounts['export_approved']! > 0;
+                  else if (status == 'DONE') hasUnseen = _unseenCounts['export_done']! > 0;
+                  else if (status == 'PROCESSING') hasUnseen = _unseenCounts['export_processing']! > 0;
+                  else if (status == 'PENDING') hasUnseen = _unseenCounts['export_pending']! > 0;
+                  else if (status == 'CANCELLED') hasUnseen = _unseenCounts['export_cancelled']! > 0;
+                }
 
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() => _selectedStatus = status);
-                  if (status != 'ALL') {
-                    _markOrdersAsSeen(status);
-                  }
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: hasUnseen && !isSelected
-                        ? const Color(0xFFFEE2E2)
-                        : (isSelected ? const Color(0xFF4F46E5) : const Color(0xFFF3F4F6)),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: hasUnseen && !isSelected
-                          ? const Color(0xFFEF4444)
-                          : (isSelected ? const Color(0xFF4F46E5) : const Color(0xFFE5E7EB)),
-                      width: 1,
+                return Padding(
+                  padding: EdgeInsets.only(right: isSmallScreen ? 6 : 8),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() => _selectedStatus = status);
+                      if (status != 'ALL') {
+                        _markOrdersAsSeen(status);
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 10 : 12, vertical: isSmallScreen ? 4 : 6),
+                      decoration: BoxDecoration(
+                        color: hasUnseen && !isSelected
+                            ? const Color(0xFFFEE2E2)
+                            : (isSelected ? const Color(0xFF4F46E5) : const Color(0xFFF3F4F6)),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: hasUnseen && !isSelected
+                              ? const Color(0xFFEF4444)
+                              : (isSelected ? const Color(0xFF4F46E5) : const Color(0xFFE5E7EB)),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          color: hasUnseen && !isSelected
+                              ? const Color(0xFFEF4444)
+                              : (isSelected ? Colors.white : const Color(0xFF6B7280)),
+                          fontSize: isSmallScreen ? 11 : 12,
+                          fontWeight: hasUnseen && !isSelected ? FontWeight.w700 : FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      color: hasUnseen && !isSelected
-                          ? const Color(0xFFEF4444)
-                          : (isSelected ? Colors.white : const Color(0xFF6B7280)),
-                      fontSize: 12,
-                      fontWeight: hasUnseen && !isSelected ? FontWeight.w700 : FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-        ),
-      ),
+                );
+              }),
+            ),
+          ),
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
       backgroundColor: const Color(0xFFFAFBFC),
       appBar: AppBar(
@@ -840,7 +850,7 @@ class _WarehouseOrdersScreenState extends State<WarehouseOrdersScreen> with Tick
               style: GoogleFonts.inter(
                 color: const Color(0xFF1F2937),
                 fontWeight: FontWeight.w700,
-                fontSize: 18,
+                fontSize: isSmallScreen ? 16 : 18,
               ),
             ),
             Text(
@@ -848,13 +858,13 @@ class _WarehouseOrdersScreenState extends State<WarehouseOrdersScreen> with Tick
               style: GoogleFonts.inter(
                 color: const Color(0xFF6B7280),
                 fontWeight: FontWeight.w500,
-                fontSize: 12,
+                fontSize: isSmallScreen ? 11 : 12,
               ),
             ),
           ],
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(45),
+          preferredSize: Size.fromHeight(isSmallScreen ? 40 : 45),
           child: Container(
             color: Colors.white,
             child: TabBar(
@@ -864,20 +874,20 @@ class _WarehouseOrdersScreenState extends State<WarehouseOrdersScreen> with Tick
               labelColor: const Color(0xFF4F46E5),
               unselectedLabelColor: const Color(0xFF9CA3AF),
               labelStyle: GoogleFonts.inter(
-                fontSize: 13,
+                fontSize: isSmallScreen ? 12 : 13,
                 fontWeight: FontWeight.w600,
               ),
               unselectedLabelStyle: GoogleFonts.inter(
-                fontSize: 13,
+                fontSize: isSmallScreen ? 12 : 13,
                 fontWeight: FontWeight.w500,
               ),
-              tabs: const [
+              tabs: [
                 Tab(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.download_rounded, size: 18),
-                      SizedBox(width: 6),
+                      Icon(Icons.download_rounded, size: isSmallScreen ? 16 : 18),
+                      SizedBox(width: isSmallScreen ? 4 : 6),
                       Text('NHẬP KHO'),
                     ],
                   ),
@@ -886,8 +896,8 @@ class _WarehouseOrdersScreenState extends State<WarehouseOrdersScreen> with Tick
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.upload_rounded, size: 18),
-                      SizedBox(width: 6),
+                      Icon(Icons.upload_rounded, size: isSmallScreen ? 16 : 18),
+                      SizedBox(width: isSmallScreen ? 4 : 6),
                       Text('XUẤT KHO'),
                     ],
                   ),
@@ -925,148 +935,155 @@ class _WarehouseOrdersScreenState extends State<WarehouseOrdersScreen> with Tick
   Widget _buildOrderList(List<dynamic> orders, bool isImport) {
     final filteredOrders = _filterByStatus(_sortOrdersByDate(orders));
 
-    if (filteredOrders.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isImport ? Icons.inbox_rounded : Icons.outbox_rounded,
-              size: 56,
-              color: const Color(0xFFD1D5DB),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Không có đơn hàng nào',
-              style: GoogleFonts.inter(
-                color: const Color(0xFF6B7280),
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    return Builder(
+      builder: (context) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isSmallScreen = screenWidth < 600;
 
-    return RefreshIndicator(
-      onRefresh: _fetchData,
-      color: const Color(0xFF4F46E5),
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        itemCount: filteredOrders.length,
-        itemBuilder: (context, index) {
-          final order = filteredOrders[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 10),
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: BorderSide(
-                color: Colors.black.withOpacity(0.06),
-                width: 1,
-              ),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () async {
-                final auth = Provider.of<AuthProvider>(context, listen: false);
-                final token = auth.token;
-                if (token != null) {
-                  await OrderService.markOrderAsSeen(order['id'], isImport ? 'import' : 'export', token);
-                  final unseen = await OrderService.getUnseenCounts(token);
-                  setState(() {
-                    _unseenCounts = unseen;
-                  });
-                }
-
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => OrderDetailScreen(
-                      orderId: order['id'],
-                      isImport: isImport,
-                      orderCode: order['code'],
-                    ),
+        if (filteredOrders.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  isImport ? Icons.inbox_rounded : Icons.outbox_rounded,
+                  size: isSmallScreen ? 48 : 56,
+                  color: const Color(0xFFD1D5DB),
+                ),
+                SizedBox(height: isSmallScreen ? 10 : 12),
+                Text(
+                  'Không có đơn hàng nào',
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF6B7280),
+                    fontSize: isSmallScreen ? 13 : 14,
+                    fontWeight: FontWeight.w500,
                   ),
-                );
-                _fetchData();
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: _fetchData,
+          color: const Color(0xFF4F46E5),
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 6 : 8),
+            itemCount: filteredOrders.length,
+            itemBuilder: (context, index) {
+              final order = filteredOrders[index];
+              return Card(
+                margin: EdgeInsets.only(bottom: isSmallScreen ? 8 : 10),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
+                  side: BorderSide(
+                    color: Colors.black.withOpacity(0.06),
+                    width: 1,
+                  ),
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
+                  onTap: () async {
+                    final auth = Provider.of<AuthProvider>(context, listen: false);
+                    final token = auth.token;
+                    if (token != null) {
+                      await OrderService.markOrderAsSeen(order['id'], isImport ? 'import' : 'export', token);
+                      final unseen = await OrderService.getUnseenCounts(token);
+                      setState(() {
+                        _unseenCounts = unseen;
+                      });
+                    }
+
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => OrderDetailScreen(
+                          orderId: order['id'],
+                          isImport: isImport,
+                          orderCode: order['code'],
+                        ),
+                      ),
+                    );
+                    _fetchData();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: isImport
-                                  ? const Color(0xFFDBEAFE).withOpacity(0.6)
-                                  : const Color(0xFFFED7AA).withOpacity(0.6),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  isImport ? Icons.download_rounded : Icons.upload_rounded,
-                                  size: 14,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 6 : 8, vertical: isSmallScreen ? 4 : 5),
+                                decoration: BoxDecoration(
                                   color: isImport
-                                      ? const Color(0xFF2563EB)
-                                      : const Color(0xFFEA580C),
+                                      ? const Color(0xFFDBEAFE).withOpacity(0.6)
+                                      : const Color(0xFFFED7AA).withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(isSmallScreen ? 5 : 6),
                                 ),
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: Text(
-                                    order['code'],
-                                    style: TextStyle(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      isImport ? Icons.download_rounded : Icons.upload_rounded,
+                                      size: isSmallScreen ? 12 : 14,
                                       color: isImport
                                           ? const Color(0xFF2563EB)
                                           : const Color(0xFFEA580C),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'monospace',
                                     ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                    SizedBox(width: isSmallScreen ? 4 : 5),
+                                    Expanded(
+                                      child: Text(
+                                        order['code'],
+                                        style: TextStyle(
+                                          color: isImport
+                                              ? const Color(0xFF2563EB)
+                                              : const Color(0xFFEA580C),
+                                          fontSize: isSmallScreen ? 11 : 12,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'monospace',
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            SizedBox(width: isSmallScreen ? 6 : 8),
+                            _buildStatusBadge(order['status']),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        _buildStatusBadge(order['status']),
+                        SizedBox(height: isSmallScreen ? 6 : 8),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today_rounded,
+                              size: isSmallScreen ? 12 : 14,
+                              color: const Color(0xFFB4B9C1),
+                            ),
+                            SizedBox(width: isSmallScreen ? 4 : 5),
+                            Text(
+                              _formatDate(order['created_at']),
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFF6B7280),
+                                fontSize: isSmallScreen ? 11 : 12,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today_rounded,
-                          size: 14,
-                          color: const Color(0xFFB4B9C1),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          _formatDate(order['created_at']),
-                          style: GoogleFonts.inter(
-                            color: const Color(0xFF6B7280),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

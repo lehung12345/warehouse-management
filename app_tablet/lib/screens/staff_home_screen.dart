@@ -128,14 +128,21 @@ class StaffHomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               // ================= GRID =================
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 1.1,
-                children: [
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate responsive grid based on screen width
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  final crossAxisCount = screenWidth < 600 ? 2 : (screenWidth < 900 ? 3 : 4);
+                  final childAspectRatio = screenWidth < 600 ? 1.1 : (screenWidth < 900 ? 1.2 : 1.3);
+                  
+                  return GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    mainAxisSpacing: screenWidth < 600 ? 12 : 16,
+                    crossAxisSpacing: screenWidth < 600 ? 12 : 16,
+                    childAspectRatio: childAspectRatio,
+                    children: [
                   _buildActionCard(
                     context: context,
                     title: 'Vị trí kho',
@@ -204,6 +211,8 @@ class StaffHomeScreen extends StatelessWidget {
                     },
                   ),
                 ],
+              );
+                },
               ),
             ],
           ),
@@ -222,6 +231,9 @@ class StaffHomeScreen extends StatelessWidget {
     required Color bgColor,
     required VoidCallback onTap,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -240,18 +252,18 @@ class StaffHomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(isSmallScreen ? 8 : 12),
                   decoration: BoxDecoration(
                     color: bgColor,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 14),
                   ),
-                  child: Icon(icon, color: color, size: 28),
+                  child: Icon(icon, color: color, size: isSmallScreen ? 22 : 28),
                 ),
 
                 const Spacer(),
@@ -259,18 +271,18 @@ class StaffHomeScreen extends StatelessWidget {
                 Text(
                   title,
                   style: GoogleFonts.inter(
-                    fontSize: 16,
+                    fontSize: isSmallScreen ? 14 : 16,
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF1E293B),
                   ),
                 ),
 
-                const SizedBox(height: 4),
+                SizedBox(height: isSmallScreen ? 2 : 4),
 
                 Text(
                   subtitle,
                   style: GoogleFonts.inter(
-                    fontSize: 12,
+                    fontSize: isSmallScreen ? 10 : 12,
                     fontWeight: FontWeight.w500,
                     color: const Color(0xFF64748B),
                   ),

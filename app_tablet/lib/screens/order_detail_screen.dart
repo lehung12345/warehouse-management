@@ -102,30 +102,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   Widget _buildStatusBadge() {
     final status = order?['status'] ?? 'UNKNOWN';
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 4 : 6),
       decoration: BoxDecoration(
         color: _getStatusBackgroundColor(status),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(isSmallScreen ? 6 : 8),
         border: Border.all(color: _getStatusColor(status).withOpacity(0.3), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 8,
-            height: 8,
+            width: isSmallScreen ? 6 : 8,
+            height: isSmallScreen ? 6 : 8,
             decoration: BoxDecoration(
               color: _getStatusColor(status),
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: isSmallScreen ? 4 : 6),
           Text(
             status,
             style: TextStyle(
               color: _getStatusColor(status),
-              fontSize: 12,
+              fontSize: isSmallScreen ? 10 : 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -136,6 +139,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
       appBar: AppBar(title: Text('Chi tiết đơn ${widget.isImport ? 'NHẬP' : 'XUẤT'}')),
       body: loading
@@ -145,17 +151,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           : Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Mã đơn: ${widget.orderCode}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Text(
+                    'Mã đơn: ${widget.orderCode}',
+                    style: TextStyle(
+                      fontSize: isSmallScreen ? 14 : 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                SizedBox(width: isSmallScreen ? 6 : 8),
                 _buildStatusBadge(),
               ],
             ),
@@ -169,7 +179,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 final total = item['quantity'];
                 final location = item['location'];
                 return Card(
-                  margin: const EdgeInsets.all(8),
+                  margin: EdgeInsets.all(isSmallScreen ? 6 : 8),
                   child: InkWell(
                     onTap: (order?['status'] == 'CANCELLED' || order?['status'] == 'APPROVED' || order?['status'] == 'DONE') ? null : () {
                       Navigator.push(
@@ -205,13 +215,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
             child: ElevatedButton.icon(
               onPressed: null,
               icon: const Icon(Icons.qr_code_scanner),
               label: Text(_getButtonText()),
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
+                minimumSize: Size(double.infinity, isSmallScreen ? 45 : 50),
                 backgroundColor: _getButtonColor(),
               ),
             ),

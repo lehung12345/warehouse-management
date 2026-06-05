@@ -188,6 +188,10 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.isImport ? "Nhập kho" : "Xuất kho"),
@@ -199,118 +203,121 @@ class _ScanScreenState extends State<ScanScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          if (!useManualInput && isScanning)
-            SizedBox(
-              height: 300,
-              child: MobileScanner(
-                controller: scannerController,
-                onDetect: _onScan,
-              ),
-            )
-          else if (!useManualInput && !isScanning)
-            Card(
-              margin: const EdgeInsets.all(16),
-              child: ListTile(
-                title: const Text("Sản phẩm đã scan"),
-                subtitle: Text("Product ID: $scannedProductId"),
-                trailing: IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: () {
-                    setState(() {
-                      isScanning = true;
-                      scannedProductId = null;
-                      productIdController.clear();
-                      scannerController.start();
-                    });
-                  },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (!useManualInput && isScanning)
+              SizedBox(
+                height: screenHeight * 0.35,
+                child: MobileScanner(
+                  controller: scannerController,
+                  onDetect: _onScan,
+                ),
+              )
+            else if (!useManualInput && !isScanning)
+              Card(
+                margin: EdgeInsets.all(isSmallScreen ? 12 : 16),
+                child: ListTile(
+                  title: const Text("Sản phẩm đã scan"),
+                  subtitle: Text("Product ID: $scannedProductId"),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      setState(() {
+                        isScanning = true;
+                        scannedProductId = null;
+                        productIdController.clear();
+                        scannerController.start();
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                if (useManualInput)
-                  TextField(
-                    controller: productIdController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: "Barcode (nhập tay)"),
+            Padding(
+              padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
+              child: Column(
+                children: [
+                  if (useManualInput)
+                    TextField(
+                      controller: productIdController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: "Barcode (nhập tay)"),
+                    ),
+                  SizedBox(height: isSmallScreen ? 10 : 12),
+                  // Hiển thị mã code nếu có preset, nếu không thì hiển thị ô nhập code
+                  widget.presetOrderId != null && widget.presetOrderCode != null
+                      ? TextFormField(
+                    initialValue: widget.presetOrderCode,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      labelText: "Mã đơn hàng",
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  )
+                      : TextField(
+                    controller: orderCodeController,
+                    keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.characters,
+                    decoration: const InputDecoration(
+                      labelText: "Mã đơn hàng (ví dụ: IMP001, EXP002)",
+                      border: OutlineInputBorder(),
+                    ),
+                    style: const TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
+                    onChanged: (v) {
+                      orderCode = v.trim().toUpperCase();
+                    },
                   ),
-                const SizedBox(height: 12),
-                // Hiển thị mã code nếu có preset, nếu không thì hiển thị ô nhập code
-                widget.presetOrderId != null && widget.presetOrderCode != null
-                    ? TextFormField(
-                  initialValue: widget.presetOrderCode,
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    labelText: "Mã đơn hàng",
-                    border: OutlineInputBorder(),
-                  ),
-                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                )
-                    : TextField(
-                  controller: orderCodeController,
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.characters,
-                  decoration: const InputDecoration(
-                    labelText: "Mã đơn hàng (ví dụ: IMP001, EXP002)",
-                    border: OutlineInputBorder(),
-                  ),
-                  style: const TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
-                  onChanged: (v) {
-                    orderCode = v.trim().toUpperCase();
-                  },
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(labelText: "Số lượng"),
-                        onChanged: (v) => quantity = int.tryParse(v) ?? 1,
-                        controller: TextEditingController(text: quantity.toString()),
+                  SizedBox(height: isSmallScreen ? 10 : 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(labelText: "Số lượng"),
+                          onChanged: (v) => quantity = int.tryParse(v) ?? 1,
+                          controller: TextEditingController(text: quantity.toString()),
+                        ),
                       ),
-                    ),
-                    Column(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.add_circle),
-                          onPressed: () => setState(() => quantity++),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.remove_circle),
-                          onPressed: () {
-                            if (quantity > 1) setState(() => quantity--);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton.icon(
-                  onPressed: widget.presetLocationId != null ? null : _pickLocation,
-                  icon: const Icon(Icons.place),
-                  label: Text(selectedLocationPath.isEmpty ? "Chọn vị trí" : selectedLocationPath),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: widget.presetLocationId != null ? Colors.grey : null,
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add_circle),
+                            onPressed: () => setState(() => quantity++),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () {
+                              if (quantity > 1) setState(() => quantity--);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 24),
-                if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: submitting ? null : _submit,
-                  style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
-                  child: submitting ? const CircularProgressIndicator() : const Text("Xác nhận"),
-                ),
-              ],
+                  SizedBox(height: isSmallScreen ? 10 : 12),
+                  ElevatedButton.icon(
+                    onPressed: widget.presetLocationId != null ? null : _pickLocation,
+                    icon: const Icon(Icons.place),
+                    label: Text(selectedLocationPath.isEmpty ? "Chọn vị trí" : selectedLocationPath),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: widget.presetLocationId != null ? Colors.grey : null,
+                    ),
+                  ),
+                  SizedBox(height: isSmallScreen ? 20 : 24),
+                  if (error != null) Text(error!, style: const TextStyle(color: Colors.red)),
+                  SizedBox(height: isSmallScreen ? 10 : 12),
+                  ElevatedButton(
+                    onPressed: submitting ? null : _submit,
+                    style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, isSmallScreen ? 45 : 50)),
+                    child: submitting ? const CircularProgressIndicator() : const Text("Xác nhận"),
+                  ),
+                  SizedBox(height: isSmallScreen ? 20 : 24),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
