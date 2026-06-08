@@ -44,14 +44,21 @@
 - Tạo đơn xuất kho (POST /api/orders/export)
 - Lấy danh sách đơn nhập (GET /api/orders/import)
 - Lấy danh sách đơn xuất (GET /api/orders/export)
+- Lấy đơn nhập theo location (GET /api/orders/import/location/:locationId)
+- Lấy đơn xuất theo location (GET /api/orders/export/location/:locationId)
+- Tìm đơn nhập theo code (GET /api/orders/import/code/:code)
+- Tìm đơn xuất theo code (GET /api/orders/export/code/:code)
 - Hủy đơn hàng (PUT /api/orders/import/:id/cancel, PUT /api/orders/export/:id/cancel)
 - Duyệt đơn hàng (PUT /api/orders/import/:id/approve, PUT /api/orders/export/:id/approve)
 - Xem chi tiết đơn hàng với các items
+- Đánh dấu đơn đã xem (POST /api/orders/mark-seen)
+- Lấy số lượng đơn chưa xem theo status (GET /api/orders/unseen-counts)
 
 #### 1.7 Scan Management
-- Quét barcode/QR code để nhập/xuất (POST /api/scan/import, POST /api/scan/export)
+- Quét barcode sản phẩm để nhập/xuất (POST /api/scan/import, POST /api/scan/export)
 - Tìm sản phẩm theo barcode
-- Xử lý quét cho import/export
+- Xử lý quét cho import/export với location được chọn
+- Theo dõi số lượng đã quét (scanned_quantity)
 
 #### 1.8 Report Management
 - Báo cáo nhập/xuất theo ngày (GET /api/reports/import-export)
@@ -131,31 +138,45 @@
 - Logout button
 
 #### 3.3 Scan Screen
-- Quét QR code/Barcode với camera
+- Quét Barcode sản phẩm với camera (không còn quét QR vị trí)
 - Nhập tay barcode nếu không quét được
-- Chọn đơn hàng (Import/Export)
-- Chọn vị trí kho (Location Picker)
+- Chuyển đổi giữa chế độ quét và nhập tay
+- Chọn đơn hàng (Import/Export) theo mã code
+- Chọn vị trí kho (Location Picker) với cấu trúc cây
 - Nhập số lượng
 - Xác nhận quét
 - Hiển thị thông báo thành công/thất bại
+- Hỗ trợ preset order code và location từ Order Detail
 
-#### 3.4 Orders Screen
-- Tab đơn nhập/xuất
+#### 3.4 Warehouse Picker Screen
+- Chọn kho (Warehouse) để làm việc
+- Hiển thị danh sách tất cả warehouses
+- Card UI với icon warehouse
+- Hiển thị path của warehouse
+- Navigation đến Warehouse Orders Screen với locationId
+
+#### 3.5 Warehouse Orders Screen
+- Tab đơn nhập/xuất cho một warehouse cụ thể
 - Lọc theo status (ALL, DONE, PROCESSING, PENDING, CANCELLED, APPROVED)
 - Sắp xếp theo ngày
 - Card UI cho từng đơn
 - Badge status với màu sắc
 - Pull-to-refresh
 - Navigation đến chi tiết đơn
+- **Theo dõi đơn chưa xem** với notification highlighting
+- Hiển thị badge đỏ cho status có đơn chưa xem
+- Auto-refresh unseen counts mỗi 5 giây
+- Đánh dấu đơn đã xem khi chọn status hoặc mở tab
+- Hiển thị tên warehouse và path
 
-#### 3.5 Location Picker Screen
+#### 3.6 Location Picker Screen
 - Chọn vị trí từ cây vị trí
 - Hiển thị cấu trúc cây (Warehouse > Shelf > Bin)
 - ExpansionTile cho các node có con
-- ListTile cho node lá
-- Trả về location ID và path
+- ListTile cho node lá với icon check
+- Trả về location ID và path đầy đủ
 
-#### 3.6 Import/Export Inventory Screen
+#### 3.7 Import/Export Inventory Screen
 - Danh sách đơn nhập/xuất riêng biệt
 - Lọc theo status với horizontal scroll
 - Sắp xếp theo ngày
@@ -163,13 +184,17 @@
 - Navigation đến chi tiết đơn
 - Refresh sau khi quay lại từ chi tiết
 
-#### 3.7 Order Detail Screen
+#### 3.8 Order Detail Screen
 - Xem chi tiết đơn hàng
-- Xem danh sách items
+- Xem danh sách items với thông tin sản phẩm và vị trí
+- Hiển thị số lượng cần và số lượng đã quét (scanned_quantity)
+- Icon check/pending cho từng item dựa trên tiến độ quét
+- Tap vào item để mở Scan Screen với preset order code và location
 - Hủy đơn hàng (nếu chưa DONE)
 - Duyệt đơn hàng (nếu PENDING/PROCESSING)
 - Hiển thị status và ngày tạo
 - Card UI cho items
+- Button "QUÉT SẢN PHẨM" hoặc disabled nếu đơn đã hoàn thành/hủy/duyệt
 
 ### 4. Database Schema (PostgreSQL)
 
@@ -178,17 +203,19 @@
 - **products**: ID, Name, SKU, Barcode, RFIDCode, Unit, CreatedAt, UpdatedAt
 - **locations**: ID, Name, Type (WAREHOUSE/SHELF/BIN), ParentID, Capacity, CreatedAt, UpdatedAt
 - **inventories**: ID, ProductID, LocationID, Quantity, MinQuantity, CreatedAt, UpdatedAt
-- **imports**: ID, Code, UserID, Status (PENDING/PROCESSING/DONE/CANCELLED), CreatedAt, UpdatedAt
-- **import_items**: ID, ImportID, ProductID, Quantity, LocationID
-- **exports**: ID, Code, UserID, Status (PENDING/PROCESSING/DONE/CANCELLED), CreatedAt, UpdatedAt
+- **imports**: ID, Code, Name, UserID, Status (PENDING/APPROVED/PROCESSING/DONE/CANCELLED), CreatedAt, UpdatedAt
+- **import_items**: ID, ImportID, ProductID, Quantity, LocationID, ScannedQuantity
+- **exports**: ID, Code, Name, UserID, Status (PENDING/APPROVED/PROCESSING/DONE/CANCELLED), CreatedAt, UpdatedAt
 - **export_items**: ID, ExportID, ProductID, Quantity, LocationID
-- **transactions**: ID, Type (IMPORT/EXPORT), OrderID, ProductID, Quantity, LocationID, CreatedAt
+- **transactions**: ID, Type (IMPORT/EXPORT), OrderID, ProductID, Quantity, LocationID, UserID, ReferenceID, ReferenceType, CreatedAt
+- **order_seen_status**: ID, UserID, OrderID, OrderType (IMPORT/EXPORT), SeenAt, CreatedAt
 
 #### 4.2 Relationships
 - Location: Self-referential (ParentID) cho tree structure
 - Inventory: N-N relationship giữa Product và Location
 - Import/Export: One-to-many với Items
 - Transactions: Log tất cả các giao dịch nhập/xuất
+- OrderSeenStatus: Tracking đơn hàng chưa xem cho từng user
 
 ### 5. Công nghệ sử dụng
 
@@ -214,7 +241,12 @@
 - Provider (State management)
 - http (HTTP client)
 - flutter_dotenv (Environment variables)
-- QR Scanner (Camera integration)
+- mobile_scanner (Barcode/QR Scanner integration)
+- google_fonts (Typography)
+- Quét Barcode sản phẩm (không quét QR vị trí)
+- Location Picker với cấu trúc cây
+- Warehouse Picker để chọn kho làm việc
+- Theo dõi đơn hàng chưa xem với notification
 - Có thể xuất apk để chạy trên máy thật
 
 
