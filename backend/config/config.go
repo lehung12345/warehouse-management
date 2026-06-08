@@ -45,22 +45,22 @@ func LoadConfig() {
 	}
 	ENV.JWTSecret = jwtSecret
 
-	// Admin credentials
+	// Admin credentials - REQUIRED from .env
 	adminUsername := os.Getenv("ADMIN_DEFAULT_USERNAME")
 	if adminUsername == "" {
-		adminUsername = "admin"
+		log.Fatal("[ERROR] ADMIN_DEFAULT_USERNAME is required in .env file")
 	}
 	ENV.AdminUsername = adminUsername
 
 	adminEmail := os.Getenv("ADMIN_DEFAULT_EMAIL")
 	if adminEmail == "" {
-		adminEmail = "admin@warehouse.com"
+		log.Fatal("[ERROR] ADMIN_DEFAULT_EMAIL is required in .env file")
 	}
 	ENV.AdminEmail = adminEmail
 
 	adminPassword := os.Getenv("ADMIN_DEFAULT_PASSWORD")
 	if adminPassword == "" {
-		adminPassword = "Admin@123"
+		log.Fatal("[ERROR] ADMIN_DEFAULT_PASSWORD is required in .env file")
 	}
 	ENV.AdminPassword = adminPassword
 }

@@ -353,6 +353,8 @@ class _ImportInventoryScreenState extends State<ImportInventoryScreen> {
           onRefresh: _fetchData,
           color: const Color(0xFF10B981),
           child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 6 : 8),
             itemCount: filteredOrders.length,
             itemBuilder: (context, index) {

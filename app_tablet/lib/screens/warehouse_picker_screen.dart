@@ -71,6 +71,9 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -78,6 +81,7 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w700,
             color: const Color(0xFF0F172A),
+            fontSize: isSmallScreen ? 16 : 18,
           ),
         ),
       ),
@@ -92,15 +96,15 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
                         children: [
                           Icon(
                             Icons.warehouse_rounded,
-                            size: 56,
+                            size: isSmallScreen ? 48 : 56,
                             color: const Color(0xFFD1D5DB),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: isSmallScreen ? 10 : 12),
                           Text(
                             'Không có kho nào',
                             style: GoogleFonts.inter(
                               color: const Color(0xFF6B7280),
-                              fontSize: 14,
+                              fontSize: isSmallScreen ? 13 : 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -108,22 +112,22 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
                       itemCount: warehouses.length,
                       itemBuilder: (context, index) {
                         final warehouse = warehouses[index];
                         return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
+                          margin: EdgeInsets.only(bottom: isSmallScreen ? 10 : 12),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(isSmallScreen ? 14 : 16),
                             side: BorderSide(
                               color: Colors.black.withOpacity(0.06),
                               width: 1,
                             ),
                           ),
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(isSmallScreen ? 14 : 16),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -137,22 +141,22 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
                               );
                             },
                             child: Padding(
-                              padding: const EdgeInsets.all(16),
+                              padding: EdgeInsets.all(isSmallScreen ? 12 : 16),
                               child: Row(
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.all(12),
+                                    padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF3B82F6).withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
                                     ),
-                                    child: const Icon(
+                                    child: Icon(
                                       Icons.warehouse_rounded,
-                                      color: Color(0xFF3B82F6),
-                                      size: 28,
+                                      color: const Color(0xFF3B82F6),
+                                      size: isSmallScreen ? 24 : 28,
                                     ),
                                   ),
-                                  const SizedBox(width: 16),
+                                  SizedBox(width: isSmallScreen ? 12 : 16),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,16 +164,16 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
                                         Text(
                                           warehouse['name'] ?? 'Unknown',
                                           style: GoogleFonts.inter(
-                                            fontSize: 16,
+                                            fontSize: isSmallScreen ? 15 : 16,
                                             fontWeight: FontWeight.w600,
                                             color: const Color(0xFF1E293B),
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
+                                        SizedBox(height: isSmallScreen ? 3 : 4),
                                         Text(
                                           _buildLocationPath(warehouse),
                                           style: GoogleFonts.inter(
-                                            fontSize: 12,
+                                            fontSize: isSmallScreen ? 11 : 12,
                                             fontWeight: FontWeight.w500,
                                             color: const Color(0xFF64748B),
                                           ),
@@ -177,10 +181,10 @@ class _WarehousePickerScreenState extends State<WarehousePickerScreen> {
                                       ],
                                     ),
                                   ),
-                                  const Icon(
+                                  Icon(
                                     Icons.arrow_forward_ios_rounded,
-                                    size: 16,
-                                    color: Color(0xFF9CA3AF),
+                                    size: isSmallScreen ? 14 : 16,
+                                    color: const Color(0xFF9CA3AF),
                                   ),
                                 ],
                               ),

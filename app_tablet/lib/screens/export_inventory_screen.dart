@@ -353,6 +353,8 @@ class _ExportInventoryScreenState extends State<ExportInventoryScreen> {
           onRefresh: _fetchData,
           color: const Color(0xFFF59E0B),
           child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 6 : 8),
             itemCount: filteredOrders.length,
             itemBuilder: (context, index) {

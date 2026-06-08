@@ -57,100 +57,103 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 20 : 24, vertical: isSmallScreen ? 24 : 32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Header (App Native Style)
-                const Icon(
+                Icon(
                   Icons.warehouse_rounded,
-                  size: 80,
-                  color: Color(0xFF2563EB),
+                  size: isSmallScreen ? 64 : 80,
+                  color: const Color(0xFF2563EB),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: isSmallScreen ? 20 : 24),
                 Text(
                   'Xin chào!',
                   style: GoogleFonts.inter(
-                    fontSize: 32,
+                    fontSize: isSmallScreen ? 28 : 32,
                     fontWeight: FontWeight.w800,
                     color: const Color(0xFF1E293B),
                     letterSpacing: -0.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: isSmallScreen ? 6 : 8),
                 Text(
                   'Đăng nhập để vào hệ thống kho',
                   style: GoogleFonts.inter(
-                    fontSize: 16,
+                    fontSize: isSmallScreen ? 14 : 16,
                     color: const Color(0xFF64748B),
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 48),
+                SizedBox(height: isSmallScreen ? 36 : 48),
 
                 // Error Message
                 if (_errorMessage != null) ...[
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEE2E2),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.error_outline, color: Color(0xFFEF4444)),
-                        const SizedBox(width: 12),
+                        Icon(Icons.error_outline, color: const Color(0xFFEF4444), size: isSmallScreen ? 20 : 24),
+                        SizedBox(width: isSmallScreen ? 10 : 12),
                         Expanded(
                           child: Text(
                             _errorMessage!,
                             style: GoogleFonts.inter(
                               color: const Color(0xFFB91C1C),
-                              fontSize: 14,
+                              fontSize: isSmallScreen ? 13 : 14,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: isSmallScreen ? 20 : 24),
                 ],
 
                 // Username Input
                 _buildInputLabel('Username'),
-                const SizedBox(height: 8),
+                SizedBox(height: isSmallScreen ? 6 : 8),
                 _buildTextField(
                   controller: _usernameController,
                   hint: 'Nhập username',
                   icon: Icons.person_outline,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: isSmallScreen ? 16 : 20),
 
                 // Email Input
                 _buildInputLabel('Email'),
-                const SizedBox(height: 8),
+                SizedBox(height: isSmallScreen ? 6 : 8),
                 _buildTextField(
                   controller: _emailController,
                   hint: 'Nhập email',
                   icon: Icons.email_outlined,
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: isSmallScreen ? 16 : 20),
 
                 // Password Input
                 _buildInputLabel('Mật khẩu'),
-                const SizedBox(height: 8),
+                SizedBox(height: isSmallScreen ? 6 : 8),
                 _buildTextField(
                   controller: _passwordController,
                   hint: 'Nhập mật khẩu',
                   icon: Icons.lock_outline,
                   isPassword: true,
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: isSmallScreen ? 24 : 32),
 
                 // Login Button
                 ElevatedButton(
@@ -159,15 +162,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: const Color(0xFF2563EB),
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 14 : 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(isSmallScreen ? 14 : 16),
                     ),
                   ),
                   child: _isSubmitting
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
+                      ? SizedBox(
+                          height: isSmallScreen ? 20 : 24,
+                          width: isSmallScreen ? 20 : 24,
                           child: CircularProgressIndicator(
                             color: Colors.white,
                             strokeWidth: 2.5,
@@ -176,17 +179,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       : Text(
                           'Đăng nhập',
                           style: GoogleFonts.inter(
-                            fontSize: 16,
+                            fontSize: isSmallScreen ? 15 : 16,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                 ),
                 
-                const SizedBox(height: 24),
+                SizedBox(height: isSmallScreen ? 20 : 24),
                 Text(
                   'Tài khoản do bộ phận quản lý cấp phát',
                   style: GoogleFonts.inter(
-                    fontSize: 13,
+                    fontSize: isSmallScreen ? 12 : 13,
                     color: const Color(0xFF94A3B8),
                   ),
                   textAlign: TextAlign.center,
@@ -200,10 +203,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildInputLabel(String text) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Text(
       text,
       style: GoogleFonts.inter(
-        fontSize: 14,
+        fontSize: isSmallScreen ? 13 : 14,
         fontWeight: FontWeight.w600,
         color: const Color(0xFF334155),
       ),
@@ -216,40 +222,43 @@ class _LoginScreenState extends State<LoginScreen> {
     required IconData icon,
     bool isPassword = false,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return TextFormField(
       controller: controller,
       obscureText: isPassword && _obscurePassword,
       style: GoogleFonts.inter(
         color: const Color(0xFF0F172A),
-        fontSize: 15,
+        fontSize: isSmallScreen ? 14 : 15,
       ),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8)),
-        prefixIcon: Icon(icon, color: const Color(0xFF64748B), size: 22),
+        hintStyle: GoogleFonts.inter(color: const Color(0xFF94A3B8), fontSize: isSmallScreen ? 14 : 15),
+        prefixIcon: Icon(icon, color: const Color(0xFF64748B), size: isSmallScreen ? 20 : 22),
         suffixIcon: isPassword
             ? IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility_off : Icons.visibility,
                   color: const Color(0xFF64748B),
-                  size: 22,
+                  size: isSmallScreen ? 20 : 22,
                 ),
                 onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
               )
             : null,
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 14 : 16, vertical: isSmallScreen ? 14 : 16),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(isSmallScreen ? 14 : 16),
           borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(isSmallScreen ? 14 : 16),
           borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(isSmallScreen ? 14 : 16),
           borderSide: const BorderSide(color: Color(0xFF2563EB), width: 2),
         ),
       ),

@@ -51,20 +51,34 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
       if (children.isEmpty) {
         widgets.add(
-          ListTile(
-            title: Text("$nodeName ($nodeType)"),
-            trailing: const Icon(Icons.check_circle_outline),
-            onTap: () {
-              widget.onSelected(nodeId, currentPath);
-              Navigator.pop(context);
+          Builder(
+            builder: (context) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final isSmallScreen = screenWidth < 600;
+              
+              return ListTile(
+                title: Text("$nodeName ($nodeType)", style: TextStyle(fontSize: isSmallScreen ? 14 : 16)),
+                trailing: Icon(Icons.check_circle_outline, size: isSmallScreen ? 20 : 24),
+                onTap: () {
+                  widget.onSelected(nodeId, currentPath);
+                  Navigator.pop(context);
+                },
+              );
             },
           ),
         );
       } else {
         widgets.add(
-          ExpansionTile(
-            title: Text("$nodeName ($nodeType)"),
-            children: _buildTreeNodes(children, currentPath),
+          Builder(
+            builder: (context) {
+              final screenWidth = MediaQuery.of(context).size.width;
+              final isSmallScreen = screenWidth < 600;
+              
+              return ExpansionTile(
+                title: Text("$nodeName ($nodeType)", style: TextStyle(fontSize: isSmallScreen ? 14 : 16)),
+                children: _buildTreeNodes(children, currentPath),
+              );
+            },
           ),
         );
       }
@@ -74,8 +88,11 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
-      appBar: AppBar(title: const Text("Chọn vị trí")),
+      appBar: AppBar(title: Text("Chọn vị trí", style: TextStyle(fontSize: isSmallScreen ? 16 : 18))),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : error != null

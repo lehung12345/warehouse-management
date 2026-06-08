@@ -2,10 +2,13 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"warehouse-backend/config"
 	"warehouse-backend/entity"
 	"warehouse-backend/routes"
+	"warehouse-backend/services"
+	"warehouse-backend/utils"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -42,13 +45,31 @@ func main() {
 		&entity.Transaction{},
 		&entity.OrderSeenStatus{},
 	)
-	if err != nil {
+	// Bỏ qua lỗi constraint không tồn tại (GORM cố drop constraint cũ)
+	if err != nil && !strings.Contains(err.Error(), "does not exist") {
 		log.Fatal("❌ MIGRATE LỖI:", err)
 	}
 	log.Println("✅ MIGRATE THÀNH CÔNG")
 
+	// Tạo admin mặc định nếu chưa có
+	hashedPassword, err := utils.HashPassword(config.ENV.AdminPassword)
+	if err != nil {
+		log.Fatal("❌ LỖI HASH PASSWORD ADMIN:", err)
+	}
+	err = services.SeedAdminIfNotExists(db, config.ENV.AdminUsername, config.ENV.AdminEmail, hashedPassword)
+	if err != nil {
+		log.Fatal("❌ LỖI TẠO ADMIN MẶC ĐỊNH:", err)
+	}
+	log.Println("✅ KIỂM TRA ADMIN THÀNH CÔNG")
+
+	// Drop unique constraint trên username (cho phép trùng username)
+	dropUsernameUniqueConstraint(db)
+
 	// Reset sequences để tránh duplicate primary key
 	fixSequences(db)
+
+	// Tắt debug mode để không hiện chi tiết
+	gin.SetMode(gin.ReleaseMode)
 
 	// Khởi tạo server
 	r := gin.Default()
@@ -85,6 +106,16 @@ func corsMiddleware() gin.HandlerFunc {
 	}
 }
 
+// Drop unique constraint trên username
+func dropUsernameUniqueConstraint(db *gorm.DB) {
+	// Drop cả 2 tên constraint có thể tồn tại
+	constraints := []string{"users_username_key", "uni_users_username"}
+	for _, constraint := range constraints {
+		query := `ALTER TABLE users DROP CONSTRAINT IF EXISTS ` + constraint
+		db.Exec(query)
+	}
+}
+
 // Fix PostgreSQL Sequences
 func fixSequences(db *gorm.DB) {
 	tables := []string{
@@ -93,10 +124,6 @@ func fixSequences(db *gorm.DB) {
 	}
 	for _, table := range tables {
 		query := `SELECT setval(pg_get_serial_sequence('` + table + `', 'id'), COALESCE((SELECT MAX(id) FROM "` + table + `"), 0) + 1, false)`
-		if err := db.Exec(query).Error; err != nil {
-			log.Printf("⚠️  Không thể reset sequence cho bảng %s: %v", table, err)
-		} else {
-			log.Printf("🔧 Reset sequence: %s", table)
-		}
+		db.Exec(query)
 	}
 }

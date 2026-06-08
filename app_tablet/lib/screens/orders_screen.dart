@@ -203,30 +203,33 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
   }
 
   Widget _buildStatusBadge(String status) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 3 : 4),
       decoration: BoxDecoration(
         color: _getStatusBackgroundColor(status),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(isSmallScreen ? 6 : 8),
         border: Border.all(color: _getStatusColor(status).withOpacity(0.3), width: 0.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 5,
-            height: 5,
+            width: isSmallScreen ? 5 : 6,
+            height: isSmallScreen ? 5 : 6,
             decoration: BoxDecoration(
               color: _getStatusColor(status),
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: isSmallScreen ? 4 : 6),
           Text(
             status,
             style: TextStyle(
               color: _getStatusColor(status),
-              fontSize: 10,
+              fontSize: isSmallScreen ? 10 : 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -236,8 +239,11 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
   }
 
   Widget _buildStatusFilter() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 8 : 10),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -266,7 +272,7 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
             }
 
             return Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: isSmallScreen ? 6 : 8),
               child: GestureDetector(
                 onTap: () {
                   setState(() => _selectedStatus = status);
@@ -276,7 +282,7 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                   }
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 10 : 12, vertical: isSmallScreen ? 4 : 6),
                   decoration: BoxDecoration(
                     color: hasUnseen && !isSelected 
                         ? const Color(0xFFFEE2E2) 
@@ -295,7 +301,7 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                       color: hasUnseen && !isSelected 
                           ? const Color(0xFFEF4444) 
                           : (isSelected ? Colors.white : const Color(0xFF6B7280)),
-                      fontSize: 12,
+                      fontSize: isSmallScreen ? 11 : 12,
                       fontWeight: hasUnseen && !isSelected ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
@@ -319,22 +325,25 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
+    
     return Scaffold(
       backgroundColor: const Color(0xFFFAFBFC),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,
-        title: const Text(
+        title: Text(
           'Đơn hàng',
           style: TextStyle(
-            color: Color(0xFF1F2937),
+            color: const Color(0xFF1F2937),
             fontWeight: FontWeight.w700,
-            fontSize: 18,
+            fontSize: isSmallScreen ? 16 : 18,
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(45),
+          preferredSize: Size.fromHeight(isSmallScreen ? 40 : 45),
           child: Container(
             color: Colors.white,
             child: TabBar(
@@ -343,21 +352,21 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
               indicatorWeight: 2.5,
               labelColor: const Color(0xFF4F46E5),
               unselectedLabelColor: const Color(0xFF9CA3AF),
-              labelStyle: const TextStyle(
-                fontSize: 13,
+              labelStyle: TextStyle(
+                fontSize: isSmallScreen ? 12 : 13,
                 fontWeight: FontWeight.w600,
               ),
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 13,
+              unselectedLabelStyle: TextStyle(
+                fontSize: isSmallScreen ? 12 : 13,
                 fontWeight: FontWeight.w500,
               ),
-              tabs: const [
+              tabs: [
                 Tab(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.download_rounded, size: 18),
-                      SizedBox(width: 6),
+                      Icon(Icons.download_rounded, size: isSmallScreen ? 16 : 18),
+                      SizedBox(width: isSmallScreen ? 4 : 6),
                       Text('NHẬP KHO'),
                     ],
                   ),
@@ -366,8 +375,8 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.upload_rounded, size: 18),
-                      SizedBox(width: 6),
+                      Icon(Icons.upload_rounded, size: isSmallScreen ? 16 : 18),
+                      SizedBox(width: isSmallScreen ? 4 : 6),
                       Text('XUẤT KHO'),
                     ],
                   ),
@@ -402,6 +411,8 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
 
   Widget _buildOrderList(List<OrderModel> orders, bool isImport) {
     final filteredOrders = _filterByStatus(orders);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 600;
 
     if (filteredOrders.isEmpty) {
       return Center(
@@ -410,15 +421,15 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
           children: [
             Icon(
               isImport ? Icons.inbox_rounded : Icons.outbox_rounded,
-              size: 56,
+              size: isSmallScreen ? 48 : 56,
               color: const Color(0xFFD1D5DB),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: isSmallScreen ? 10 : 12),
             Text(
               'Không có đơn hàng nào',
               style: TextStyle(
                 color: const Color(0xFF6B7280),
-                fontSize: 14,
+                fontSize: isSmallScreen ? 13 : 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -431,22 +442,22 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
       onRefresh: _fetchData,
       color: const Color(0xFF4F46E5),
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 8 : 12, vertical: isSmallScreen ? 6 : 8),
         itemCount: filteredOrders.length,
         itemBuilder: (context, index) {
           final order = filteredOrders[index];
           return Card(
-            margin: const EdgeInsets.only(bottom: 10),
+            margin: EdgeInsets.only(bottom: isSmallScreen ? 8 : 10),
             elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
               side: BorderSide(
                 color: Colors.black.withOpacity(0.06),
                 width: 1,
               ),
             ),
             child: InkWell(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(isSmallScreen ? 10 : 12),
               onTap: () async {
                 // Mark this specific order as seen
                 final auth = Provider.of<AuthProvider>(context, listen: false);
@@ -474,7 +485,7 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                 _fetchData();
               },
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(isSmallScreen ? 10 : 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -483,24 +494,24 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                       children: [
                         Expanded(
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                            padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 6 : 8, vertical: isSmallScreen ? 4 : 5),
                             decoration: BoxDecoration(
                               color: isImport
                                   ? const Color(0xFFDBEAFE).withOpacity(0.6)
                                   : const Color(0xFFFED7AA).withOpacity(0.6),
-                              borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(isSmallScreen ? 5 : 6),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
                                   isImport ? Icons.download_rounded : Icons.upload_rounded,
-                                  size: 14,
+                                  size: isSmallScreen ? 12 : 14,
                                   color: isImport
                                       ? const Color(0xFF2563EB)
                                       : const Color(0xFFEA580C),
                                 ),
-                                const SizedBox(width: 5),
+                                SizedBox(width: isSmallScreen ? 4 : 5),
                                 Expanded(
                                   child: Text(
                                     order.code,
@@ -508,7 +519,7 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                                       color: isImport
                                           ? const Color(0xFF2563EB)
                                           : const Color(0xFFEA580C),
-                                      fontSize: 12,
+                                      fontSize: isSmallScreen ? 11 : 12,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: 'monospace',
                                     ),
@@ -519,24 +530,24 @@ class _OrdersScreenState extends State<OrdersScreen> with TickerProviderStateMix
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: isSmallScreen ? 6 : 8),
                         _buildStatusBadge(order.status),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: isSmallScreen ? 6 : 8),
                     Row(
                       children: [
                         Icon(
                           Icons.calendar_today_rounded,
-                          size: 14,
+                          size: isSmallScreen ? 12 : 14,
                           color: const Color(0xFFB4B9C1),
                         ),
-                        const SizedBox(width: 5),
+                        SizedBox(width: isSmallScreen ? 4 : 5),
                         Text(
                           _formatDate(order.createdAt),
-                          style: const TextStyle(
-                            color: Color(0xFF6B7280),
-                            fontSize: 12,
+                          style: TextStyle(
+                            color: const Color(0xFF6B7280),
+                            fontSize: isSmallScreen ? 11 : 12,
                           ),
                         ),
                       ],
