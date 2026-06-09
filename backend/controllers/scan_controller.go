@@ -14,9 +14,7 @@ func NewScanController(s *services.ScanService) *ScanController {
 	return &ScanController{Service: s}
 }
 
-// =======================
-// 🔥 SCAN IMPORT
-// =======================
+// SCAN IMPORT
 func (c *ScanController) ScanImport(ctx *gin.Context) {
 
 	var req struct {

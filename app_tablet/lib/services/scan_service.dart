@@ -51,7 +51,7 @@ class ScanService {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse('$_baseUrl/api/scan/export'), // ĐÃ SỬA: không phải /import
+        Uri.parse('$_baseUrl/api/scan/export'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',

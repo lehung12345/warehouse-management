@@ -1,5 +1,3 @@
-# TODO - Warehouse Management System
-
 ## Tính năng hệ thống Quản lý Kho (Warehouse Management System)
 
 ### 1. Backend (Go API)
