@@ -80,13 +80,23 @@ func main() {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 
+	// React
+	r.Static("/assets", "./dist/assets")
+	r.StaticFile("/favicon.svg", "./dist/favicon.svg")
+	r.StaticFile("/icons.svg", "./dist/icons.svg")
+
 	// Routes
 	routes.SetupRoutes(r, db)
 
+	// SPA
+	r.NoRoute(func(c *gin.Context) {
+		c.File("./dist/index.html")
+	})
+
 	// Run server
 	log.Println("🚀 Server chạy tại port:", config.ENV.Port)
-	r.Run(":" + config.ENV.Port)
-	// r.Run("0.0.0.0:" + config.ENV.Port) dùng súng rfid thì dùng
+	// r.Run(":" + config.ENV.Port)
+	r.Run("0.0.0.0:" + config.ENV.Port) //dùng súng rfid thì dùng
 }
 
 // CORS Middleware
