@@ -52,23 +52,23 @@ export const loginAPI = (data: { username: string; email: string; password: stri
 
 // ─── Admin – User Management ────────────────────
 export const getStaffListAPI = () =>
-  api.get<{ users: StaffUser[]; total: number }>('/admin/users')
+  api.get<{ users: StaffUser[]; total: number }>('/api/admin/users')
 
 export const createStaffAPI = (data: {
   username: string
   email: string
   password: string
-}) => api.post<{ message: string; user: StaffUser }>('/admin/users', data)
+}) => api.post<{ message: string; user: StaffUser }>('/api/admin/users', data)
 
 export const editStaffAPI = (id: number, data: {
   username: string
   email: string
-}) => api.put<{ message: string; user: StaffUser }>(`/admin/users/${id}`, data)
+}) => api.put<{ message: string; user: StaffUser }>(`/api/admin/users/${id}`, data)
 
 export const deleteStaffAPI = (id: number) =>
-  api.delete(`/admin/users/${id}`)
+  api.delete(`/api/admin/users/${id}`)
 
 export const resetPasswordAPI = (id: number, new_password: string) =>
-  api.put(`/admin/users/${id}/reset-password`, { new_password })
+  api.put(`/api/admin/users/${id}/reset-password`, { new_password })
 
 export default api

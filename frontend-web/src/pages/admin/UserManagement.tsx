@@ -39,8 +39,8 @@ export default function UserManagement() {
     setIsLoadingList(true)
     try {
       const res = await getStaffListAPI()
-      setStaffList(res.data.users)
-      setTotal(res.data.total)
+      setStaffList(res.data.users ?? [])
+      setTotal(res.data.total ?? 0)
     } catch {
       setStaffList([])
     } finally {
@@ -244,7 +244,7 @@ export default function UserManagement() {
                     <td>{idx + 1}</td>
                     <td>
                       <div className="td-user">
-                        <div className="td-avatar">{s.username[0]?.toUpperCase()}</div>
+                        <div className="td-avatar">{(s.username || '?')[0]?.toUpperCase()}</div>
                         <span>{s.username}</span>
                       </div>
                     </td>
