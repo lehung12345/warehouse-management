@@ -27,7 +27,7 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080"
+      const baseURL = window.location.origin
 
       // Fetch products count
       const productsRes = await axios.get(`${baseURL}/api/products`, getAuthHeader())

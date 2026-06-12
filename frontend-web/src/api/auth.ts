@@ -1,9 +1,12 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  baseURL: window.location.origin,
   headers: { 'Content-Type': 'application/json' },
 })
+
+console.log("VITE_API_URL =", import.meta.env.VITE_API_URL)
+console.log("BASE_URL =", api.defaults.baseURL)
 
 // Tự động gắn JWT token vào mọi request
 api.interceptors.request.use((config) => {
@@ -46,11 +49,11 @@ export interface StaffUser {
   created_at: string
 }
 
-// ─── Auth ───────────────────────────────────────
+// Auth
 export const loginAPI = (data: { username: string; email: string; password: string; platform: 'web' | 'mobile' }) =>
   api.post<LoginResponse>('/auth/login', data)
 
-// ─── Admin – User Management ────────────────────
+// Admin - User Management
 export const getStaffListAPI = () =>
   api.get<{ users: StaffUser[]; total: number }>('/api/admin/users')
 

@@ -311,6 +311,172 @@
 
 
 //bản mới linux win
+// package main
+
+// import (
+// 	"embed"
+// 	"io/fs"
+// 	"log"
+// 	"net/http"
+// 	"strings"
+
+// 	"warehouse-backend/config"
+// 	"warehouse-backend/entity"
+// 	"warehouse-backend/routes"
+// 	"warehouse-backend/services"
+// 	"warehouse-backend/utils"
+
+// 	"github.com/gin-gonic/gin"
+// 	"gorm.io/gorm"
+// )
+
+// // Đóng gói toàn bộ thư mục dist vào trong file chạy
+// //go:embed dist/*
+// var embedFS embed.FS
+
+// func main() {
+// 	// Load config từ .env
+// 	config.LoadConfig()
+
+// 	// Kết nối database (chuẩn)
+// 	config.ConnectDB()
+// 	db := config.DB
+
+// 	// Ping database
+// 	sqlDB, err := db.DB()
+// 	if err != nil {
+// 		log.Fatal("❌ Không lấy được SQL DB:", err)
+// 	}
+// 	if err = sqlDB.Ping(); err != nil {
+// 		log.Fatal("❌ DATABASE KHÔNG PING ĐƯỢC:", err)
+// 	}
+// 	log.Println("✅ KẾT NỐI DATABASE THÀNH CÔNG")
+
+// 	// Auto migrate
+// 	err = db.AutoMigrate(
+// 		&entity.User{},
+// 		&entity.Product{},
+// 		&entity.Location{},
+// 		&entity.Inventory{},
+// 		&entity.Import{},
+// 		&entity.ImportItem{},
+// 		&entity.Export{},
+// 		&entity.ExportItem{},
+// 		&entity.Transaction{},
+// 		&entity.OrderSeenStatus{},
+// 	)
+// 	if err != nil && !strings.Contains(err.Error(), "does not exist") {
+// 		log.Fatal("❌ MIGRATE LỖI:", err)
+// 	}
+// 	log.Println("✅ MIGRATE THÀNH CÔNG")
+
+// 	// Tạo admin mặc định nếu chưa có
+// 	hashedPassword, err := utils.HashPassword(config.ENV.AdminPassword)
+// 	if err != nil {
+// 		log.Fatal("❌ LỖI HASH PASSWORD ADMIN:", err)
+// 	}
+// 	err = services.SeedAdminIfNotExists(db, config.ENV.AdminUsername, config.ENV.AdminEmail, hashedPassword)
+// 	if err != nil {
+// 		log.Fatal("❌ LỖI TẠO ADMIN MẶC ĐỊNH:", err)
+// 	}
+// 	log.Println("✅ KIỂM TRA ADMIN THÀNH CÔNG")
+
+// 	dropUsernameUniqueConstraint(db)
+// 	fixSequences(db)
+
+// 	// Tắt debug mode để chạy mượt hơn ở môi trường production
+// 	gin.SetMode(gin.ReleaseMode)
+
+// 	r := gin.Default()
+// 	r.Use(corsMiddleware())
+
+// 	// API test
+// 	r.GET("/ping", func(c *gin.Context) {
+// 		c.JSON(200, gin.H{"message": "pong"})
+// 	})
+
+// 	// Cấu hình gốc đọc Frontend từ file nhúng (embed)
+// 	distFS, err := fs.Sub(embedFS, "dist")
+// 	if err != nil {
+// 		log.Fatal("❌ Lỗi cấu hình tài nguyên tĩnh (embed):", err)
+// 	}
+
+// 	// 🛠️ FIX TRIỆT ĐỂ TẠI ĐÂY: Hệ thống file embed bắt buộc dùng dấu "/" cố định cho cả Win và Linux
+// 	assetsFS, err := fs.Sub(embedFS, "dist/assets")
+// 	if err != nil {
+// 		log.Fatal("❌ Lỗi cấu hình thư mục assets (embed):", err)
+// 	}
+// 	r.StaticFS("/assets", http.FS(assetsFS))
+
+// 	// Map các file tĩnh ngoài root của dist
+// 	r.GET("/favicon.svg", func(c *gin.Context) {
+// 		c.FileFromFS("favicon.svg", http.FS(distFS))
+// 	})
+// 	r.GET("/icons.svg", func(c *gin.Context) {
+// 		c.FileFromFS("icons.svg", http.FS(distFS))
+// 	})
+
+// 	// Routes APIs
+// 	routes.SetupRoutes(r, db)
+
+// 	// SPA Router
+// 	r.NoRoute(func(c *gin.Context) {
+// 		file, err := distFS.Open("index.html")
+// 		if err != nil {
+// 			c.String(http.StatusNotFound, "Frontend build không tồn tại hoặc lỗi")
+// 			return
+// 		}
+// 		defer file.Close()
+
+// 		stat, _ := file.Stat()
+// 		c.DataFromReader(http.StatusOK, stat.Size(), "text/html; charset=utf-8", file, nil)
+// 	})
+
+// 	log.Println("🚀 Server chạy tại port:", config.ENV.Port)
+// 	r.Run("0.0.0.0:" + config.ENV.Port)
+// }
+
+// func corsMiddleware() gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+// 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+// 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+// 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+// 		if c.Request.Method == "OPTIONS" {
+// 			c.AbortWithStatus(204)
+// 			return
+// 		}
+// 		c.Next()
+// 	}
+// }
+
+// func dropUsernameUniqueConstraint(db *gorm.DB) {
+// 	constraints := []string{"users_username_key", "uni_users_username"}
+// 	for _, constraint := range constraints {
+// 		query := `ALTER TABLE users DROP CONSTRAINT IF EXISTS ` + constraint
+// 		db.Exec(query)
+// 	}
+// }
+
+// func fixSequences(db *gorm.DB) {
+// 	tables := []string{
+// 		"products", "locations", "imports", "exports",
+// 		"import_items", "export_items", "inventories", "users", "transactions", "order_seen_statuses",
+// 	}
+// 	for _, table := range tables {
+// 		query := `SELECT setval(pg_get_serial_sequence('` + table + `', 'id'), COALESCE((SELECT MAX(id) FROM "` + table + `"), 0) + 1, false)`
+// 		db.Exec(query)
+// 	}
+// }
+
+
+
+
+
+
+
+//bản chạy đc 
 package main
 
 import (
@@ -330,19 +496,18 @@ import (
 	"gorm.io/gorm"
 )
 
-// Đóng gói toàn bộ thư mục dist vào trong file chạy
+// embed toàn bộ FE dist
 //go:embed dist/*
 var embedFS embed.FS
 
 func main() {
-	// Load config từ .env
+	// Load config
 	config.LoadConfig()
 
-	// Kết nối database (chuẩn)
+	// DB
 	config.ConnectDB()
 	db := config.DB
 
-	// Ping database
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatal("❌ Không lấy được SQL DB:", err)
@@ -370,45 +535,48 @@ func main() {
 	}
 	log.Println("✅ MIGRATE THÀNH CÔNG")
 
-	// Tạo admin mặc định nếu chưa có
+	// Seed admin
 	hashedPassword, err := utils.HashPassword(config.ENV.AdminPassword)
 	if err != nil {
 		log.Fatal("❌ LỖI HASH PASSWORD ADMIN:", err)
 	}
-	err = services.SeedAdminIfNotExists(db, config.ENV.AdminUsername, config.ENV.AdminEmail, hashedPassword)
+	err = services.SeedAdminIfNotExists(
+		db,
+		config.ENV.AdminUsername,
+		config.ENV.AdminEmail,
+		hashedPassword,
+	)
 	if err != nil {
-		log.Fatal("❌ LỖI TẠO ADMIN MẶC ĐỊNH:", err)
+		log.Fatal("❌ LỖI TẠO ADMIN:", err)
 	}
 	log.Println("✅ KIỂM TRA ADMIN THÀNH CÔNG")
 
 	dropUsernameUniqueConstraint(db)
 	fixSequences(db)
 
-	// Tắt debug mode để chạy mượt hơn ở môi trường production
+	// release mode
 	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
 	r.Use(corsMiddleware())
 
-	// API test
+	// test API
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 
-	// Cấu hình gốc đọc Frontend từ file nhúng (embed)
+	// EMBED FRONTEND
 	distFS, err := fs.Sub(embedFS, "dist")
 	if err != nil {
-		log.Fatal("❌ Lỗi cấu hình tài nguyên tĩnh (embed):", err)
+		log.Fatal("❌ Lỗi dist embed:", err)
 	}
 
-	// 🛠️ FIX TRIỆT ĐỂ TẠI ĐÂY: Hệ thống file embed bắt buộc dùng dấu "/" cố định cho cả Win và Linux
 	assetsFS, err := fs.Sub(embedFS, "dist/assets")
 	if err != nil {
-		log.Fatal("❌ Lỗi cấu hình thư mục assets (embed):", err)
+		log.Fatal("❌ Lỗi assets embed:", err)
 	}
 	r.StaticFS("/assets", http.FS(assetsFS))
 
-	// Map các file tĩnh ngoài root của dist
 	r.GET("/favicon.svg", func(c *gin.Context) {
 		c.FileFromFS("favicon.svg", http.FS(distFS))
 	})
@@ -416,30 +584,46 @@ func main() {
 		c.FileFromFS("icons.svg", http.FS(distFS))
 	})
 
-	// Routes APIs
+	// API routes
 	routes.SetupRoutes(r, db)
 
-	// SPA Router
+	// SPA fallback
 	r.NoRoute(func(c *gin.Context) {
 		file, err := distFS.Open("index.html")
 		if err != nil {
-			c.String(http.StatusNotFound, "Frontend build không tồn tại hoặc lỗi")
+			c.String(http.StatusNotFound, "Frontend not found")
 			return
 		}
 		defer file.Close()
 
 		stat, _ := file.Stat()
-		c.DataFromReader(http.StatusOK, stat.Size(), "text/html; charset=utf-8", file, nil)
+		c.DataFromReader(
+			http.StatusOK,
+			stat.Size(),
+			"text/html; charset=utf-8",
+			file,
+			nil,
+		)
 	})
 
-	log.Println("🚀 Server chạy tại port:", config.ENV.Port)
-	r.Run("0.0.0.0:" + config.ENV.Port)
+	// PORT
+	port := config.ENV.Port
+
+	// GET IP
+	ip := utils.GetLocalIP()
+
+	log.Println("🚀 Server chạy tại port:" + port)
+	log.Println("👉 Local: http://localhost:" + port)
+	log.Println("👉 LAN:   http://" + ip + ":" + port)
+
+	// IMPORTANT: bind all interfaces
+	r.Run("0.0.0.0:" + port)
 }
 
+// CORS
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 
@@ -451,21 +635,28 @@ func corsMiddleware() gin.HandlerFunc {
 	}
 }
 
+// DB helpers
 func dropUsernameUniqueConstraint(db *gorm.DB) {
 	constraints := []string{"users_username_key", "uni_users_username"}
 	for _, constraint := range constraints {
-		query := `ALTER TABLE users DROP CONSTRAINT IF EXISTS ` + constraint
-		db.Exec(query)
+		db.Exec(`ALTER TABLE users DROP CONSTRAINT IF EXISTS ` + constraint)
 	}
 }
 
 func fixSequences(db *gorm.DB) {
 	tables := []string{
 		"products", "locations", "imports", "exports",
-		"import_items", "export_items", "inventories", "users", "transactions", "order_seen_statuses",
+		"import_items", "export_items", "inventories",
+		"users", "transactions", "order_seen_statuses",
 	}
+
 	for _, table := range tables {
-		query := `SELECT setval(pg_get_serial_sequence('` + table + `', 'id'), COALESCE((SELECT MAX(id) FROM "` + table + `"), 0) + 1, false)`
+		query := `
+		SELECT setval(
+			pg_get_serial_sequence('` + table + `', 'id'),
+			COALESCE((SELECT MAX(id) FROM "` + table + `"), 0) + 1,
+			false
+		)`
 		db.Exec(query)
 	}
 }

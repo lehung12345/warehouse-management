@@ -23,7 +23,7 @@ func RegisterUserManagementRoutes(adminGroup *gin.RouterGroup, db *gorm.DB) {
 	}
 }
 
-// ==================== LIST STAFF ====================
+// LIST STAFF
 
 func listStaffHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -55,7 +55,7 @@ func listStaffHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-// ==================== CREATE STAFF (từ admin panel) ====================
+// CREATE STAFF (từ admin panel)
 
 type AdminCreateStaffRequest struct {
 	Username string `json:"username" binding:"required,min=3,max=50"`
@@ -105,7 +105,7 @@ func createStaffFromAdminHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-// ==================== UPDATE STAFF ====================
+// UPDATE STAFF
 
 type UpdateStaffRequest struct {
 	Username string `json:"username" binding:"required,min=3,max=50"`
@@ -155,7 +155,7 @@ func updateStaffHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-// ==================== DELETE STAFF ====================
+// DELETE STAFF
 
 func deleteStaffHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -182,7 +182,7 @@ func deleteStaffHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-// ==================== RESET PASSWORD ====================
+// RESET PASSWORD
 
 type ResetPasswordRequest struct {
 	NewPassword string `json:"new_password" binding:"required,min=6"`

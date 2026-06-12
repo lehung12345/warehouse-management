@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// ==================== REQUEST STRUCTS ====================
+// REQUEST STRUCTS
 
 type LoginRequest struct {
 	Username string `json:"username" binding:"required"`
@@ -26,7 +26,7 @@ type CreateUserRequest struct {
 	Role     string `json:"role" binding:"required"`
 }
 
-// ==================== RESPONSE STRUCTS ====================
+// RESPONSE STRUCTS
 
 type UserResponse struct {
 	ID        uint   `json:"id"`
@@ -36,7 +36,7 @@ type UserResponse struct {
 	CreatedAt string `json:"created_at"`
 }
 
-// ==================== ROUTE REGISTRATION ====================
+// ROUTE REGISTRATION
 
 func RegisterAuthRoutes(r *gin.Engine, db *gorm.DB) {
 	auth := r.Group("/auth")
@@ -45,7 +45,7 @@ func RegisterAuthRoutes(r *gin.Engine, db *gorm.DB) {
 	}
 }
 
-// ==================== HANDLERS ====================
+// HANDLERS
 
 // loginHandler xử lý đăng nhập bằng username và email
 func loginHandler(db *gorm.DB) gin.HandlerFunc {

@@ -63,7 +63,7 @@ func (s *ScanService) ScanImport(importID uint, productID uint, locationID uint,
 	item.ScannedQuantity += qty
 	tx.Save(&item)
 
-	// 🔥 Chuyển trạng thái từ PENDING sang PROCESSING (nếu chưa được chuyển)
+	// Chuyển trạng thái từ PENDING sang PROCESSING (nếu chưa được chuyển)
 	if order.Status == "PENDING" {
 		order.Status = "PROCESSING"
 		if err := tx.Save(&order).Error; err != nil {
@@ -74,7 +74,7 @@ func (s *ScanService) ScanImport(importID uint, productID uint, locationID uint,
 		tx.Where("order_id = ? AND order_type = 'import'", importID).Delete(&entity.OrderSeenStatus{})
 	}
 
-	// 🔥 Kiểm tra xem còn item nào chưa scan đủ không
+	// Kiểm tra xem còn item nào chưa scan đủ không
 	var total int64
 	tx.Model(&entity.ImportItem{}).
 		Where("import_id = ?", importID).
@@ -134,7 +134,7 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint,
 		return errors.New("export item không tồn tại")
 	}
 
-	// 🔥 Kiểm tra tồn kho thực tế trước khi cho scan
+	// Kiểm tra tồn kho thực tế trước khi cho scan
 	var inv entity.Inventory
 	if err := tx.Where("product_id = ? AND location_id = ?", productID, locationID).
 		First(&inv).Error; err != nil {
@@ -156,7 +156,7 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint,
 	item.ScannedQuantity += qty
 	tx.Save(&item)
 
-	// 🔥 Chuyển trạng thái từ PENDING sang PROCESSING (nếu chưa được chuyển)
+	// Chuyển trạng thái từ PENDING sang PROCESSING (nếu chưa được chuyển)
 	if order.Status == "PENDING" {
 		order.Status = "PROCESSING"
 		if err := tx.Save(&order).Error; err != nil {
@@ -167,7 +167,7 @@ func (s *ScanService) ScanExport(exportID uint, productID uint, locationID uint,
 		tx.Where("order_id = ? AND order_type = 'export'", exportID).Delete(&entity.OrderSeenStatus{})
 	}
 
-	// 🔥 Kiểm tra xem còn item nào chưa scan đủ không
+	// Kiểm tra xem còn item nào chưa scan đủ không
 	var total int64
 	tx.Model(&entity.ExportItem{}).
 		Where("export_id = ?", exportID).

@@ -55,7 +55,7 @@ export default function ReportPage() {
 
   const fetchReports = async () => {
     try {
-      const baseURL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+      const baseURL = window.location.origin;
 
       const [res1, res2, res3, res4] = await Promise.all([
         axios.get(`${baseURL}/api/reports/import-export`, getAuthHeader()),

@@ -40,7 +40,7 @@ class StaffHomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ================= HEADER =================
+              // HEADER
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -127,7 +127,7 @@ class StaffHomeScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // ================= GRID =================
+              // GRID
               LayoutBuilder(
                 builder: (context, constraints) {
                   // Calculate responsive grid based on screen width
@@ -221,7 +221,7 @@ class StaffHomeScreen extends StatelessWidget {
     );
   }
 
-  // ================= ACTION CARD =================
+  // ACTION CARD
   Widget _buildActionCard({
     required BuildContext context,
     required String title,

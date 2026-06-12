@@ -19,7 +19,7 @@ func (c *ScanController) ScanImport(ctx *gin.Context) {
 
 	var req struct {
 		ImportID   uint   `json:"import_id"`
-		Barcode    string `json:"barcode"` // ✅ nhận barcode thay vì product_id
+		Barcode    string `json:"barcode"` // nhận barcode thay vì product_id
 		LocationID uint   `json:"location_id"`
 		Quantity   int    `json:"quantity"`
 	}
@@ -30,14 +30,14 @@ func (c *ScanController) ScanImport(ctx *gin.Context) {
 		return
 	}
 
-	// 🔥 Tìm product theo barcode
+	// Tìm product theo barcode
 	var product entity.Product
 	if err := c.Service.DB.Where("barcode = ?", req.Barcode).First(&product).Error; err != nil {
 		ctx.JSON(400, gin.H{"error": "Không tìm thấy sản phẩm"})
 		return
 	}
 
-	// 🔥 Gọi service với product.ID chuẩn
+	// Gọi service với product.ID chuẩn
 	err := c.Service.ScanImport(
 		req.ImportID,
 		product.ID,
@@ -53,14 +53,12 @@ func (c *ScanController) ScanImport(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"message": "scan import success"})
 }
 
-// =======================
-// 🔥 SCAN EXPORT
-// =======================
+// SCAN EXPORT
 func (c *ScanController) ScanExport(ctx *gin.Context) {
 
 	var req struct {
 		ExportID   uint   `json:"export_id"`
-		Barcode    string `json:"barcode"` // ✅ nhận barcode
+		Barcode    string `json:"barcode"` // nhận barcode
 		LocationID uint   `json:"location_id"`
 		Quantity   int    `json:"quantity"`
 	}
@@ -71,14 +69,14 @@ func (c *ScanController) ScanExport(ctx *gin.Context) {
 		return
 	}
 
-	// 🔥 Tìm product theo barcode
+	// Tìm product theo barcode
 	var product entity.Product
 	if err := c.Service.DB.Where("barcode = ?", req.Barcode).First(&product).Error; err != nil {
 		ctx.JSON(400, gin.H{"error": "Không tìm thấy sản phẩm"})
 		return
 	}
 
-	// 🔥 Gọi service
+	// Gọi service
 	err := c.Service.ScanExport(
 		req.ExportID,
 		product.ID,
