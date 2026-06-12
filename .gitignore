@@ -1,15 +1,44 @@
-# Binaries
+# =========================
+# ENV FILES
+# =========================
+.env
+*.env
+
+backend/.env
+frontend-web/.env
+app_tablet/.env
+
+# =========================
+# DATABASE
+# =========================
+database/
+
+# =========================
+# BACKEND (GO)
+# =========================
+backend/warehouse-backend.exe
+backend/warehouse-backend-linux
+
 *.exe
 *.dll
 *.so
 *.dylib
-backend/warehouse-backend.exe
 
-# Build directories
-app_tablet/build/
+# Go build cache
+backend/bin/
+backend/build/
+
+# =========================
+# FRONTEND (REACT/VITE)
+# =========================
+frontend-web/node_modules/
 frontend-web/dist/
+frontend-web/.cache/
 
-# Flutter/Dart
+# =========================
+# FLUTTER
+# =========================
+app_tablet/build/
 app_tablet/.dart_tool/
 app_tablet/.flutter-plugins
 app_tablet/.flutter-plugins-dependencies
@@ -17,25 +46,45 @@ app_tablet/.packages
 app_tablet/.pub-cache/
 app_tablet/.pub/
 
-# IDE
-app_tablet/.idea/
-*.iml
-.vscode/
+# Flutter generated
+app_tablet/.metadata
 
-# Node
-frontend-web/node_modules/
-frontend-web/.cache/
-
-# Android
+# =========================
+# ANDROID
+# =========================
 app_tablet/android/.gradle/
 app_tablet/android/.kotlin/
 app_tablet/android/local.properties
 app_tablet/android/*.iml
-app_tablet/android/.idea/
 
-# Environment files (optional - uncomment if needed)
-.env
-backend/.env
-frontend-web/.env
-app_tablet/.env
-*.env
+# =========================
+# IOS
+# =========================
+app_tablet/ios/Pods/
+app_tablet/ios/.symlinks/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+*.iml
+
+# =========================
+# LOGS
+# =========================
+*.log
+
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# TEMP FILES
+# =========================
+tmp/
+temp/
+*.tmp
